@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>4.7 Command Palette (Cmd+K) · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .cp-demo {
+    min-height: 640px;
+    background:
+      radial-gradient(40% 60% at 50% 0%, rgba(124,92,255,0.08), transparent 60%),
+      #0E0E14;
+    color: #fff;
+    padding: 0;
+    border-radius: var(--radius-lg);
+    position: relative;
+    overflow: hidden;
+  }
+  .cp-bar {
+    padding: 18px 28px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .cp-bar .b { font-family: var(--font-display); font-size: 19px; color: #fff; }
+  .cp-trigger {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    color: rgba(255,255,255,0.65);
+    font-family: var(--font-body);
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .cp-trigger:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+  .cp-trigger kbd {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 2px 6px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 4px;
+    color: #fff;
+  }
+
+  .cp-content {
+    padding: 80px 32px;
+    text-align: center;
+  }
+  .cp-content h3 { font-family: var(--font-display); font-weight: 400; font-size: clamp(32px, 5vw, 48px); letter-spacing: -0.02em; line-height: 1; }
+  .cp-content h3 em { font-style: italic; color: var(--accent); }
+  .cp-content p { color: rgba(255,255,255,0.65); margin-top: 14px; font-size: 16px; max-width: 46ch; margin-left: auto; margin-right: auto; }
+  .cp-content .hint { margin-top: 24px; display: inline-flex; align-items: center; gap: 10px; padding: 9px 16px; border: 1px solid rgba(232,179,57,0.4); border-radius: 999px; background: rgba(232,179,57,0.08); color: var(--accent); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; }
+  .cp-content .hint kbd { padding: 2px 7px; background: rgba(232,179,57,0.18); border: 1px solid rgba(232,179,57,0.5); border-radius: 4px; color: var(--accent); }
+
+  /* The palette overlay */
+  .cp-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 60;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(6px);
+    display: grid;
+    place-items: start center;
+    padding-top: 80px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s var(--ease);
+  }
+  .cp-overlay.open { opacity: 1; pointer-events: auto; }
+
+  .cp-panel {
+    width: min(560px, 90%);
+    background: #14141B;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    overflow: hidden;
+    transform: scale(0.95) translateY(-8px);
+    transition: transform 0.18s var(--ease);
+  }
+  .cp-overlay.open .cp-panel { transform: scale(1) translateY(0); }
+
+  .cp-search {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .cp-search svg { width: 16px; height: 16px; color: rgba(255,255,255,0.5); }
+  .cp-search input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 15px;
+  }
+  .cp-search input::placeholder { color: rgba(255,255,255,0.4); }
+  .cp-esc { font-family: var(--font-mono); font-size: 11px; padding: 3px 7px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.18); border-radius: 4px; color: rgba(255,255,255,0.6); }
+
+  .cp-results {
+    max-height: 340px;
+    overflow-y: auto;
+    padding: 8px;
+  }
+  .cp-group {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    padding: 10px 12px 6px;
+  }
+  .cp-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: rgba(255,255,255,0.85);
+    font-size: 14px;
+  }
+  .cp-item.active { background: rgba(255,255,255,0.08); color: #fff; }
+  .cp-item .ic { width: 22px; height: 22px; display: grid; place-items: center; color: var(--accent); font-family: var(--font-mono); font-size: 14px; }
+  .cp-item .ttl { flex: 1; }
+  .cp-item .kb { display: flex; gap: 4px; opacity: 0.7; }
+  .cp-item .kb kbd { font-family: var(--font-mono); font-size: 10px; padding: 2px 6px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); border-radius: 4px; color: rgba(255,255,255,0.8); }
+  .cp-empty { padding: 30px 16px; text-align: center; color: rgba(255,255,255,0.4); font-size: 13px; }
+
+  .cp-foot {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+  }
+  .cp-foot .grp { display: flex; gap: 14px; }
+  .cp-foot kbd { font-family: var(--font-mono); font-size: 10px; padding: 2px 6px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); border-radius: 4px; color: rgba(255,255,255,0.7); margin-right: 4px; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Navigation</a>
+      <span class="sep">/</span>
+      <span class="here">Command Palette</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">4.7 · Navigation</span>
+    <h1 class="title">Command Palette<br>(<em>Cmd+K</em>).</h1>
+    <p class="tagline">A searchable launcher that opens with a keyboard shortcut. Every action in your app, one keystroke away. The Linear / Raycast / Notion / VS Code pattern.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Press Cmd+K (or Ctrl+K on Windows) anywhere in the app and a search overlay appears in the center of the screen. Type to fuzzy-search across every page, action, setting, and document. Arrow-keys to navigate, Enter to execute. It replaces nested menus for power users and has become the expected pattern in any productivity tool shipped after 2020.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>A global <code>keydown</code> listener watches for Cmd/Ctrl+K and toggles a full-screen overlay. The overlay contains a search input (auto-focused) and a result list grouped by category. As the user types, JS filters items by simple substring (or fuzzy match). Arrow keys move an <code>.active</code> class up/down; Enter triggers the active item; Escape closes. Each item shows an icon, a title, and the keyboard shortcut to invoke it directly.</p>
+      <div class="term-grid">
+        <div><b>Cmd/Ctrl + K</b><span>Global keydown listener — works from anywhere in the app</span></div>
+        <div><b>Fuzzy filter</b><span>As the user types, filter items by substring match (or use Fuse.js)</span></div>
+        <div><b>Arrow keys + Enter</b><span>Up/Down moves selection, Enter fires the action, Escape closes</span></div>
+        <div><b>Grouped results</b><span>Categories: Pages, Actions, Recent, Settings — visual hierarchy</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Press <b>Cmd+K</b> (or <b>Ctrl+K</b>) inside the demo, or click the search button in the top-right. Type to filter.</p>
+    <div class="demo-shell">
+      <div class="demo cp-demo" id="cpDemo" tabindex="0">
+        <span class="demo-badge">Live · Cmd+K</span>
+        <div class="cp-bar">
+          <div class="b">Aurora</div>
+          <button class="cp-trigger" id="cpTrigger">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            <span>Search anything…</span>
+            <kbd>⌘</kbd><kbd>K</kbd>
+          </button>
+        </div>
+        <div class="cp-content">
+          <h3>Every action, <em>one keystroke away</em>.</h3>
+          <p>Press Cmd+K — the palette opens. Type "set" or "doc" or "team". Watch results filter in real time.</p>
+          <div class="hint"><kbd>⌘</kbd><kbd>K</kbd> Try it now</div>
+        </div>
+
+        <div class="cp-overlay" id="cpOverlay">
+          <div class="cp-panel">
+            <div class="cp-search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+              <input id="cpInput" type="text" placeholder="Search pages, actions, settings…" autocomplete="off" />
+              <span class="cp-esc">Esc</span>
+            </div>
+            <div class="cp-results" id="cpResults">
+              <!-- populated by JS -->
+            </div>
+            <div class="cp-foot">
+              <div class="grp"><span><kbd>↑↓</kbd> navigate</span><span><kbd>↵</kbd> select</span><span><kbd>esc</kbd> close</span></div>
+              <div>Aurora · v0.4</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 4.7 Command Palette</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a Cmd+K command palette. Add a global keydown listener that toggles an overlay when Cmd+K (Mac) or Ctrl+K (Windows/Linux) is pressed. Overlay: position:fixed, inset:0, background:rgba(0,0,0,0.5), backdrop-filter:blur(6px). Panel centered near the top: width 560px, dark background (#14141B), 14px border-radius, big shadow. Panel contents (top to bottom): (1) Search input row with a magnifying-glass icon, input field (autofocus on open), and "Esc" kbd indicator on the right. (2) Results area max-height 340px with overflow-y:auto. Results grouped by category — "Pages", "Actions", "Settings" — each group has a small uppercase mono header. Each result row: a colored mono icon, the action title, and a keyboard shortcut on the right (using styled kbd elements). The currently-selected result has an .active class with a subtle background. (3) Footer with mini kbd hints "↑↓ navigate · ↵ select · esc close" and app version. Behavior: as user types in the input, filter all items by substring case-insensitive. Arrow keys move the .active selection up/down through visible items. Enter triggers the active action. Esc or clicking the overlay closes. When no matches, show "No results" empty state.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://linear.app" target="_blank" rel="noopener">Linear</a><span class="desc">The canonical command-palette implementation</span></div></li>
+      <li><div><a href="https://raycast.com" target="_blank" rel="noopener">Raycast</a><span class="desc">A whole launcher built around command palette UX</span></div></li>
+      <li><div><a href="https://cmdk.paco.me" target="_blank" rel="noopener">cmdk (Paco)</a><span class="desc">Open-source React component used by Vercel, Linear, GitHub</span></div></li>
+      <li><div><a href="https://github.com" target="_blank" rel="noopener">GitHub</a><span class="desc">Cmd+K to search any repo / org / file</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="4.6-tab-navigation.html" class="prev"><span class="label">← Prev</span><span class="title">4.6 Tab Navigation</span></a>
+      <a href="4.8-floating-pill-nav.html" class="next"><span class="label">Next →</span><span class="title">4.8 Floating Pill Nav</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const demo = document.getElementById('cpDemo');
+    const overlay = document.getElementById('cpOverlay');
+    const trigger = document.getElementById('cpTrigger');
+    const input = document.getElementById('cpInput');
+    const results = document.getElementById('cpResults');
+    if (!demo) return;
+
+    const items = [
+      { grp: 'Pages', ic: '◆', t: 'Go to Dashboard', kb: ['G','D'] },
+      { grp: 'Pages', ic: '◆', t: 'Go to Projects', kb: ['G','P'] },
+      { grp: 'Pages', ic: '◆', t: 'Go to Team', kb: ['G','T'] },
+      { grp: 'Pages', ic: '◆', t: 'Go to Billing', kb: ['G','B'] },
+      { grp: 'Actions', ic: '+', t: 'New document', kb: ['⌘','N'] },
+      { grp: 'Actions', ic: '+', t: 'New project', kb: ['⌘','⇧','P'] },
+      { grp: 'Actions', ic: '↗', t: 'Invite a teammate', kb: ['⌘','I'] },
+      { grp: 'Actions', ic: '⌫', t: 'Archive current view', kb: ['⌘','⇧','⌫'] },
+      { grp: 'Actions', ic: '↻', t: 'Refresh data', kb: ['R'] },
+      { grp: 'Settings', ic: '⚙', t: 'Open settings', kb: ['⌘',','] },
+      { grp: 'Settings', ic: '🎨', t: 'Switch theme', kb: ['⌘','⇧','L'] },
+      { grp: 'Settings', ic: '🔔', t: 'Notification preferences', kb: [] },
+      { grp: 'Settings', ic: '💳', t: 'Manage billing', kb: [] },
+      { grp: 'Recent', ic: '◷', t: 'Q2 launch plan', kb: [] },
+      { grp: 'Recent', ic: '◷', t: 'Maya — interview notes', kb: [] },
+      { grp: 'Recent', ic: '◷', t: 'Pricing brainstorm', kb: [] },
+    ];
+
+    let activeIdx = 0;
+    function render(q = '') {
+      const filtered = q ? items.filter(i => i.t.toLowerCase().includes(q.toLowerCase()) || i.grp.toLowerCase().includes(q.toLowerCase())) : items;
+      if (!filtered.length) {
+        results.innerHTML = '<div class="cp-empty">No matches. Try fewer words.</div>';
+        return;
+      }
+      let html = '';
+      let lastGrp = '';
+      filtered.forEach((it, i) => {
+        if (it.grp !== lastGrp) {
+          html += `<div class="cp-group">${it.grp}</div>`;
+          lastGrp = it.grp;
+        }
+        const kb = it.kb.length ? `<div class="kb">${it.kb.map(k => `<kbd>${k}</kbd>`).join('')}</div>` : '';
+        html += `<div class="cp-item ${i === activeIdx ? 'active' : ''}" data-idx="${i}"><div class="ic">${it.ic}</div><div class="ttl">${it.t}</div>${kb}</div>`;
+      });
+      results.innerHTML = html;
+    }
+    function open() {
+      overlay.classList.add('open');
+      activeIdx = 0;
+      render();
+      setTimeout(() => input.focus(), 60);
+    }
+    function close() { overlay.classList.remove('open'); input.value = ''; }
+
+    trigger.addEventListener('click', open);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+    input.addEventListener('input', () => { activeIdx = 0; render(input.value); });
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); open(); return; }
+      if (!overlay.classList.contains('open')) return;
+      if (e.key === 'Escape') { close(); }
+      else if (e.key === 'ArrowDown') { e.preventDefault(); const visible = results.querySelectorAll('.cp-item'); activeIdx = Math.min(visible.length - 1, activeIdx + 1); render(input.value); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); activeIdx = Math.max(0, activeIdx - 1); render(input.value); }
+      else if (e.key === 'Enter') { close(); }
+    });
+    results.addEventListener('click', (e) => {
+      const it = e.target.closest('.cp-item');
+      if (it) { activeIdx = parseInt(it.getAttribute('data-idx'), 10); render(input.value); close(); }
+    });
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

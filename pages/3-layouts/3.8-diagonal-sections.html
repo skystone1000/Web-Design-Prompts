@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>3.8 Diagonal / Skewed Sections · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .dg-demo {
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+    background: #FAFAF7;
+    color: #1A1814;
+    padding: 0;
+  }
+  .dg-sec {
+    position: relative;
+    padding: 80px 36px;
+    text-align: center;
+    overflow: hidden;
+  }
+  .dg-sec .inner {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .dg-sec h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(28px, 4vw, 44px);
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin-bottom: 10px;
+  }
+  .dg-sec h4 em { font-style: italic; color: var(--accent); }
+  .dg-sec p { font-size: 16px; line-height: 1.55; }
+
+  /* Hero — flat */
+  .dg-hero { background: #1A1814; color: #fff; padding-bottom: 120px; }
+  .dg-hero h4 { font-size: clamp(36px, 6vw, 60px); }
+  .dg-hero p { color: rgba(255,255,255,0.7); }
+
+  /* Diagonal divider — skewed via clip-path */
+  .dg-sec.skew-tl { background: #fff; padding-top: 120px; padding-bottom: 120px; clip-path: polygon(0 6%, 100% 0, 100% 94%, 0 100%); margin-top: -50px; }
+  .dg-sec.skew-tr { background: #f3ecd9; padding-top: 120px; padding-bottom: 120px; clip-path: polygon(0 0, 100% 6%, 100% 100%, 0 94%); margin-top: -50px; }
+  .dg-sec.skew-end { background: linear-gradient(135deg, #E8B339, #D96F5A); color: #1A1814; padding-top: 120px; padding-bottom: 80px; clip-path: polygon(0 6%, 100% 0, 100% 100%, 0 100%); margin-top: -50px; }
+
+  /* Inner content row */
+  .dg-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 32px; }
+  .dg-row .card {
+    padding: 18px;
+    background: rgba(255,255,255,0.6);
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 12px;
+    text-align: left;
+  }
+  .dg-row .card .ic {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: rgba(232,179,57,0.18);
+    color: #8b6517;
+    display: grid;
+    place-items: center;
+    margin-bottom: 10px;
+    font-family: var(--font-mono);
+  }
+  .dg-row .card h5 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .dg-row .card p { font-size: 13px; color: #555; line-height: 1.5; }
+  .dg-sec.skew-tr .card { background: rgba(255,255,255,0.7); }
+  .dg-sec.skew-end .card { background: rgba(26,24,20,0.16); border-color: rgba(26,24,20,0.18); }
+  .dg-sec.skew-end .card .ic { background: rgba(26,24,20,0.2); color: #1A1814; }
+  .dg-sec.skew-end .card p { color: rgba(26,24,20,0.7); }
+
+  .dg-cta {
+    display: inline-block;
+    margin-top: 22px;
+    padding: 12px 22px;
+    border-radius: 8px;
+    background: #1A1814;
+    color: #fff;
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  @media (max-width: 720px) {
+    .dg-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Layouts</a>
+      <span class="sep">/</span>
+      <span class="here">Diagonal Sections</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">3.8 · Layout</span>
+    <h1 class="title">Diagonal /<br>Skewed <em>Sections</em>.</h1>
+    <p class="tagline">Page sections divided by angled lines instead of straight ones. Adds visual rhythm — the eye sweeps diagonally rather than stepping flatly down.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Instead of stacking flat rectangular sections, diagonal layouts angle the edge between two background colors so the divider runs at ~5–8°. The result is a more dynamic, less corporate feel — the eye is pulled diagonally across the page. Especially common on agency landing pages, fintech sites, and event microsites that want energy but still want a clean, structured layout.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Two modern approaches: (1) <code>clip-path: polygon(...)</code> on each section with corners shifted up or down by ~6% gives an exact angled edge; (2) a <code>::before</code> pseudo-element with <code>transform: skewY(-3deg)</code> and the section's background color provides the cut, while the inner content stays unskewed. Either way, give sections a slight negative <code>margin-top</code> so they overlap and the cut looks intentional. Padding is increased to compensate for the diagonal taking up vertical space.</p>
+      <div class="term-grid">
+        <div><b>clip-path: polygon</b><span>Precise angled edges — points like polygon(0 6%, 100% 0, 100% 100%, 0 94%)</span></div>
+        <div><b>transform: skewY(-3deg)</b><span>Alternative: skew a background-only pseudo-element, leave content flat</span></div>
+        <div><b>Negative margin-top</b><span>Sections overlap by ~50px so the cut is decisive, not a gap</span></div>
+        <div><b>Extra vertical padding</b><span>Sections need 100–120px top/bottom padding to absorb the diagonal</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="tip"><b>Tip.</b> Keep the angle subtle — 4° to 8° max. Anything steeper looks like a 2014 startup landing page. And alternate direction (top-left to bottom-right, then reversed) so the page doesn't lean in one direction the entire scroll.</div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. Sections meet at angled edges instead of flat lines.</p>
+    <div class="demo-shell">
+      <div class="demo dg-demo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#fff; border-color:rgba(255,255,255,0.2);">Live · scroll inside</span>
+        <section class="dg-sec dg-hero">
+          <div class="inner">
+            <h4>Quiet by <em>design</em>.</h4>
+            <p>Software that respects your attention — built by a small team in Brooklyn.</p>
+          </div>
+        </section>
+        <section class="dg-sec skew-tl">
+          <div class="inner">
+            <h4>What it does <em>well</em>.</h4>
+            <div class="dg-row">
+              <div class="card"><div class="ic">◆</div><h5>Realtime sync</h5><p>Sub-60ms updates across devices.</p></div>
+              <div class="card"><div class="ic">✦</div><h5>Block library</h5><p>Drop-in widgets, ready to use.</p></div>
+              <div class="card"><div class="ic">⌘</div><h5>Cmd palette</h5><p>Every action, one keystroke away.</p></div>
+            </div>
+          </div>
+        </section>
+        <section class="dg-sec skew-tr">
+          <div class="inner">
+            <h4>Built by <em>operators</em>.</h4>
+            <p>Five people who use it every single day. No outside investors.</p>
+            <a class="dg-cta">Read the story →</a>
+          </div>
+        </section>
+        <section class="dg-sec skew-end">
+          <div class="inner">
+            <h4>Start in <em>60 seconds</em>.</h4>
+            <p>No credit card. No call. Just a workspace.</p>
+            <a class="dg-cta">Get started →</a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 3.8 Diagonal Sections</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Build a landing page with diagonal section dividers (instead of flat horizontal cuts). Use 4 stacked sections, each with overflow:hidden and padding-top/bottom of 100-120px to absorb the diagonal. Each section after the hero gets a clip-path:polygon to angle its top and/or bottom edge by ~6% — e.g. clip-path: polygon(0 6%, 100% 0, 100% 94%, 0 100%) creates a downward-angled top edge and upward-angled bottom edge. Alternate direction every section so the page doesn't lean one way the whole scroll. Add margin-top:-50px on each angled section so they overlap and the cut looks decisive (not a gap). Keep the angle subtle (4-8 degrees max). Use 4 different background colors / gradients (dark hero, white, warm gray, amber-coral gradient finale). Content inside each section stays centered with max-width:640px. On mobile, the diagonals still work but reduce padding to 60-80px.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://stripe.com" target="_blank" rel="noopener">Stripe.com</a><span class="desc">Subtle diagonal sweeps between hero and feature sections</span></div></li>
+      <li><div><a href="https://bennettfeely.com/clippy" target="_blank" rel="noopener">Clippy — clip-path generator</a><span class="desc">Interactive tool to generate polygon clip-path values visually</span></div></li>
+      <li><div><a href="https://www.shapedivider.app" target="_blank" rel="noopener">Shape Divider App</a><span class="desc">Generates SVG section dividers (waves, slants, triangles) ready to copy</span></div></li>
+      <li><div><a href="https://www.awwwards.com/websites/diagonal" target="_blank" rel="noopener">Awwwards — diagonal category</a><span class="desc">Sites recognized for diagonal / angled layouts</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="3.7-magazine-columns.html" class="prev"><span class="label">← Prev</span><span class="title">3.7 Magazine Columns</span></a>
+      <a href="3.9-vertical-timeline.html" class="next"><span class="label">Next →</span><span class="title">3.9 Vertical Timeline</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

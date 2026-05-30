@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.12 Clip-Path Image Reveal · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .cr-demo {
+    height: 720px;
+    overflow-y: scroll;
+    background: #0E0E14;
+    border-radius: var(--radius-lg);
+    color: #fff;
+  }
+  .cr-spacer {
+    height: 200px;
+    display: grid;
+    place-items: center;
+    color: rgba(255,255,255,0.4);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .cr-tile {
+    margin: 0 auto 80px;
+    max-width: 720px;
+    padding: 0 32px;
+  }
+  .cr-frame {
+    aspect-ratio: 16/10;
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+  }
+  /* Background "image" replaced by gradient art */
+  .cr-art {
+    position: absolute;
+    inset: 0;
+    transform: scale(1.15);
+    transition: transform 1.4s var(--ease);
+    will-change: transform;
+  }
+  .cr-art.a { background: linear-gradient(135deg, #FF6B9D, #7C5CFF); }
+  .cr-art.b { background: linear-gradient(135deg, #00D9FF, #0a3d4d); }
+  .cr-art.c { background: linear-gradient(135deg, #FFB800, #D96F5A); }
+  .cr-art::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3), transparent 60%),
+      radial-gradient(circle at 70% 70%, rgba(0,0,0,0.3), transparent 60%);
+  }
+  /* The clip mask — starts as a tiny rectangle and expands */
+  .cr-frame .cover {
+    position: absolute;
+    inset: 0;
+    background: #0E0E14;
+    clip-path: inset(50% 50% 50% 50%);
+    transition: clip-path 1.2s cubic-bezier(0.7, 0, 0.2, 1);
+    will-change: clip-path;
+  }
+  .cr-tile.in .cr-frame .cover { clip-path: inset(0 0 0 0); /* hide cover, reveal image */ }
+  /* Reverse: the IMAGE is revealed by expanding its OWN clip-path */
+  .cr-tile.in .cr-art { transform: scale(1); }
+  .cr-tile .cr-art { clip-path: inset(40% 50% 40% 50%); transition: clip-path 1.2s cubic-bezier(0.7, 0, 0.2, 1), transform 1.4s var(--ease); }
+  .cr-tile.in .cr-art { clip-path: inset(0 0 0 0); }
+
+  .cr-meta { margin-top: 18px; display: flex; justify-content: space-between; }
+  .cr-ix { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); }
+  .cr-cap { font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: 18px; color: rgba(255,255,255,0.85); }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Clip-Path Reveal</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.12 · Animation</span>
+    <h1 class="title">Clip-Path Image<br><em>Reveal</em>.</h1>
+    <p class="tagline">Images aren't faded in — they're revealed by a rectangle that expands from a slit in the middle. Editorial and cinematic.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A reveal animation where the image starts hidden behind a "shutter" — a mask shaped like a thin horizontal slit — and the slit expands outward to uncover the full image. Often combined with a slow zoom-out on the image inside. Used heavily on agency portfolios, editorial features, and any product page that wants a cinematic moment for hero imagery.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>The image starts with <code>clip-path: inset(40% 50% 40% 50%)</code> — a thin horizontal slit in the middle of its container. On scroll, an IntersectionObserver adds an <code>.in</code> class which transitions <code>clip-path</code> to <code>inset(0 0 0 0)</code> (full visibility) over ~1.2 seconds with a custom cubic-bezier. Pair with a <code>transform: scale(1.15)</code> on the image that animates to <code>scale(1)</code> over the same duration so the image looks like it pushes through the slit. Two simultaneous transitions create the cinematic feel.</p>
+      <div class="term-grid">
+        <div><b>clip-path: inset</b><span>inset(top right bottom left) — start with 40-50% on top and bottom for a slit</span></div>
+        <div><b>cubic-bezier(0.7, 0, 0.2, 1)</b><span>Slow-start fast-finish easing — feels theatrical, not mechanical</span></div>
+        <div><b>transform: scale(1.15) → 1</b><span>Paired zoom-out makes the reveal feel like a camera push</span></div>
+        <div><b>IntersectionObserver</b><span>Triggers when the frame is 25% in view — fire once with unobserve</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. Images push through the slit as each frame enters the viewport.</p>
+    <div class="demo-shell">
+      <div class="demo cr-demo" id="crDemo">
+        <span class="demo-badge">Live · scroll inside</span>
+        <div class="cr-spacer">↓ scroll to reveal</div>
+        <div class="cr-tile" data-reveal>
+          <div class="cr-frame"><div class="cr-art a"></div><div class="cover"></div></div>
+          <div class="cr-meta"><span class="cr-ix">Plate 01</span><span class="cr-cap">Aurora, vol. 04</span></div>
+        </div>
+        <div class="cr-tile" data-reveal>
+          <div class="cr-frame"><div class="cr-art b"></div><div class="cover"></div></div>
+          <div class="cr-meta"><span class="cr-ix">Plate 02</span><span class="cr-cap">Marine drift</span></div>
+        </div>
+        <div class="cr-tile" data-reveal>
+          <div class="cr-frame"><div class="cr-art c"></div><div class="cover"></div></div>
+          <div class="cr-meta"><span class="cr-ix">Plate 03</span><span class="cr-cap">Sunset, slow</span></div>
+        </div>
+        <div class="cr-spacer">— end —</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.12 Clip-Path Reveal</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build an image reveal effect using clip-path. For each image frame: aspect-ratio:16/10, border-radius:14px, overflow:hidden, position:relative. Inside, the image is absolutely-positioned and starts with clip-path:inset(40% 50% 40% 50%) — a thin horizontal slit in the middle. Also start the image at transform:scale(1.15). Apply transitions to both: clip-path 1.2s cubic-bezier(0.7, 0, 0.2, 1) and transform 1.4s ease. Use IntersectionObserver (threshold 0.25) on each frame; on first intersection, add an .in class that animates clip-path to inset(0 0 0 0) (fully visible) and transform to scale(1). The image appears to push through the slit while zooming back to normal — cinematic camera-push feel. Unobserve after first trigger so it doesn't repeat. Add caption metadata below each frame (uppercase mono "Plate 01" + italic serif title).</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.obys.agency" target="_blank" rel="noopener">Obys Agency</a><span class="desc">Image reveals on every project tile — the master class</span></div></li>
+      <li><div><a href="https://www.activetheory.net" target="_blank" rel="noopener">Active Theory</a><span class="desc">Clip-path reveals woven through the agency portfolio</span></div></li>
+      <li><div><a href="https://gsap.com" target="_blank" rel="noopener">GSAP — clip-path tutorials</a><span class="desc">Library + tutorials for advanced reveal animations</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.11-stacking-cards.html" class="prev"><span class="label">← Prev</span><span class="title">2.11 Stacking Cards</span></a>
+      <a href="2.13-svg-draw.html" class="next"><span class="label">Next →</span><span class="title">2.13 SVG Path Draw</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const root = document.getElementById('crDemo');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { root, threshold: 0.25 });
+    root.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

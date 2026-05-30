@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>4.14 Slide-out Drawer · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .dr-demo {
+    min-height: 620px;
+    background: #FAFAF7;
+    color: #111;
+    border-radius: var(--radius-lg);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .dr-bar {
+    padding: 18px 28px;
+    background: #fff;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .dr-bar .b { font-family: var(--font-display); font-size: 22px; color: #111; }
+  .dr-burger {
+    width: 38px; height: 38px;
+    border: 1px solid rgba(0,0,0,0.12);
+    background: #fff;
+    border-radius: 8px;
+    display: grid; place-items: center;
+    cursor: pointer;
+  }
+  .dr-burger svg { width: 16px; height: 16px; color: #111; }
+
+  .dr-body {
+    padding: 60px 32px;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .dr-body h3 { font-family: var(--font-display); font-size: clamp(32px, 5vw, 44px); font-weight: 400; letter-spacing: -0.02em; color: #111; margin-bottom: 14px; }
+  .dr-body h3 em { font-style: italic; color: #e63946; }
+  .dr-body p { color: #555; font-size: 16px; line-height: 1.55; }
+  .dr-cta {
+    display: inline-block;
+    margin-top: 24px;
+    padding: 12px 22px;
+    background: #1A1814;
+    color: #fff;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 0;
+  }
+
+  /* Drawer */
+  .dr-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 8;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s var(--ease);
+  }
+  .dr-overlay.open { opacity: 1; pointer-events: auto; }
+
+  .dr-panel {
+    position: absolute;
+    top: 0; bottom: 0; right: 0;
+    width: min(360px, 92%);
+    background: #fff;
+    border-left: 1px solid rgba(0,0,0,0.08);
+    z-index: 9;
+    transform: translateX(100%);
+    transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    box-shadow: -24px 0 60px rgba(0,0,0,0.18);
+  }
+  .dr-panel.open { transform: translateX(0); }
+  .dr-panel.left { left: 0; right: auto; transform: translateX(-100%); border-right: 1px solid rgba(0,0,0,0.08); border-left: 0; box-shadow: 24px 0 60px rgba(0,0,0,0.18); }
+  .dr-panel.left.open { transform: translateX(0); }
+
+  .dr-head {
+    padding: 18px 22px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .dr-head h5 { font-family: var(--font-display); font-size: 18px; color: #111; }
+  .dr-close {
+    width: 32px; height: 32px;
+    background: transparent; border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    display: grid; place-items: center;
+    color: #555;
+    transition: background 0.15s, color 0.15s;
+  }
+  .dr-close:hover { background: #F3F4F6; color: #111; }
+  .dr-close svg { width: 16px; height: 16px; }
+
+  .dr-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 8px;
+  }
+  .dr-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    color: #1A1814;
+    font-size: 14.5px;
+    cursor: pointer;
+  }
+  .dr-link:hover { background: #F3F4F6; }
+  .dr-link.active { background: rgba(230,57,70,0.1); color: #e63946; }
+  .dr-link .ic { width: 28px; display: grid; place-items: center; color: #888; font-family: var(--font-mono); }
+  .dr-link.active .ic { color: #e63946; }
+
+  .dr-grouplabel { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #999; padding: 12px 14px 6px; }
+
+  .dr-footer {
+    padding: 16px 22px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .dr-footer .av { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #e63946, #b81d2c); color: #fff; display: grid; place-items: center; font-size: 12px; font-weight: 700; }
+  .dr-footer .nm { font-size: 13px; font-weight: 500; color: #111; }
+  .dr-footer .em { font-size: 11px; color: #888; }
+
+  .dr-trigger-row { display: flex; gap: 10px; margin-top: 14px; justify-content: center; }
+  .dr-trigger-row button { padding: 10px 16px; border: 1px solid rgba(0,0,0,0.12); background: #fff; color: #111; border-radius: 999px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; cursor: pointer; }
+  .dr-trigger-row button:hover { background: #1A1814; color: #fff; border-color: #1A1814; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Navigation</a>
+      <span class="sep">/</span>
+      <span class="here">Slide-out Drawer</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">4.14 · Navigation</span>
+    <h1 class="title">Slide-out <em>Drawer</em>.</h1>
+    <p class="tagline">A panel that slides in from the edge of the screen — left for nav, right for filters/cart/details. Modal-but-spatial.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A panel that slides in from the edge of the viewport, covering part of the page while leaving the rest dimmed. Two common uses: a left drawer for navigation (especially on mobile, replacing or augmenting the hamburger menu) and a right drawer for contextual actions — filters, cart, notification details, or settings. Implemented natively as <code>&lt;dialog&gt;</code> in modern browsers, or as a div + JS for full control.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Two elements: a full-screen overlay (semi-transparent black, blocks page interaction) and the panel itself. Panel is <code>position: fixed; top: 0; bottom: 0; right: 0; width: 360px</code> (or <code>left: 0</code> for left drawer). It starts off-screen at <code>transform: translateX(100%)</code> and transitions to <code>translateX(0)</code> when opened. Click overlay or press Escape to close. Lock body scroll while open. The panel typically contains a header (title + close), a scrollable body, and a sticky footer with primary action.</p>
+      <div class="term-grid">
+        <div><b>transform: translateX</b><span>Starts at 100% (off-screen), transitions to 0 — GPU-accelerated</span></div>
+        <div><b>Overlay backdrop</b><span>Semi-transparent black behind the panel — blocks page interaction</span></div>
+        <div><b>Body scroll lock</b><span>overflow:hidden on body when open — prevents background scroll</span></div>
+        <div><b>Escape + click outside</b><span>Both close the drawer — standard a11y expectations</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Try both drawers. Esc or click outside to close.</p>
+    <div class="demo-shell">
+      <div class="demo dr-demo" id="drDemo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#111; border-color:rgba(0,0,0,0.1);">Live · tap a button</span>
+        <div class="dr-bar">
+          <div class="b">Field Co.</div>
+          <button class="dr-burger" data-open="left" aria-label="Open menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="dr-body">
+          <h3>Drawer <em>navigation</em>.</h3>
+          <p>Two variants: a left nav drawer (tap the hamburger above), and a right contextual drawer (tap the buttons below).</p>
+          <button class="dr-cta" data-open="left">Open left drawer</button>
+          <div class="dr-trigger-row">
+            <button data-open="right">Open Cart</button>
+            <button data-open="right">Open Filters</button>
+            <button data-open="right">Open Details</button>
+          </div>
+        </div>
+
+        <div class="dr-overlay" id="drOverlay"></div>
+
+        <aside class="dr-panel left" id="drLeft" aria-label="Menu">
+          <div class="dr-head"><h5>Menu</h5><button class="dr-close" data-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+          <div class="dr-list">
+            <div class="dr-grouplabel">Shop</div>
+            <a class="dr-link active"><div class="ic">★</div>All</a>
+            <a class="dr-link"><div class="ic">◆</div>Outerwear</a>
+            <a class="dr-link"><div class="ic">◆</div>Shirts</a>
+            <a class="dr-link"><div class="ic">◆</div>Trousers</a>
+            <a class="dr-link"><div class="ic">◆</div>Accessories</a>
+            <div class="dr-grouplabel">Stories</div>
+            <a class="dr-link"><div class="ic">✦</div>Journal</a>
+            <a class="dr-link"><div class="ic">✦</div>Process</a>
+            <a class="dr-link"><div class="ic">✦</div>Stockists</a>
+            <div class="dr-grouplabel">Account</div>
+            <a class="dr-link"><div class="ic">⌘</div>Orders</a>
+            <a class="dr-link"><div class="ic">⌘</div>Wishlist</a>
+            <a class="dr-link"><div class="ic">⌘</div>Settings</a>
+          </div>
+          <div class="dr-footer">
+            <div class="av">HK</div>
+            <div><div class="nm">Hannah K.</div><div class="em">hannah@fieldco.com</div></div>
+          </div>
+        </aside>
+
+        <aside class="dr-panel" id="drRight" aria-label="Cart">
+          <div class="dr-head"><h5>Your bag (2)</h5><button class="dr-close" data-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+          <div class="dr-list">
+            <a class="dr-link"><div class="ic">⬛</div>Field Jacket — M — $485</a>
+            <a class="dr-link"><div class="ic">⬛</div>Wool Hat — Onesize — $58</a>
+          </div>
+          <div class="dr-footer" style="flex-direction:column; align-items:stretch; gap:8px;">
+            <div style="display:flex; justify-content:space-between; font-size:14px; color:#111;"><b>Subtotal</b><b>$543</b></div>
+            <button class="dr-cta" style="margin-top:0;">Checkout →</button>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 4.14 Slide-out Drawer</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a slide-out drawer system with TWO variants: a left navigation drawer and a right contextual drawer (cart/filters). Common pieces: (1) An overlay div position:fixed inset:0 background:rgba(0,0,0,0.4), opacity:0 pointer-events:none default — adds .open class to fade in and become interactive. (2) The drawer panel: position:fixed top:0 bottom:0, width:min(360px, 92%), white background, 1px edge border. RIGHT variant: right:0, transform:translateX(100%) default, on .open translateX(0). LEFT variant: left:0, transform:translateX(-100%) default, on .open translateX(0). Both transition:transform 0.32s cubic-bezier(0.4, 0, 0.2, 1) with a deep edge box-shadow. Panel layout: hairline-bordered header (title + close X button), flex-1 scrollable body containing grouped link sections (small mono group label + indented link rows with icon + label, hover background), and a footer (account avatar + name, or cart subtotal + checkout button). Open/close behavior: clicking a trigger toggles .open on overlay + panel, locks body scroll. Click on overlay or press Escape closes. Different triggers ([data-open="left"] or [data-open="right"]) open the appropriate panel.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://shopify.com" target="_blank" rel="noopener">Any Shopify store cart</a><span class="desc">Cart drawer slides in from the right on every Shopify store</span></div></li>
+      <li><div><a href="https://material.io/components/navigation-drawer" target="_blank" rel="noopener">Material Design — Navigation Drawer</a><span class="desc">Google's spec for the canonical left drawer pattern</span></div></li>
+      <li><div><a href="https://ui.shadcn.com/docs/components/sheet" target="_blank" rel="noopener">shadcn/ui — Sheet</a><span class="desc">Composable React drawer component with all four edges</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="4.13-footer-mega.html" class="prev"><span class="label">← Prev</span><span class="title">4.13 Footer Mega-Menu</span></a>
+      <a href="../5-typography-color/index.html" class="next"><span class="label">Next chapter →</span><span class="title">Typography &amp; Color</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const overlay = document.getElementById('drOverlay');
+    const left = document.getElementById('drLeft');
+    const right = document.getElementById('drRight');
+    function open(which) {
+      overlay.classList.add('open');
+      if (which === 'left') left.classList.add('open');
+      else right.classList.add('open');
+    }
+    function close() {
+      overlay.classList.remove('open');
+      left.classList.remove('open');
+      right.classList.remove('open');
+    }
+    document.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => open(b.getAttribute('data-open'))));
+    document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', close));
+    overlay.addEventListener('click', close);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

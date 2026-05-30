@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>6.12 File Upload Dropzone · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .dz-demo {
+    min-height: 620px;
+    background: var(--bg-elev);
+    color: var(--text);
+    padding: 56px 40px;
+    border-radius: var(--radius-lg);
+  }
+  .dz-stage { max-width: 640px; margin: 0 auto; }
+
+  .dz-zone {
+    border: 2px dashed var(--border-strong);
+    border-radius: 14px;
+    padding: 56px 32px;
+    text-align: center;
+    background: var(--bg-card);
+    transition: all 0.25s var(--ease);
+    cursor: pointer;
+    position: relative;
+  }
+  .dz-zone:hover { border-color: var(--accent); background: rgba(232,179,57,0.04); }
+  .dz-zone.over {
+    border-color: var(--accent);
+    background: rgba(232,179,57,0.1);
+    transform: scale(1.01);
+    box-shadow: 0 0 0 4px rgba(232,179,57,0.16);
+  }
+  .dz-zone .icon {
+    width: 64px; height: 64px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: rgba(232,179,57,0.12);
+    color: var(--accent);
+    display: grid;
+    place-items: center;
+    transition: transform 0.3s var(--ease-out-back);
+  }
+  .dz-zone.over .icon { transform: scale(1.15) rotate(-6deg); }
+  .dz-zone .icon svg { width: 30px; height: 30px; }
+  .dz-zone h5 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 22px;
+    color: var(--text);
+    letter-spacing: -0.01em;
+    margin-bottom: 6px;
+  }
+  .dz-zone h5 em { font-style: italic; color: var(--accent); }
+  .dz-zone p { font-size: 14px; color: var(--text-muted); margin-bottom: 18px; }
+  .dz-zone .browse {
+    display: inline-block;
+    padding: 10px 18px;
+    background: var(--accent);
+    color: #1A1300;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13.5px;
+    font-family: var(--font-body);
+  }
+  .dz-zone .meta { margin-top: 14px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); }
+  .dz-zone input[type="file"] { display: none; }
+
+  .dz-list {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .dz-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: dz-in 0.3s var(--ease);
+  }
+  @keyframes dz-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .dz-item .filetype {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: rgba(232,179,57,0.16);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    letter-spacing: 0.06em;
+    flex-shrink: 0;
+  }
+  .dz-item .filetype.img { background: rgba(96,165,250,0.18); color: #60a5fa; }
+  .dz-item .filetype.vid { background: rgba(239,68,68,0.18); color: #f87171; }
+  .dz-item .filetype.zip { background: rgba(192,132,252,0.18); color: #c084fc; }
+  .dz-item .info { flex: 1; min-width: 0; }
+  .dz-item .info .nm { font-size: 13.5px; color: var(--text); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dz-item .info .sz { font-size: 11px; color: var(--text-muted); margin-top: 2px; font-family: var(--font-mono); }
+  .dz-item .bar {
+    flex: 0 0 80px;
+    height: 4px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .dz-item .bar::after {
+    content: "";
+    display: block;
+    height: 100%;
+    width: var(--p, 100%);
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width 0.6s ease;
+  }
+  .dz-item .x {
+    background: transparent;
+    border: 0;
+    color: var(--text-muted);
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: grid;
+    place-items: center;
+  }
+  .dz-item .x:hover { background: rgba(239,68,68,0.16); color: #f87171; }
+  .dz-item .x svg { width: 14px; height: 14px; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">UI Patterns</a>
+      <span class="sep">/</span>
+      <span class="here">File Upload Dropzone</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">6.12 · UI Pattern</span>
+    <h1 class="title">File Upload <em>Dropzone</em>.</h1>
+    <p class="tagline">Drag any file from your desktop onto the box, or click to pick. Files appear in the list with a fake progress bar that fills, plus a delete X. Real drag events.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A large dashed-border target zone where users either click to open the native file picker or drag a file from their desktop directly onto it. The zone visibly reacts to a hovering drag (border + background change, icon pulse). Once files land, they show in a list below with filename, size, file-type badge, a progress bar (real or animated), and a remove button. Standard on every upload form, image-cropping tool, and import flow.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>The drop zone is a label or div wrapping a hidden <code>&lt;input type="file" multiple&gt;</code>. JS listens for <code>dragenter</code> / <code>dragover</code> on the zone — call <code>preventDefault()</code> so the browser allows drop, add an <code>.over</code> class for the visual state. On <code>drop</code>, read <code>event.dataTransfer.files</code> and process each. On click of the zone, trigger the hidden input. Both paths funnel into one handler that creates list items, optionally with a fake upload progress animation (in production: real <code>XMLHttpRequest.upload.onprogress</code>).</p>
+      <div class="term-grid">
+        <div><b>dragenter / dragover</b><span>Must preventDefault() — otherwise the browser blocks drop</span></div>
+        <div><b>event.dataTransfer.files</b><span>FileList from the drop — same shape as input.files</span></div>
+        <div><b>Hidden input fallback</b><span>Click the zone → trigger the hidden type=file input</span></div>
+        <div><b>File-type detection</b><span>Use file.type or extension for the colored type badge</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Drag any file from your desktop onto the box, or click to pick.</p>
+    <div class="demo-shell">
+      <div class="demo dz-demo">
+        <span class="demo-badge">Live · drag &amp; drop</span>
+        <div class="dz-stage">
+          <label class="dz-zone" id="dzZone">
+            <input type="file" multiple id="dzInput" />
+            <div class="icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <h5>Drop files <em>here</em></h5>
+            <p>Or click to browse your computer.</p>
+            <span class="browse">Choose files</span>
+            <div class="meta">Max 25 MB per file · PNG, JPG, MP4, PDF, ZIP</div>
+          </label>
+          <div class="dz-list" id="dzList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 6.12 File Upload Dropzone</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a drag-and-drop file upload zone. A &lt;label&gt; element wrapping a hidden &lt;input type="file" multiple&gt;. Label styling: 2px dashed border, 14px border-radius, large padding (56px 32px), centered content, cursor:pointer, hover lifts border to accent color and tints the background. Inside: a circular 64px icon container (accent bg at 12% alpha + accent-colored upload arrow icon), a serif headline "Drop files here" with an italic accent on "here", a muted helper line ("Or click to browse"), an accent-colored "Choose files" pill button, and a mono caption with max size + accepted extensions. JavaScript: listen for dragenter/dragover on the zone — call preventDefault() so the browser allows drop, add .over class for visible state (accent border, brighter bg tint, scale 1.01, accent-glow box-shadow, scale-rotate the icon). On dragleave remove .over. On drop, preventDefault, remove .over, read event.dataTransfer.files. For each file, create a list item below: colored file-type badge (PDF / IMG / VID / ZIP — different colors), filename + size, a thin gradient progress bar that fills 0→100% over 800ms (fake upload), and a delete × button. Click × removes the item with a small fade-out.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://uppy.io" target="_blank" rel="noopener">Uppy</a><span class="desc">Open-source uploader by Transloadit — the reference dropzone</span></div></li>
+      <li><div><a href="https://react-dropzone.js.org" target="_blank" rel="noopener">react-dropzone</a><span class="desc">Tiny accessible React wrapper for the drop API</span></div></li>
+      <li><div><a href="https://github.com" target="_blank" rel="noopener">GitHub issue uploads</a><span class="desc">Drag files into any comment box for instant upload</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="6.11-toggle-switch.html" class="prev"><span class="label">← Prev</span><span class="title">6.11 Toggle Switch</span></a>
+      <a href="6.13-data-table.html" class="next"><span class="label">Next →</span><span class="title">6.13 Data Table</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const zone = document.getElementById('dzZone');
+    const input = document.getElementById('dzInput');
+    const list = document.getElementById('dzList');
+    if (!zone) return;
+
+    ['dragenter', 'dragover'].forEach(ev => zone.addEventListener(ev, (e) => {
+      e.preventDefault();
+      zone.classList.add('over');
+    }));
+    ['dragleave', 'drop'].forEach(ev => zone.addEventListener(ev, (e) => {
+      e.preventDefault();
+      zone.classList.remove('over');
+    }));
+    zone.addEventListener('drop', (e) => addFiles(e.dataTransfer.files));
+    input.addEventListener('change', (e) => addFiles(e.target.files));
+
+    function fmtSize(b) {
+      if (b < 1024) return b + ' B';
+      if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
+      return (b / 1024 / 1024).toFixed(1) + ' MB';
+    }
+    function fileBadge(f) {
+      const ext = (f.name.split('.').pop() || '').toLowerCase();
+      if (['png','jpg','jpeg','gif','webp','svg'].includes(ext)) return ['img', 'IMG'];
+      if (['mp4','mov','webm','avi'].includes(ext)) return ['vid', 'VID'];
+      if (['zip','rar','7z','tar','gz'].includes(ext)) return ['zip', 'ZIP'];
+      return ['', ext.toUpperCase().slice(0,3) || 'FILE'];
+    }
+    function addFiles(files) {
+      Array.from(files).forEach((f, i) => {
+        const [cls, label] = fileBadge(f);
+        const item = document.createElement('div');
+        item.className = 'dz-item';
+        item.innerHTML = `
+          <div class="filetype ${cls}">${label}</div>
+          <div class="info"><div class="nm">${f.name}</div><div class="sz">${fmtSize(f.size)}</div></div>
+          <div class="bar" style="--p: 0%"></div>
+          <button class="x" aria-label="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+        `;
+        list.appendChild(item);
+        // Fake upload
+        setTimeout(() => item.querySelector('.bar').style.setProperty('--p', '100%'), 100 + i * 120);
+        item.querySelector('.x').addEventListener('click', () => {
+          item.style.animation = 'dz-in 0.2s reverse';
+          setTimeout(() => item.remove(), 200);
+        });
+      });
+    }
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

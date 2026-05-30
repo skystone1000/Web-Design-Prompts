@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.8 Magnetic / Custom Cursor · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  /* ===== Live demo: Magnetic Cursor ===== */
+  .mc-demo {
+    background: #0E0E14;
+    color: #fff;
+    min-height: 620px;
+    padding: 56px 32px;
+    border-radius: var(--radius-lg);
+    position: relative;
+    overflow: hidden;
+    cursor: none;
+  }
+  .mc-demo * { cursor: none; }
+
+  .mc-cursor {
+    position: absolute;
+    pointer-events: none;
+    z-index: 50;
+    top: 0; left: 0;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    transform: translate(-50%, -50%);
+    transition: width 0.25s var(--ease-out-back), height 0.25s var(--ease-out-back), background 0.25s var(--ease), mix-blend-mode 0.2s;
+    will-change: transform;
+  }
+  .mc-cursor.hovering {
+    width: 60px; height: 60px;
+    background: rgba(255,255,255,0.95);
+    mix-blend-mode: difference;
+  }
+  .mc-cursor.hovering-cta {
+    width: 96px; height: 96px;
+    background: var(--accent);
+  }
+  .mc-cursor .label {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #1A1300;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .mc-cursor.hovering-cta .label { opacity: 1; }
+
+  .mc-hint {
+    position: absolute;
+    top: 18px; left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    background: rgba(255,255,255,0.05);
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .mc-stage {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 40px;
+    align-items: center;
+    height: 100%;
+    padding: 60px 0;
+  }
+  .mc-stage h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(36px, 6vw, 56px);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    color: #fff;
+    margin-bottom: 18px;
+  }
+  .mc-stage h3 em { font-style: italic; color: var(--accent); }
+  .mc-stage p { color: rgba(255,255,255,0.7); font-size: 16px; line-height: 1.55; max-width: 44ch; }
+
+  .mc-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 28px;
+    padding: 22px 36px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    position: relative;
+    transition: background 0.25s, transform 0.25s var(--ease-out-back);
+  }
+  .mc-cta:hover { background: rgba(255,255,255,0.12); }
+
+  .mc-right { display: flex; flex-direction: column; gap: 14px; }
+  .mc-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 22px;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    background: rgba(255,255,255,0.03);
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .mc-link:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.25); }
+  .mc-link .t { font-family: var(--font-display); font-size: 18px; font-weight: 500; }
+  .mc-link .arr { font-family: var(--font-mono); font-size: 13px; color: var(--accent); transition: transform 0.2s; }
+  .mc-link:hover .arr { transform: translateX(4px); }
+
+  @media (max-width: 720px) {
+    .mc-stage { grid-template-columns: 1fr; gap: 24px; padding: 30px 0; }
+    .mc-hint { font-size: 10px; padding: 6px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Magnetic Cursor</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.8 · Animation</span>
+    <h1 class="title">Magnetic /<br>Custom <em>Cursor</em>.</h1>
+    <p class="tagline">Hide the native cursor. Replace with a smooth dot that grows when it hovers anything interactive — and magnetically pulls the CTA toward it. Awwwards staple.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A custom cursor is a JavaScript-controlled element that follows the mouse and replaces the native arrow. It can change size, color, and label depending on what it's hovering. The "magnetic" variant goes further: when the cursor enters certain interactive elements (CTAs, links), it snaps to them and pulls them slightly toward the actual cursor position, creating a tactile gravity-like feel.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Set <code>cursor: none</code> on the container. Create an absolutely-positioned element (the custom cursor). On <code>mousemove</code>, update its <code>transform: translate(x, y)</code>. For smooth following, lerp toward the target position each animation frame. On <code>mouseenter</code> of any interactive element (with a data attribute like <code>data-cursor</code>), add a class that grows the cursor and changes its color. For magnetic CTAs, calculate the cursor's offset from the button's center and apply a translate to the button itself (10–20% of the offset).</p>
+      <div class="term-grid">
+        <div><b>cursor: none</b><span>Hide the OS cursor inside the container so only the custom one shows</span></div>
+        <div><b>requestAnimationFrame + lerp</b><span>Cursor lerps toward target each frame — smooth physics-feel</span></div>
+        <div><b>mix-blend-mode: difference</b><span>Cursor inverts colors below it — works on light AND dark sections</span></div>
+        <div><b>Magnetic offset</b><span>Button translates 10–20% of the cursor's offset from its center</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="tip"><b>Tip.</b> Always disable custom cursors below 768px (touch devices have no cursor). And keep the native cursor for form inputs — typing without a caret-cursor is jarring.</div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Move your mouse inside the demo. Hover the cards and the big CTA — feel the magnet pull.</p>
+    <div class="demo-shell">
+      <div class="demo mc-demo" id="mcDemo">
+        <span class="demo-badge" style="z-index: 60;">Live · mouse only</span>
+        <div class="mc-hint">↕ move cursor inside</div>
+        <div class="mc-cursor" id="mcCursor"><span class="label">View →</span></div>
+
+        <div class="mc-stage">
+          <div>
+            <h3>Hover anything.<br>Watch the cursor <em>react</em>.</h3>
+            <p>The dot grows on links, snaps onto the big CTA, and inverts colors over light surfaces using mix-blend-mode.</p>
+            <a class="mc-cta" data-cursor="cta" data-magnet>Start the journey</a>
+          </div>
+          <div class="mc-right">
+            <a class="mc-link" data-cursor><div class="t">Read the manifesto</div><div class="arr">→</div></a>
+            <a class="mc-link" data-cursor><div class="t">See our process</div><div class="arr">→</div></a>
+            <a class="mc-link" data-cursor><div class="t">Meet the team</div><div class="arr">→</div></a>
+            <a class="mc-link" data-cursor><div class="t">View the work</div><div class="arr">→</div></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 2.8 Magnetic Cursor</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Build a custom cursor system. Apply cursor:none to the page container and all its descendants. Create a position:absolute cursor div (16px circle, brand accent color, transform-origin center). On mousemove, set CSS variables --x and --y on the container and lerp the cursor's transform toward them via requestAnimationFrame (with a 0.15 lerp factor for smooth easing). Add mix-blend-mode:difference so the cursor inverts over light and dark backgrounds equally well. For interactive elements (links, buttons), add data-cursor attribute — on mouseenter, add a .hovering class to the cursor that grows it to 60px and changes the background to white. For magnetic CTAs (data-cursor="cta" data-magnet), additionally apply a translate to the button equal to 18% of the cursor's offset from the button's center on mousemove, returning to 0,0 on mouseleave. Show a small text label inside the cursor when over a CTA ("View →"). Disable the entire system on touch devices (window.matchMedia('(hover: none)').matches) and inside form inputs.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://cuberto.com" target="_blank" rel="noopener">Cuberto Agency</a><span class="desc">One of the most-copied custom cursor implementations</span></div></li>
+      <li><div><a href="https://www.codrops.com" target="_blank" rel="noopener">Codrops — cursor effects</a><span class="desc">Demos and tutorials for trail, magnetic, and morphing cursors</span></div></li>
+      <li><div><a href="https://www.awwwards.com/websites/cursor" target="_blank" rel="noopener">Awwwards — cursor category</a><span class="desc">Award-winning sites using custom cursor design</span></div></li>
+      <li><div><a href="https://stripe.com/sessions" target="_blank" rel="noopener">Stripe Sessions</a><span class="desc">Subtle magnetic CTAs in their event marketing pages</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.7-smooth-scroll-lenis.html" class="prev"><span class="label">← Prev</span><span class="title">2.7 Smooth scroll</span></a>
+      <a href="2.9-3d-tilt.html" class="next"><span class="label">Next →</span><span class="title">2.9 3D Card Tilt</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    const demo = document.getElementById('mcDemo');
+    const cursor = document.getElementById('mcCursor');
+    if (!demo || !cursor) return;
+    // Skip on touch
+    if (window.matchMedia && window.matchMedia('(hover: none)').matches) {
+      cursor.style.display = 'none';
+      demo.style.cursor = '';
+      return;
+    }
+    let tx = 0, ty = 0, cx = 0, cy = 0;
+    let active = false;
+    const rect = () => demo.getBoundingClientRect();
+    demo.addEventListener('mouseenter', () => { active = true; cursor.style.opacity = 1; });
+    demo.addEventListener('mouseleave', () => { active = false; cursor.style.opacity = 0; });
+    demo.addEventListener('mousemove', (e) => {
+      const r = rect();
+      tx = e.clientX - r.left;
+      ty = e.clientY - r.top;
+    });
+    function loop() {
+      cx += (tx - cx) * 0.18;
+      cy += (ty - cy) * 0.18;
+      cursor.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
+      requestAnimationFrame(loop);
+    }
+    loop();
+
+    // Hover state
+    demo.querySelectorAll('[data-cursor]').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        const variant = el.getAttribute('data-cursor');
+        cursor.classList.add('hovering');
+        if (variant === 'cta') cursor.classList.add('hovering-cta');
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.classList.remove('hovering', 'hovering-cta');
+        if (el.hasAttribute('data-magnet')) el.style.transform = '';
+      });
+    });
+
+    // Magnetic
+    demo.querySelectorAll('[data-magnet]').forEach(el => {
+      el.addEventListener('mousemove', (e) => {
+        const r = el.getBoundingClientRect();
+        const x = e.clientX - (r.left + r.width / 2);
+        const y = e.clientY - (r.top + r.height / 2);
+        el.style.transform = `translate(${x * 0.18}px, ${y * 0.18}px)`;
+      });
+    });
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

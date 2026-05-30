@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.11 Sticky Stacking Cards · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .st-demo {
+    height: 720px;
+    overflow-y: scroll;
+    background: var(--bg-elev);
+    border-radius: var(--radius-lg);
+    padding: 0;
+  }
+  .st-hint {
+    position: sticky;
+    top: 16px;
+    z-index: 30;
+    margin: 0 auto;
+    width: fit-content;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(10px);
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  .st-spacer { height: 200px; display: grid; place-items: center; color: var(--text-muted); font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; }
+
+  .st-wrap { padding: 60px 32px; }
+  .st-card {
+    position: sticky;
+    top: 80px;
+    max-width: 700px;
+    margin: 0 auto 80px;
+    padding: 48px;
+    border-radius: 22px;
+    color: #fff;
+    box-shadow: 0 22px 60px rgba(0,0,0,0.35);
+    transition: transform 0.2s;
+  }
+  .st-card:nth-child(1) { background: linear-gradient(135deg, #7C5CFF, #2c1a4a); }
+  .st-card:nth-child(2) { background: linear-gradient(135deg, #FF6B9D, #6e0080); top: 100px; }
+  .st-card:nth-child(3) { background: linear-gradient(135deg, #00D9FF, #0a3d4d); top: 120px; }
+  .st-card:nth-child(4) { background: linear-gradient(135deg, #FFB800, #7a4a00); top: 140px; }
+  .st-card .ix { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.2em; opacity: 0.7; text-transform: uppercase; margin-bottom: 18px; }
+  .st-card h4 { font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 4vw, 44px); letter-spacing: -0.02em; line-height: 1.05; margin-bottom: 14px; }
+  .st-card h4 em { font-style: italic; }
+  .st-card p { font-size: 16px; line-height: 1.55; opacity: 0.88; max-width: 46ch; }
+  .st-card .tag { display: inline-block; margin-top: 18px; padding: 6px 14px; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3); border-radius: 999px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Stacking Cards</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.11 · Animation</span>
+    <h1 class="title">Sticky Stacking <em>Cards</em>.</h1>
+    <p class="tagline">Each card pins to the top as you scroll, and the next one slides up underneath it — creating a physical stack of cards growing on top of each other.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Instead of normal sections that scroll away, each "card" sticks to the top of the viewport when it reaches it, and the next card slides up over it. By the end of the scroll, you have a deck of cards stacked on top of each other, with the latest one visible. Used by Apple product pages, Linear, Vercel pricing, and almost every modern long-scroll storytelling page.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Each card has <code>position: sticky; top: 80px</code> with the same parent. Crucially, give each card an increasing <code>top</code> offset (80px, 100px, 120px) — that's what makes them stagger as they stack, so you can see the colored top edge of the previous one peeking out. Add big <code>margin-bottom</code> so each card sticks for a full viewport before unsticking. Wrap in a parent that's tall enough (the parent's height controls how long each card stays pinned).</p>
+      <div class="term-grid">
+        <div><b>position: sticky</b><span>Each card pins relative to a shared parent</span></div>
+        <div><b>Increasing top offset</b><span>Stagger top:80px, 100px, 120px so previous cards peek out</span></div>
+        <div><b>margin-bottom on cards</b><span>Provides scroll distance — each card pins until its margin-end</span></div>
+        <div><b>Shared parent</b><span>All cards must share one parent to layer correctly</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. Cards stack on top of each other as you go.</p>
+    <div class="demo-shell">
+      <div class="demo st-demo">
+        <span class="demo-badge">Live · scroll inside</span>
+        <div class="st-hint">↓ scroll to stack</div>
+        <div class="st-wrap">
+          <div class="st-card">
+            <div class="ix">01 / Speed</div>
+            <h4>Faster than <em>any framework</em> you used last year.</h4>
+            <p>Compile in under 80ms. Hot-reload that actually reloads what changed and nothing else.</p>
+            <span class="tag">Performance</span>
+          </div>
+          <div class="st-card">
+            <div class="ix">02 / Calm</div>
+            <h4>Quiet by <em>default</em>.</h4>
+            <p>No popups. No engagement nudges. The product surface gets out of your way as you work.</p>
+            <span class="tag">Design</span>
+          </div>
+          <div class="st-card">
+            <div class="ix">03 / Trust</div>
+            <h4>Encrypted, audited, <em>boring</em>.</h4>
+            <p>SOC 2, end-to-end encryption, signed builds. The reliability nobody likes to write copy about.</p>
+            <span class="tag">Security</span>
+          </div>
+          <div class="st-card">
+            <div class="ix">04 / Care</div>
+            <h4>Made by <em>five operators</em>.</h4>
+            <p>Half the team writes code, the other half writes back to customers. The split is honest.</p>
+            <span class="tag">Team</span>
+          </div>
+        </div>
+        <div class="st-spacer">end of stack</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.11 Sticky Stacking Cards</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a sticky stacking-cards section. Wrap 4 large cards in a single parent. Each card: position:sticky, padding:48px, border-radius:22px, max-width:700px, margin:0 auto 80px (the margin-bottom gives the scroll distance each card pins for). CRITICAL: each card needs an INCREASING top offset so they stagger when stacked — card 1: top:80px, card 2: top:100px, card 3: top:120px, card 4: top:140px. As the user scrolls, each card pins to the top in turn; previous cards stay underneath with their top edge visible (because of the stagger). Each card has a different gradient background (violet, pink, cyan, amber), a small uppercase eyebrow ("01 / Speed"), a big italic-mix display headline, a paragraph, and a glass-pill tag at the bottom. Add a sticky hint badge at the very top "↓ scroll to stack". Parent container has overflow-y:scroll so the effect is scoped to the demo.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://apple.com/airpods-pro" target="_blank" rel="noopener">Apple AirPods Pro</a><span class="desc">Each feature section stacks on top of the next</span></div></li>
+      <li><div><a href="https://linear.app" target="_blank" rel="noopener">Linear.app</a><span class="desc">Subtle sticky stacks throughout the product tour</span></div></li>
+      <li><div><a href="https://www.framer.com" target="_blank" rel="noopener">Framer.com</a><span class="desc">Stacking pricing cards mid-page</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.10-number-counter.html" class="prev"><span class="label">← Prev</span><span class="title">2.10 Number Counter</span></a>
+      <a href="2.12-clip-reveal.html" class="next"><span class="label">Next →</span><span class="title">2.12 Clip-Path Reveal</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

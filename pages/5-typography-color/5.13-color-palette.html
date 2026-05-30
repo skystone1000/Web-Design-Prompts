@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>5.13 Color Palette Explorer · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .cp-demo {
+    min-height: 720px;
+    background: var(--bg-elev);
+    color: var(--text);
+    padding: 40px;
+    border-radius: var(--radius-lg);
+  }
+  .cp-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .cp-tab {
+    padding: 8px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--text-soft);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .cp-tab:hover { color: var(--text); border-color: var(--border-strong); }
+  .cp-tab.active { background: var(--accent); color: #1A1300; border-color: var(--accent); }
+
+  .cp-palette {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2px;
+    margin-bottom: 24px;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .cp-sw {
+    aspect-ratio: 1;
+    cursor: pointer;
+    position: relative;
+    transition: flex 0.3s var(--ease);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 14px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.95);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    font-weight: 600;
+  }
+  .cp-sw.light { color: rgba(0,0,0,0.85); text-shadow: 0 1px 3px rgba(255,255,255,0.4); }
+  .cp-sw .lbl { opacity: 0; transition: opacity 0.2s; }
+  .cp-sw:hover .lbl { opacity: 1; }
+  .cp-sw .copy { display: block; margin-top: 4px; opacity: 0.7; font-size: 10px; }
+
+  .cp-palette-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .cp-palette-info h4 { font-family: var(--font-display); font-size: 24px; font-weight: 500; color: var(--text); letter-spacing: -0.01em; }
+  .cp-palette-info h4 em { font-style: italic; color: var(--accent); }
+  .cp-palette-info .meta { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); }
+
+  /* Preview mockup using the palette */
+  .cp-preview {
+    margin-top: 24px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 32px;
+    transition: background 0.3s, color 0.3s, border-color 0.3s;
+  }
+  .cp-preview h5 { font-family: var(--font-display); font-size: 28px; font-weight: 400; letter-spacing: -0.02em; margin-bottom: 8px; transition: color 0.3s; }
+  .cp-preview h5 em { font-style: italic; transition: color 0.3s; }
+  .cp-preview p { font-size: 14.5px; line-height: 1.55; margin-bottom: 18px; transition: color 0.3s; }
+  .cp-preview-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 22px; }
+  .cp-preview-card { padding: 14px; border-radius: 10px; transition: background 0.3s, color 0.3s, border-color 0.3s; border: 1px solid transparent; }
+  .cp-preview-card b { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; transition: color 0.3s; }
+  .cp-preview-card span { font-size: 12px; opacity: 0.75; transition: color 0.3s; }
+  .cp-cta { display: inline-block; padding: 12px 20px; border-radius: 8px; font-weight: 500; font-size: 14px; transition: background 0.3s, color 0.3s; }
+
+  @media (max-width: 700px) {
+    .cp-palette { grid-template-columns: 1fr 1fr 1fr; }
+    .cp-preview-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Typography &amp; Color</a>
+      <span class="sep">/</span>
+      <span class="here">Color Palette Explorer</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">5.13 · Color</span>
+    <h1 class="title">Color Palette <em>Explorer</em>.</h1>
+    <p class="tagline">5 curated palettes you can browse, click any swatch to copy its hex code, and a live mockup that re-themes with each palette.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A swatch-based palette explorer where each color is clickable to copy. Picking a palette re-themes a small mockup so you can see the colors in actual UI context — text, cards, buttons. The pattern used by Coolors, Huemint, Tailwind's color docs, and most modern brand-system tools. Drop one into your design system page or onboarding so users can pick a starting theme.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Each palette is an array of 5 hex strings + a name. Rendered as a 5-column flex row of swatches that fill their cell. Click any swatch → write the hex to clipboard with <code>navigator.clipboard.writeText</code>, show a brief "copied" tag in the swatch. Selecting a palette tab updates CSS custom properties (<code>--bg, --text, --accent</code>) on the mockup container, which restyles in real time with smooth transitions. Smart text-color logic: each swatch decides text color (light vs dark) based on its luminance.</p>
+      <div class="term-grid">
+        <div><b>Hex array per palette</b><span>5 colors per palette: bg, surface, muted, text, accent</span></div>
+        <div><b>navigator.clipboard.writeText</b><span>Click swatch → copy hex, brief toast confirmation</span></div>
+        <div><b>Luminance-aware text</b><span>Each swatch chooses dark or light label based on its brightness</span></div>
+        <div><b>CSS custom properties</b><span>Mockup re-themes by swapping --bg / --text / --accent</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Pick a palette. Click any swatch to copy its hex. The mockup below re-themes.</p>
+    <div class="demo-shell">
+      <div class="demo cp-demo">
+        <span class="demo-badge">Live · click to copy</span>
+        <div class="cp-tabs" id="cpTabs"></div>
+        <div class="cp-palette-info">
+          <h4 id="cpName">— pick a palette —</h4>
+          <div class="meta" id="cpMeta">5 colors · click to copy hex</div>
+        </div>
+        <div class="cp-palette" id="cpPalette"></div>
+
+        <div class="cp-preview" id="cpPreview">
+          <h5>Aurora <em>preview</em></h5>
+          <p>Sample copy in the preview — body text uses the muted color, headlines use the dominant text color, accent appears only on the CTA.</p>
+          <div class="cp-preview-cards" id="cpCards">
+            <div class="cp-preview-card"><b>Surface</b><span>Card background</span></div>
+            <div class="cp-preview-card"><b>Muted</b><span>Secondary type</span></div>
+            <div class="cp-preview-card"><b>Accent</b><span>CTA + active states</span></div>
+          </div>
+          <a class="cp-cta" id="cpCta">Use this palette →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 5.13 Color Palette Explorer</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a color palette explorer for a design system docs page. Define 5 curated palettes (data structure: each has name + array of 5 hex colors representing [bg, surface, muted, text, accent]). Layout: (1) ROW OF TABS — one per palette name, accent-styled when active. (2) Below tabs: palette title (display-serif h4 with italic accent word) + small "5 colors · click to copy hex" caption. (3) MAIN PALETTE — 5-column grid with no gap, border-radius:14px overflow:hidden. Each swatch is aspect-ratio:1 with the color as background, label (uppercase mono) and hex code (smaller mono) revealed in the bottom-left on hover. Auto-pick label color (light or dark) per swatch using a luminance check on the hex value. Click swatch → copy hex via navigator.clipboard.writeText, show "Copied!" momentarily inside the swatch. (4) PREVIEW MOCKUP card below — when palette changes, update its CSS custom properties (--bg, --surface, --muted, --text, --accent) so it re-themes live with a 0.3s background/color transition. Mockup contains: a serif headline using --text, a paragraph using --muted, three small surface cards using --surface backgrounds and --muted captions, and a CTA button using --accent. This way the user sees the palette in actual UI context.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://coolors.co" target="_blank" rel="noopener">Coolors</a><span class="desc">The original swatch-based palette generator</span></div></li>
+      <li><div><a href="https://huemint.com" target="_blank" rel="noopener">Huemint</a><span class="desc">AI-generated palettes shown in actual UI mockups</span></div></li>
+      <li><div><a href="https://tailwindcss.com/docs/customizing-colors" target="_blank" rel="noopener">Tailwind — Colors</a><span class="desc">Their docs page is a great copy-able-swatch reference</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="5.12-mix-blend-text.html" class="prev"><span class="label">← Prev</span><span class="title">5.12 Mix-blend Text</span></a>
+      <a href="../6-ui-patterns/index.html" class="next"><span class="label">Next chapter →</span><span class="title">UI Patterns</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const palettes = [
+      { name: 'Quiet Dark', colors: ['#0E0E14', '#1B1B23', '#5C5A55', '#F2EFE7', '#E8B339'] },
+      { name: 'Warm Paper', colors: ['#F8F4EA', '#FFFFFF', '#8B8A82', '#1A1814', '#8b1a1a'] },
+      { name: 'Aurora SaaS', colors: ['#0D0D1A', '#111827', '#888888', '#F1F1EE', '#0066FF'] },
+      { name: 'Vapor Pastel', colors: ['#F8B8E8', '#FFD9F0', '#A076B0', '#3D2A4D', '#FF1493'] },
+      { name: 'Field Heritage', colors: ['#F4EDD9', '#E8D9A8', '#8A7544', '#2A1D0A', '#E63946'] },
+    ];
+    const tabsEl = document.getElementById('cpTabs');
+    const paletteEl = document.getElementById('cpPalette');
+    const name = document.getElementById('cpName');
+    const meta = document.getElementById('cpMeta');
+    const preview = document.getElementById('cpPreview');
+    const cards = document.getElementById('cpCards');
+    const cta = document.getElementById('cpCta');
+
+    function lum(hex) {
+      const c = hex.replace('#', '');
+      const r = parseInt(c.substr(0, 2), 16) / 255;
+      const g = parseInt(c.substr(2, 2), 16) / 255;
+      const b = parseInt(c.substr(4, 2), 16) / 255;
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    }
+    function labels(i) { return ['Background', 'Surface', 'Muted', 'Text', 'Accent'][i] || ''; }
+
+    function render(idx) {
+      const p = palettes[idx];
+      // tabs
+      tabsEl.innerHTML = palettes.map((pp, i) => `<button class="cp-tab ${i === idx ? 'active' : ''}" data-i="${i}">${pp.name}</button>`).join('');
+      // header
+      name.innerHTML = `${p.name} <em>palette</em>`;
+      // swatches
+      paletteEl.innerHTML = p.colors.map((c, i) => {
+        const light = lum(c) > 0.6;
+        return `<div class="cp-sw ${light ? 'light' : ''}" style="background:${c}" data-hex="${c}"><span class="lbl">${labels(i)}<span class="copy">${c}</span></span></div>`;
+      }).join('');
+      // preview
+      preview.style.background = p.colors[1];
+      preview.style.borderColor = p.colors[2] + '33';
+      preview.querySelector('h5').style.color = p.colors[3];
+      preview.querySelector('h5 em').style.color = p.colors[4];
+      preview.querySelector('p').style.color = p.colors[2];
+      cards.querySelectorAll('.cp-preview-card').forEach((card, i) => {
+        const bg = [p.colors[0], p.colors[2] + '22', p.colors[4] + '22'][i];
+        const bd = [p.colors[2] + '33', p.colors[2] + '33', p.colors[4] + '55'][i];
+        card.style.background = bg;
+        card.style.borderColor = bd;
+        card.querySelector('b').style.color = p.colors[3];
+        card.querySelector('span').style.color = p.colors[2];
+      });
+      cta.style.background = p.colors[4];
+      cta.style.color = lum(p.colors[4]) > 0.6 ? p.colors[0] : '#fff';
+    }
+
+    tabsEl.addEventListener('click', (e) => {
+      const t = e.target.closest('.cp-tab');
+      if (t) render(parseInt(t.getAttribute('data-i'), 10));
+    });
+    paletteEl.addEventListener('click', (e) => {
+      const s = e.target.closest('.cp-sw');
+      if (!s) return;
+      const hex = s.getAttribute('data-hex');
+      navigator.clipboard.writeText(hex).then(() => {
+        const lbl = s.querySelector('.lbl');
+        const original = lbl.innerHTML;
+        lbl.innerHTML = `Copied!<span class="copy">${hex}</span>`;
+        lbl.style.opacity = 1;
+        setTimeout(() => { lbl.innerHTML = original; lbl.style.opacity = ''; }, 1100);
+      });
+    });
+    render(0);
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

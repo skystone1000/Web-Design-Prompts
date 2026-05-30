@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>6.10 Stat / KPI Card · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .kp-demo {
+    min-height: 620px;
+    background: var(--bg-elev);
+    color: var(--text);
+    padding: 40px;
+    border-radius: var(--radius-lg);
+  }
+  .kp-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .kp-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .kp-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+  .kp-head {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 12px;
+  }
+  .kp-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); }
+  .kp-trend { display: inline-flex; align-items: center; gap: 4px; font-family: var(--font-mono); font-size: 11px; font-weight: 600; padding: 3px 7px; border-radius: 5px; }
+  .kp-trend.up { background: rgba(34,197,94,0.16); color: #4ade80; }
+  .kp-trend.down { background: rgba(239,68,68,0.16); color: #f87171; }
+  .kp-trend.flat { background: rgba(255,255,255,0.08); color: var(--text-muted); }
+  .kp-value {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 36px;
+    letter-spacing: -0.025em;
+    line-height: 1;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 4px;
+  }
+  .kp-value .pre { font-size: 0.5em; color: var(--text-muted); margin-right: 2px; }
+  .kp-value .suf { font-size: 0.4em; color: var(--text-muted); margin-left: 4px; }
+  .kp-context { font-size: 12px; color: var(--text-muted); }
+
+  /* Sparkline */
+  .kp-spark { margin-top: 14px; height: 40px; width: 100%; display: block; }
+  .kp-spark .ln { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .kp-spark .area { opacity: 0.18; }
+  .kp-card.up .kp-spark .ln { stroke: #4ade80; }
+  .kp-card.up .kp-spark .area { fill: #4ade80; }
+  .kp-card.down .kp-spark .ln { stroke: #f87171; }
+  .kp-card.down .kp-spark .area { fill: #f87171; }
+  .kp-card.accent .kp-spark .ln { stroke: var(--accent); }
+  .kp-card.accent .kp-spark .area { fill: var(--accent); }
+
+  /* Larger featured card */
+  .kp-card.feat { grid-column: span 2; grid-row: span 2; padding: 28px; }
+  .kp-card.feat .kp-value { font-size: 76px; }
+  .kp-card.feat .kp-spark { height: 110px; margin-top: 22px; }
+  .kp-card.feat .kp-context { font-size: 14px; line-height: 1.5; }
+  .kp-card.feat .kp-mini {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+  }
+  .kp-mini > div .l { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); }
+  .kp-mini > div .v { font-family: var(--font-display); font-size: 20px; color: var(--text); margin-top: 2px; }
+
+  @media (max-width: 900px) { .kp-grid { grid-template-columns: 1fr 1fr; } .kp-card.feat { grid-column: span 2; grid-row: span 1; } }
+  @media (max-width: 520px) { .kp-grid { grid-template-columns: 1fr; } .kp-card.feat { grid-column: span 1; } }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">UI Patterns</a>
+      <span class="sep">/</span>
+      <span class="here">Stat / KPI Card</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">6.10 · UI Pattern</span>
+    <h1 class="title">Stat / <em>KPI</em> Card.</h1>
+    <p class="tagline">Dashboard metric tile — label, big number, delta pill, and a sparkline trend. Plus a featured 2× variant with mini breakdown.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>The default unit of every dashboard: a card showing one metric (Revenue, Users, Conversion rate) with its current value, a trend pill (+ or − vs previous period), a one-line context message, and a small sparkline chart underneath. Compact enough to fit 4–6 in a row at the top of a dashboard, expressive enough to communicate the headline numbers at a glance. The pattern that powers every analytics tool from Linear Insights to Stripe Dashboard.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>A card with header row (small uppercase label + colored delta pill), big tabular-nums value (with optional prefix like "$" and suffix like "%"), one line of context ("vs last week"), and an SVG sparkline below. The sparkline is a 2-line SVG path: the trend line, plus a filled area beneath at low opacity. Green = up, red = down, accent color = neutral hero metric. The featured variant spans 2×2 cells with a larger sparkline and a mini-grid breakdown of sub-metrics beneath.</p>
+      <div class="term-grid">
+        <div><b>Delta pill</b><span>+/- vs previous period — green if up, red if down, gray if flat</span></div>
+        <div><b>Tabular numerals</b><span>font-variant-numeric:tabular-nums keeps digits the same width</span></div>
+        <div><b>SVG sparkline</b><span>Line path + area path under it at low opacity — no library required</span></div>
+        <div><b>2×2 featured variant</b><span>Hero metric spans wider with mini-grid of sub-metrics below</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <div class="demo-shell">
+      <div class="demo kp-demo">
+        <span class="demo-badge">Live</span>
+        <div class="kp-grid">
+
+          <div class="kp-card feat accent">
+            <div class="kp-head">
+              <span class="kp-label">Monthly recurring revenue</span>
+              <span class="kp-trend up">↑ 12.4%</span>
+            </div>
+            <div class="kp-value"><span class="pre">$</span>84,208</div>
+            <div class="kp-context">vs $74,920 last month · best month since 2024 Q4</div>
+            <svg class="kp-spark" viewBox="0 0 300 100" preserveAspectRatio="none">
+              <path class="area" d="M0 80 L 30 70 L 60 75 L 90 60 L 120 65 L 150 50 L 180 55 L 210 40 L 240 30 L 270 35 L 300 20 L 300 100 L 0 100 Z"/>
+              <path class="ln" d="M0 80 L 30 70 L 60 75 L 90 60 L 120 65 L 150 50 L 180 55 L 210 40 L 240 30 L 270 35 L 300 20"/>
+            </svg>
+            <div class="kp-mini">
+              <div><div class="l">Customers</div><div class="v">312</div></div>
+              <div><div class="l">ARPU</div><div class="v">$270</div></div>
+              <div><div class="l">Churn</div><div class="v">1.8%</div></div>
+            </div>
+          </div>
+
+          <div class="kp-card up">
+            <div class="kp-head"><span class="kp-label">Active users</span><span class="kp-trend up">↑ 8.2%</span></div>
+            <div class="kp-value">12,408</div>
+            <div class="kp-context">vs 11,468 last week</div>
+            <svg class="kp-spark" viewBox="0 0 200 40" preserveAspectRatio="none">
+              <path class="area" d="M0 30 L 20 28 L 40 22 L 60 25 L 80 18 L 100 20 L 120 12 L 140 14 L 160 10 L 180 8 L 200 6 L 200 40 L 0 40 Z"/>
+              <path class="ln" d="M0 30 L 20 28 L 40 22 L 60 25 L 80 18 L 100 20 L 120 12 L 140 14 L 160 10 L 180 8 L 200 6"/>
+            </svg>
+          </div>
+
+          <div class="kp-card down">
+            <div class="kp-head"><span class="kp-label">Orders</span><span class="kp-trend down">↓ 2.1%</span></div>
+            <div class="kp-value">1,927</div>
+            <div class="kp-context">vs 1,968 last week</div>
+            <svg class="kp-spark" viewBox="0 0 200 40" preserveAspectRatio="none">
+              <path class="area" d="M0 12 L 20 18 L 40 15 L 60 22 L 80 20 L 100 28 L 120 24 L 140 26 L 160 22 L 180 30 L 200 28 L 200 40 L 0 40 Z"/>
+              <path class="ln" d="M0 12 L 20 18 L 40 15 L 60 22 L 80 20 L 100 28 L 120 24 L 140 26 L 160 22 L 180 30 L 200 28"/>
+            </svg>
+          </div>
+
+          <div class="kp-card up">
+            <div class="kp-head"><span class="kp-label">Conversion</span><span class="kp-trend up">↑ 0.4pp</span></div>
+            <div class="kp-value">3.8<span class="suf">%</span></div>
+            <div class="kp-context">vs 3.4% last week</div>
+            <svg class="kp-spark" viewBox="0 0 200 40" preserveAspectRatio="none">
+              <path class="area" d="M0 25 L 20 26 L 40 24 L 60 22 L 80 20 L 100 18 L 120 19 L 140 16 L 160 14 L 180 13 L 200 10 L 200 40 L 0 40 Z"/>
+              <path class="ln" d="M0 25 L 20 26 L 40 24 L 60 22 L 80 20 L 100 18 L 120 19 L 140 16 L 160 14 L 180 13 L 200 10"/>
+            </svg>
+          </div>
+
+          <div class="kp-card up">
+            <div class="kp-head"><span class="kp-label">Avg session</span><span class="kp-trend up">↑ 12s</span></div>
+            <div class="kp-value">4m<span class="suf">32s</span></div>
+            <div class="kp-context">vs 4m 20s last week</div>
+            <svg class="kp-spark" viewBox="0 0 200 40" preserveAspectRatio="none">
+              <path class="area" d="M0 28 L 20 26 L 40 22 L 60 24 L 80 20 L 100 18 L 120 14 L 140 16 L 160 12 L 180 10 L 200 8 L 200 40 L 0 40 Z"/>
+              <path class="ln" d="M0 28 L 20 26 L 40 22 L 60 24 L 80 20 L 100 18 L 120 14 L 140 16 L 160 12 L 180 10 L 200 8"/>
+            </svg>
+          </div>
+
+          <div class="kp-card">
+            <div class="kp-head"><span class="kp-label">Uptime</span><span class="kp-trend flat">— flat</span></div>
+            <div class="kp-value">99.96<span class="suf">%</span></div>
+            <div class="kp-context">trailing 12 months</div>
+            <svg class="kp-spark" viewBox="0 0 200 40" preserveAspectRatio="none">
+              <path class="area" d="M0 18 L 200 18 L 200 40 L 0 40 Z" style="fill:rgba(255,255,255,0.08);"/>
+              <path class="ln" d="M0 18 L 200 18" style="stroke:rgba(255,255,255,0.4);"/>
+            </svg>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 6.10 Stat / KPI Card</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a dashboard KPI card grid with 6 metrics. Container: 4-column responsive CSS Grid, gap:14px. Each card: padding:20px, border:1px solid border-color, border-radius:14px, hover lift transform:translateY(-2px). Card layout: HEADER ROW with a tiny uppercase mono label on the left and a colored delta pill on the right ("↑ 8.2%" green for up, "↓ 2.1%" red for down, "— flat" gray). BIG VALUE in display serif at 36px with font-variant-numeric:tabular-nums and an optional prefix ($) or suffix (%, s, pp). CONTEXT line below ("vs $74,920 last month"). SPARKLINE at the bottom: an SVG with preserveAspectRatio:none, ~40px tall, containing TWO paths — a line path (stroke 2px, fill:none, color matches trend) and an area path (same shape closed at the bottom, fill same color, opacity 0.18). Featured variant: .kp-card.feat spans grid-column:span 2 grid-row:span 2 with larger value (76px), larger sparkline (110px tall), and a 3-column mini breakdown grid at the bottom showing sub-metrics. Trend colors: .up green #4ade80, .down red #f87171, accent purple/amber for hero metrics.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://stripe.com/dashboard" target="_blank" rel="noopener">Stripe Dashboard</a><span class="desc">The reference KPI cards with delta + sparkline</span></div></li>
+      <li><div><a href="https://vercel.com" target="_blank" rel="noopener">Vercel Analytics</a><span class="desc">Performance metrics in clean card form</span></div></li>
+      <li><div><a href="https://recharts.org" target="_blank" rel="noopener">Recharts</a><span class="desc">Lightweight React chart lib for the sparklines</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="6.9-avatar-stack.html" class="prev"><span class="label">← Prev</span><span class="title">6.9 Avatar Stack</span></a>
+      <a href="6.11-toggle-switch.html" class="next"><span class="label">Next →</span><span class="title">6.11 Toggle Switch</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

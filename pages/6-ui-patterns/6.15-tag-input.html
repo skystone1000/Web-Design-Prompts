@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>6.15 Tag / Chip Input · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .ti-demo {
+    min-height: 620px;
+    background: var(--bg-elev);
+    color: var(--text);
+    padding: 56px 40px;
+    border-radius: var(--radius-lg);
+  }
+  .ti-stage { max-width: 580px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+  .ti-block { }
+  .ti-block label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .ti-field {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    min-height: 48px;
+  }
+  .ti-field:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(232,179,57,0.15); }
+
+  .ti-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 6px 6px 12px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--text);
+    animation: ti-in 0.18s var(--ease-out-back);
+  }
+  @keyframes ti-in { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
+  .ti-chip .x {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    border: 0;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: background 0.15s, color 0.15s;
+  }
+  .ti-chip .x:hover { background: rgba(239,68,68,0.18); color: #f87171; }
+  .ti-chip .x svg { width: 10px; height: 10px; }
+  .ti-chip.invalid { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.4); color: #f87171; }
+  .ti-chip.invalid .x { background: rgba(239,68,68,0.2); }
+
+  /* Color-coded category chips */
+  .ti-chip.cat-1 { background: rgba(124,92,255,0.15); border-color: rgba(124,92,255,0.3); color: #b29eff; }
+  .ti-chip.cat-2 { background: rgba(255,107,157,0.14); border-color: rgba(255,107,157,0.3); color: #ff9bb9; }
+  .ti-chip.cat-3 { background: rgba(0,217,255,0.12); border-color: rgba(0,217,255,0.3); color: #87e8ff; }
+  .ti-chip.cat-4 { background: rgba(255,184,0,0.14); border-color: rgba(255,184,0,0.3); color: #fcd56e; }
+
+  .ti-input {
+    background: transparent;
+    border: 0;
+    outline: 0;
+    color: var(--text);
+    font-size: 14px;
+    flex: 1;
+    min-width: 140px;
+    padding: 6px 8px;
+  }
+  .ti-input::placeholder { color: var(--text-muted); }
+
+  /* Suggestion dropdown */
+  .ti-field { position: relative; }
+  .ti-sug {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0; right: 0;
+    background: #14141B;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 14px 30px rgba(0,0,0,0.4);
+    padding: 6px;
+    z-index: 5;
+    display: none;
+    max-height: 240px;
+    overflow-y: auto;
+  }
+  .ti-sug.show { display: block; }
+  .ti-sug button {
+    width: 100%;
+    padding: 10px 12px;
+    text-align: left;
+    background: transparent;
+    border: 0;
+    color: var(--text);
+    border-radius: 7px;
+    cursor: pointer;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 13.5px;
+  }
+  .ti-sug button .av { width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #1A1300; font-size: 11px; font-weight: 700; display: grid; place-items: center; flex-shrink: 0; }
+  .ti-sug button .nm { color: var(--text); }
+  .ti-sug button .em { color: var(--text-muted); font-size: 11.5px; margin-left: auto; font-family: var(--font-mono); }
+  .ti-sug button:hover, .ti-sug button.active { background: rgba(255,255,255,0.06); }
+
+  .ti-hint { margin-top: 8px; font-size: 12px; color: var(--text-muted); }
+  .ti-hint kbd { padding: 1px 5px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: 3px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">UI Patterns</a>
+      <span class="sep">/</span>
+      <span class="here">Tag / Chip Input</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">6.15 · UI Pattern</span>
+    <h1 class="title">Tag / <em>Chip</em> Input.</h1>
+    <p class="tagline">Type an email + Enter to turn it into a removable chip. Plus suggestion dropdown with autocomplete and email validation. The Gmail "To:" pattern.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>An input that accumulates multiple values as little chips you can edit or remove individually. Typing a value and pressing Enter (or comma) turns the text into a chip; pressing Backspace on an empty input removes the last chip. Often paired with an autocomplete dropdown so users can pick from teammates / tags / cities instead of typing each one. Email recipients, hashtags, post tags, multi-select filters.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>A flex container that holds the chips AND an inline <code>&lt;input&gt;</code>. Listen for <code>keydown</code> on the input: Enter or "," → add a chip from current value, clear input. Backspace on empty input → remove last chip. Each chip is a pill with an × button. For autocomplete, as user types, filter a candidate list and show a dropdown below the field. Arrow keys move highlight; Enter selects. Validate each chip (e.g., email regex) and mark invalid ones with a red style.</p>
+      <div class="term-grid">
+        <div><b>Enter / comma to chip</b><span>Two keys to trigger commit — comma is most natural for emails</span></div>
+        <div><b>Backspace on empty</b><span>Removes the last chip — fastest way to undo a typo</span></div>
+        <div><b>Validation per chip</b><span>Mark invalid chips with a red style — non-blocking, just visible</span></div>
+        <div><b>Autocomplete dropdown</b><span>Filter suggestions as the user types — arrow keys + enter to pick</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Try the first field: type and press Enter, type "han" to see suggestions, press Backspace on empty to remove the last chip. Second field is colored category tags.</p>
+    <div class="demo-shell">
+      <div class="demo ti-demo">
+        <span class="demo-badge">Live · type + Enter</span>
+        <div class="ti-stage">
+
+          <div class="ti-block">
+            <label>To recipients</label>
+            <div class="ti-field" id="tiField1">
+              <span class="ti-chip">hannah@fieldco.com<button class="x" aria-label="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg></button></span>
+              <span class="ti-chip">theo@obys.agency<button class="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg></button></span>
+              <input class="ti-input" type="text" id="tiInput1" placeholder="Type an email and press Enter…" />
+              <div class="ti-sug" id="tiSug"></div>
+            </div>
+            <div class="ti-hint"><kbd>↵</kbd> or <kbd>,</kbd> to add · <kbd>⌫</kbd> on empty to remove last</div>
+          </div>
+
+          <div class="ti-block">
+            <label>Categories</label>
+            <div class="ti-field" id="tiField2">
+              <span class="ti-chip cat-1">design<button class="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg></button></span>
+              <span class="ti-chip cat-2">brand-system<button class="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg></button></span>
+              <span class="ti-chip cat-3">editorial<button class="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg></button></span>
+              <span class="ti-chip cat-4">typography<button class="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg></button></span>
+              <input class="ti-input" type="text" id="tiInput2" placeholder="Add a tag…" />
+            </div>
+            <div class="ti-hint">Color cycles through 4 categories</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 6.15 Tag / Chip Input</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a chip / tag input component (Gmail "To:" pattern). Container: padding:8px, border-radius:12px, flex-wrap:wrap, gap:6px, position:relative. focus-within state grows the border to accent + adds glow shadow. Chips: pill-shaped (border-radius:999px, padding:6px 12px on left, 6px on right), each with a tiny circular × button that hovers red. Add a new-chip insertion animation (scale 0.85→1 + opacity 0→1, 0.18s spring). Inline input element: transparent background, no border/outline, flex:1, min-width:140px. Keyboard: pressing Enter or "," commits the current input value to a new chip and clears the input; Backspace on EMPTY input removes the last chip. Validate emails with a regex — mark invalid chips with a red-tinted background and red × button. Add an absolutely-positioned suggestion dropdown below the input that appears as the user types and matches existing candidates (show avatar + name + email). Arrow keys move .active highlight, Enter picks. Second variant: tag categories with 4 color classes that cycle as new tags are added (cat-1 violet, cat-2 pink, cat-3 cyan, cat-4 amber).</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://gmail.com" target="_blank" rel="noopener">Gmail compose</a><span class="desc">The reference "To:" recipient chip pattern</span></div></li>
+      <li><div><a href="https://github.com" target="_blank" rel="noopener">GitHub issue labels</a><span class="desc">Tag chips with autocomplete + color coding</span></div></li>
+      <li><div><a href="https://react-select.com" target="_blank" rel="noopener">React Select</a><span class="desc">Composable select / multi-tag input library</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="6.14-empty-state.html" class="prev"><span class="label">← Prev</span><span class="title">6.14 Empty State</span></a>
+      <a href="6.16-range-slider.html" class="next"><span class="label">Next →</span><span class="title">6.16 Range Slider</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const candidates = [
+      { name: 'Hannah Kveld', email: 'hannah@fieldco.com' },
+      { name: 'Theo Mårsson', email: 'theo@obys.agency' },
+      { name: 'Soraya Naz', email: 'soraya@quill.dev' },
+      { name: 'Dev Khanna', email: 'dev@aurora.app' },
+      { name: 'Maya Reid', email: 'maya@argent.io' },
+      { name: 'Rauno Bjørn', email: 'rauno@linear.app' },
+      { name: 'Lina Park', email: 'lina@hex.games' },
+      { name: 'Aditya M.', email: 'aditya@aurora.app' },
+    ];
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const xsvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+
+    // ----- Field 1: email recipients with suggestions -----
+    const f1 = document.getElementById('tiField1');
+    const inp1 = document.getElementById('tiInput1');
+    const sug = document.getElementById('tiSug');
+    let active = 0;
+
+    function addChip1(text) {
+      const ok = emailRe.test(text);
+      // skip duplicates
+      if (Array.from(f1.querySelectorAll('.ti-chip')).some(c => c.firstChild.textContent === text)) return;
+      const chip = document.createElement('span');
+      chip.className = 'ti-chip' + (ok ? '' : ' invalid');
+      chip.innerHTML = `${text}<button class="x" aria-label="Remove">${xsvg}</button>`;
+      f1.insertBefore(chip, inp1);
+    }
+    function getSugs(q) {
+      const taken = Array.from(f1.querySelectorAll('.ti-chip')).map(c => c.firstChild.textContent);
+      return candidates.filter(c => !taken.includes(c.email) && (
+        c.email.toLowerCase().includes(q.toLowerCase()) || c.name.toLowerCase().includes(q.toLowerCase())
+      )).slice(0, 5);
+    }
+    function renderSug() {
+      const q = inp1.value.trim();
+      if (!q) { sug.classList.remove('show'); return; }
+      const list = getSugs(q);
+      if (!list.length) { sug.classList.remove('show'); return; }
+      active = Math.min(active, list.length - 1);
+      sug.innerHTML = list.map((s, i) => `<button data-email="${s.email}" class="${i === active ? 'active' : ''}"><span class="av">${s.name.split(' ').map(w => w[0]).slice(0,2).join('')}</span><span class="nm">${s.name}</span><span class="em">${s.email}</span></button>`).join('');
+      sug.classList.add('show');
+    }
+    inp1.addEventListener('input', () => { active = 0; renderSug(); });
+    inp1.addEventListener('keydown', (e) => {
+      const list = sug.classList.contains('show') ? sug.querySelectorAll('button') : [];
+      if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault();
+        if (list.length) {
+          const sel = list[active];
+          addChip1(sel.dataset.email);
+        } else if (inp1.value.trim()) {
+          addChip1(inp1.value.trim().replace(/,$/, ''));
+        }
+        inp1.value = ''; sug.classList.remove('show');
+      } else if (e.key === 'Backspace' && !inp1.value) {
+        const chips = f1.querySelectorAll('.ti-chip');
+        if (chips.length) chips[chips.length - 1].remove();
+      } else if (e.key === 'ArrowDown' && list.length) {
+        e.preventDefault();
+        active = Math.min(list.length - 1, active + 1);
+        renderSug();
+      } else if (e.key === 'ArrowUp' && list.length) {
+        e.preventDefault();
+        active = Math.max(0, active - 1);
+        renderSug();
+      } else if (e.key === 'Escape') { sug.classList.remove('show'); }
+    });
+    sug.addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-email]');
+      if (b) { addChip1(b.dataset.email); inp1.value = ''; sug.classList.remove('show'); inp1.focus(); }
+    });
+
+    // Global removal handlers
+    document.addEventListener('click', (e) => {
+      const x = e.target.closest('.ti-chip .x');
+      if (x) x.parentElement.remove();
+    });
+    // Click field focuses input
+    document.querySelectorAll('.ti-field').forEach(f => {
+      f.addEventListener('click', (e) => { if (e.target === f) f.querySelector('input').focus(); });
+    });
+
+    // ----- Field 2: colored categories (cycling colors) -----
+    const f2 = document.getElementById('tiField2');
+    const inp2 = document.getElementById('tiInput2');
+    function nextCat() {
+      const chips = f2.querySelectorAll('.ti-chip');
+      return ((chips.length) % 4) + 1;
+    }
+    function addChip2(text) {
+      const cat = nextCat();
+      const chip = document.createElement('span');
+      chip.className = `ti-chip cat-${cat}`;
+      chip.innerHTML = `${text}<button class="x">${xsvg}</button>`;
+      f2.insertBefore(chip, inp2);
+    }
+    inp2.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault();
+        const v = inp2.value.trim().replace(/,$/, '');
+        if (v) { addChip2(v); inp2.value = ''; }
+      } else if (e.key === 'Backspace' && !inp2.value) {
+        const chips = f2.querySelectorAll('.ti-chip');
+        if (chips.length) chips[chips.length - 1].remove();
+      }
+    });
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>6.9 Avatar Stack · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .av-demo {
+    min-height: 620px;
+    background: var(--bg-elev);
+    color: var(--text);
+    padding: 50px 40px;
+    border-radius: var(--radius-lg);
+  }
+  .av-stage { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+
+  .av-card {
+    padding: 22px 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .av-card .info { flex: 1; min-width: 200px; }
+  .av-card h5 { font-family: var(--font-display); font-weight: 500; font-size: 18px; color: var(--text); margin-bottom: 4px; letter-spacing: -0.01em; }
+  .av-card p { font-size: 13.5px; color: var(--text-muted); line-height: 1.5; }
+
+  .av-stack {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .av-stack .av {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    border: 2px solid var(--bg-card);
+    margin-left: -10px;
+    transition: transform 0.2s var(--ease-out-back), margin-left 0.2s;
+    cursor: pointer;
+    position: relative;
+  }
+  .av-stack .av:first-child { margin-left: 0; }
+  .av-stack .av:hover { transform: translateY(-3px); z-index: 10; }
+  .av-stack:hover .av { margin-left: -4px; }
+  .av-stack:hover .av:first-child { margin-left: 0; }
+  .av-stack .more {
+    background: var(--bg-elev);
+    color: var(--text-muted);
+    border-color: var(--border);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+
+  .av-1 .av:nth-child(1) { background: linear-gradient(135deg, #FF6B9D, #6e0080); }
+  .av-1 .av:nth-child(2) { background: linear-gradient(135deg, #7C5CFF, #2c1a4a); }
+  .av-1 .av:nth-child(3) { background: linear-gradient(135deg, #00D9FF, #0a3d4d); }
+  .av-1 .av:nth-child(4) { background: linear-gradient(135deg, #FFB800, #7a4a00); }
+  .av-1 .av:nth-child(5) { background: linear-gradient(135deg, #6FB5A8, #1A1814); }
+
+  /* Larger size variant */
+  .av-stack.lg .av { width: 48px; height: 48px; font-size: 13px; }
+  /* Smaller XS variant */
+  .av-stack.xs .av { width: 26px; height: 26px; font-size: 9px; border-width: 1.5px; }
+
+  /* Online indicator */
+  .av-stack .av.online::after {
+    content: "";
+    position: absolute;
+    bottom: -2px; right: -2px;
+    width: 10px; height: 10px;
+    background: #4ade80;
+    border-radius: 50%;
+    border: 2px solid var(--bg-card);
+  }
+
+  /* Tooltip on hover (CSS only) */
+  .av-stack .av {
+    position: relative;
+  }
+  .av-stack .av[data-name]::before {
+    content: attr(data-name);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #14141B;
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 4px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s;
+    border: 1px solid var(--border);
+  }
+  .av-stack .av:hover[data-name]::before { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">UI Patterns</a>
+      <span class="sep">/</span>
+      <span class="here">Avatar Stack</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">6.9 · UI Pattern</span>
+    <h1 class="title">Avatar <em>Stack</em>.</h1>
+    <p class="tagline">Overlapping circles representing a group, with a "+N more" indicator at the end. Hover any avatar to see a tooltip. The way Linear, GitHub, Slack show participants.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A compact way to show many people/contributors in a tiny horizontal space. Each avatar overlaps the previous by ~10px so you can see 4–6 people in the room a single card takes. If there are more than will fit, the last circle becomes "+12" or "+99". Used wherever a list of participants must be acknowledged without taking up real estate: PR reviewers, project members, comment threads, online indicators.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>A flex container holding circular avatar elements. Each subsequent avatar gets a <code>margin-left: -10px</code> to overlap the previous. The avatar's <code>border: 2px solid bgColor</code> (same as the card background) cuts a visible halo so the circles look distinct. The "+N" overflow is just another circle styled with a muted background and the number text. On hover, each avatar lifts (<code>translateY(-3px)</code>) and gets <code>z-index: 10</code> so it pops above the others. Optional: tooltip with the user's name via <code>::before</code> with <code>content: attr(data-name)</code>.</p>
+      <div class="term-grid">
+        <div><b>margin-left: -10px</b><span>Overlap each avatar with the previous by ~30% of size</span></div>
+        <div><b>border: solid bgColor</b><span>Border in the parent's background — creates a visible gap between</span></div>
+        <div><b>z-index on hover</b><span>Hovered avatar lifts above others — visible and tappable</span></div>
+        <div><b>+N overflow</b><span>Final circle shows count when group exceeds visible limit</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Hover any avatar — it lifts and shows a tooltip. Hover the whole stack — the overlap spreads.</p>
+    <div class="demo-shell">
+      <div class="demo av-demo">
+        <span class="demo-badge">Live · hover</span>
+        <div class="av-stage">
+          <div class="av-card">
+            <div class="info">
+              <h5>Q2 launch plan</h5>
+              <p>5 reviewers · last updated 2h ago</p>
+            </div>
+            <div class="av-stack av-1">
+              <div class="av online" data-name="Hannah Kveld">HK</div>
+              <div class="av online" data-name="Theo Mårsson">TM</div>
+              <div class="av" data-name="Soraya Naz">SN</div>
+              <div class="av online" data-name="Dev Khanna">DK</div>
+              <div class="av" data-name="Maya Reid">MR</div>
+            </div>
+          </div>
+
+          <div class="av-card">
+            <div class="info">
+              <h5>Brand redesign</h5>
+              <p>12 members · 4 active now</p>
+            </div>
+            <div class="av-stack av-1 lg">
+              <div class="av" data-name="Aditya M.">AM</div>
+              <div class="av online" data-name="Rauno B.">RB</div>
+              <div class="av" data-name="Jen Tan">JT</div>
+              <div class="av online" data-name="Lina Park">LP</div>
+              <div class="av more" data-name="8 more members">+8</div>
+            </div>
+          </div>
+
+          <div class="av-card">
+            <div class="info">
+              <h5>Followers</h5>
+              <p>121 people follow you</p>
+            </div>
+            <div class="av-stack av-1 xs">
+              <div class="av" data-name="Anna L.">AL</div>
+              <div class="av" data-name="Chris J.">CJ</div>
+              <div class="av" data-name="Fran N.">FN</div>
+              <div class="av" data-name="Jo O.">JO</div>
+              <div class="av" data-name="Rae S.">RS</div>
+              <div class="av more" data-name="116 more">+116</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 6.9 Avatar Stack</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build an avatar stack component. Flex container holding N avatars. Each .av: 36px circle, border:2px solid <CARD_BG_COLOR>, white initials text 11px 700, gradient background (each avatar a different gradient — pink/violet/cyan/amber/teal). Apply margin-left:-10px to each .av except :first-child so they overlap by ~30%. The border in the card background color creates a clean visible halo between circles. Final .av.more shows "+8" with a muted background and border, representing additional members. On individual avatar :hover, transform:translateY(-3px) + z-index:10 so it lifts above siblings. On the stack container :hover, increase margin-left to -4px on children (the stack spreads slightly on inspect). Each avatar has a data-name attribute and a ::before pseudo-element with content:attr(data-name) that shows as a dark tooltip pill above on hover. Include 3 size variants: default (36px), lg (48px), xs (26px). Include an optional .online state: small green dot at bottom-right (10px circle with 2px border in card bg color) signaling presence.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://linear.app" target="_blank" rel="noopener">Linear</a><span class="desc">Avatar stacks on every issue/project tile</span></div></li>
+      <li><div><a href="https://github.com" target="_blank" rel="noopener">GitHub</a><span class="desc">PR reviewer avatars in the same pattern</span></div></li>
+      <li><div><a href="https://slack.com" target="_blank" rel="noopener">Slack</a><span class="desc">Channel-member stacks with online dot indicators</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="6.8-skeleton-loader.html" class="prev"><span class="label">← Prev</span><span class="title">6.8 Skeleton Loader</span></a>
+      <a href="6.10-stat-card.html" class="next"><span class="label">Next →</span><span class="title">6.10 Stat / KPI Card</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

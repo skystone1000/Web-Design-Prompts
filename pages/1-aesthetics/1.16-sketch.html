@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>1.16 Sketch / Hand-drawn · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;700&family=Architects+Daughter&display=swap" rel="stylesheet" />
+<style>
+  .sk-demo {
+    min-height: 720px;
+    padding: 50px 40px;
+    background: #fdfaf2;
+    color: #1A1814;
+    background-image:
+      radial-gradient(circle at 20% 80%, rgba(0,0,0,0.02) 1px, transparent 2px),
+      radial-gradient(circle at 80% 20%, rgba(0,0,0,0.02) 1px, transparent 2px);
+    background-size: 24px 24px;
+    font-family: 'Architects Daughter', cursive;
+    position: relative;
+  }
+  /* faint notebook grid */
+  .sk-demo::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(180,160,120,0.18) 1px, transparent 1px);
+    background-size: 26px 26px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .sk-stage { position: relative; z-index: 1; max-width: 920px; margin: 0 auto; }
+  .sk-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+  .sk-brand {
+    font-family: 'Caveat', cursive;
+    font-size: 32px;
+    font-weight: 700;
+    color: #1A1814;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sk-brand::before {
+    content: "";
+    width: 26px; height: 26px;
+    border: 2.5px solid #1A1814;
+    border-radius: 50% 8% 50% 50%;
+    transform: rotate(8deg);
+  }
+  .sk-links { display: flex; gap: 22px; font-family: 'Architects Daughter', cursive; font-size: 15px; color: #555; }
+  .sk-links span { cursor: pointer; padding-bottom: 3px; border-bottom: 2px solid transparent; }
+  .sk-links span:hover { border-bottom-style: solid; border-bottom-color: #1A1814; }
+  .sk-links span.active {
+    background: linear-gradient(180deg, transparent 70%, #ffe87b 70% 90%, transparent 90%);
+    padding: 0 4px;
+  }
+
+  .sk-hero {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+  .sk-hero h3 {
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+    font-size: clamp(48px, 7vw, 78px);
+    line-height: 1;
+    color: #1A1814;
+    margin-bottom: 14px;
+  }
+  .sk-hero h3 .yel {
+    background: linear-gradient(180deg, transparent 60%, #ffe87b 60% 92%, transparent 92%);
+    padding: 0 6px;
+  }
+  .sk-hero h3 .underline {
+    position: relative;
+    display: inline-block;
+  }
+  .sk-hero h3 .underline::after {
+    content: "";
+    position: absolute;
+    left: -2px; right: -2px;
+    bottom: 0;
+    height: 8px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8'><path d='M2 6 Q 25 1, 50 5 T 98 5' fill='none' stroke='%23e63946' stroke-width='2.4' stroke-linecap='round'/></svg>") no-repeat center / 100% 100%;
+  }
+  .sk-hero p {
+    font-family: 'Architects Daughter', cursive;
+    font-size: 17px;
+    color: #444;
+    line-height: 1.55;
+    max-width: 34ch;
+  }
+  .sk-cta {
+    margin-top: 22px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+    font-size: 22px;
+    color: #1A1814;
+    border: 0;
+    background: #ffe87b;
+    cursor: pointer;
+    position: relative;
+  }
+  .sk-cta::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border: 2.5px solid #1A1814;
+    border-radius: 50% 8% 50% 8% / 6% 50% 6% 50%;
+  }
+
+  /* Hand-drawn sticky note card */
+  .sk-note {
+    position: relative;
+    padding: 26px;
+    background: #fff;
+    transform: rotate(-2deg);
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.06);
+  }
+  .sk-note::before {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border: 2.4px solid #1A1814;
+    border-radius: 6px 8px 4px 7px / 8px 4px 7px 5px;
+  }
+  .sk-note .tape {
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-6deg);
+    width: 90px; height: 22px;
+    background: rgba(255, 232, 123, 0.75);
+    border: 1.5px dashed rgba(0,0,0,0.18);
+  }
+  .sk-note h4 {
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+    font-size: 28px;
+    margin-bottom: 10px;
+    color: #1A1814;
+  }
+  .sk-note ul { font-family: 'Architects Daughter', cursive; font-size: 16px; color: #333; }
+  .sk-note ul li { padding: 5px 0; display: flex; gap: 10px; }
+  .sk-note ul li::before { content: "✓"; color: #e63946; font-weight: 700; font-size: 18px; }
+
+  /* doodles */
+  .sk-doodle {
+    position: absolute;
+    font-family: 'Caveat', cursive;
+    color: #1A1814;
+    z-index: 2;
+  }
+  .sk-doodle.arrow {
+    top: 220px; left: 38%;
+    font-size: 20px;
+    transform: rotate(-12deg);
+  }
+  .sk-doodle.arrow::after {
+    content: "";
+    display: block;
+    width: 64px; height: 28px;
+    margin-top: 4px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 28'><path d='M2 14 Q 24 2, 48 16' fill='none' stroke='%231A1814' stroke-width='2' stroke-linecap='round'/><path d='M48 16 L 42 10 M48 16 L 38 18' stroke='%231A1814' stroke-width='2' fill='none' stroke-linecap='round'/></svg>") no-repeat;
+  }
+  .sk-star {
+    position: absolute;
+    font-size: 28px;
+    color: #e63946;
+    z-index: 2;
+    animation: sk-twink 2s ease-in-out infinite alternate;
+  }
+  .sk-star.s1 { top: 80px; right: 80px; }
+  .sk-star.s2 { bottom: 80px; left: 60px; animation-delay: 0.6s; }
+  @keyframes sk-twink { from {transform: rotate(0) scale(0.9);} to {transform: rotate(20deg) scale(1.1);} }
+
+  @media (max-width: 720px) {
+    .sk-hero { grid-template-columns: 1fr; }
+    .sk-doodle.arrow { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Aesthetics</a>
+      <span class="sep">/</span>
+      <span class="here">Sketch / Hand-drawn</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">1.16 · Aesthetic</span>
+    <h1 class="title">Sketch / <em>Hand-drawn</em>.</h1>
+    <p class="tagline">Wobbly borders, handwritten type, hand-drawn underlines and arrows. The Excalidraw / Tldraw aesthetic — friendly, low-stakes, and surprisingly hard to do well.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Everything looks like it was drawn with a Sharpie on graph paper. Borders are imperfect with rough corners, lines are slightly wavy, type is handwritten, and decorative arrows or stars are sketched in. The aesthetic signals "this is a friendly tool, you can play here without breaking anything" — used by Excalidraw, Tldraw, Notion's empty states, and a lot of teaching/onboarding products.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Three layers: (1) a handwritten font family (Caveat, Architects Daughter, Patrick Hand from Google Fonts) for everything; (2) imperfect borders — instead of <code>border-radius</code>, use asymmetric radii like <code>border-radius: 6px 8px 4px 7px / 8px 4px 7px 5px</code> to wobble each corner differently, or use a <code>::before</code> pseudo-element so the wobble can have its own slight rotation; (3) inline SVG decorations for underlines, arrows, and stars with hand-drawn Bezier curves. A faint notebook grid background (<code>linear-gradient</code> 1px lines) seals the effect.</p>
+      <div class="term-grid">
+        <div><b>Caveat / Architects Daughter</b><span>Free Google Fonts that look handwritten without going twee</span></div>
+        <div><b>Asymmetric border-radius</b><span>Eight-value border-radius (per-corner H and V) wobbles each corner uniquely</span></div>
+        <div><b>SVG underline scribbles</b><span>Quick Bezier paths in &lt;svg&gt; used as background-image on text</span></div>
+        <div><b>Slight rotations</b><span>Cards rotated -2deg to 3deg — makes them feel placed by hand</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <div class="demo-shell">
+      <div class="demo sk-demo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#1A1814; border-color:rgba(0,0,0,0.1);">Live</span>
+        <span class="sk-star s1">✦</span>
+        <span class="sk-star s2">★</span>
+        <span class="sk-doodle arrow">to-do list →</span>
+
+        <div class="sk-stage">
+          <div class="sk-head">
+            <div class="sk-brand">scribblr</div>
+            <div class="sk-links"><span class="active">Whiteboards</span><span>Docs</span><span>Pricing</span><span>About</span></div>
+          </div>
+
+          <div class="sk-hero">
+            <div>
+              <h3>Draw your <span class="yel">ideas</span><br>before you <span class="underline">build</span> them.</h3>
+              <p>The whiteboard for messy first drafts. Made for designers, engineers, and anyone who thinks better with a marker in hand.</p>
+              <button class="sk-cta">Start a whiteboard →</button>
+            </div>
+            <div class="sk-note">
+              <span class="tape"></span>
+              <h4>This week's todos</h4>
+              <ul>
+                <li>Sketch the new hero</li>
+                <li>Send the proposal</li>
+                <li>Call mom Sunday</li>
+                <li>Order more pens</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 1.16 Sketch / Hand-drawn</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a sketch / hand-drawn whiteboard-app landing. Import Caveat and Architects Daughter from Google Fonts. Background: warm paper #fdfaf2 with a very faint horizontal-line notebook grid (linear-gradient lines at 26px spacing, 18% alpha). Brand name in big Caveat 700. Body and nav links in Architects Daughter. Headline: two highlighted words — one with a yellow-marker rectangle (use linear-gradient(180deg, transparent 60%, #ffe87b 60% 92%, transparent 92%) as a CSS background), one with a hand-drawn squiggle underline (inline SVG path as background-image). CTA button: yellow background, no border-radius, with a ::before pseudo-element that has an asymmetric eight-value border-radius like "50% 8% 50% 8% / 6% 50% 6% 50%" and a 2.5px black border — this creates the wobbly hand-drawn rectangle around it. Add a tilted "sticky note" card on the right with rotated tape strip at the top, an asymmetric-radius black outline pseudo-border, handwritten heading and checklist with red ✓ marks. Scatter hand-drawn arrows (inline SVG), small ★ doodles, and rotate one or two elements slightly off-axis. Use Architects Daughter for body text, Caveat for headings/buttons.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://excalidraw.com" target="_blank" rel="noopener">Excalidraw</a><span class="desc">The reference — a whole drawing tool built around hand-drawn aesthetic</span></div></li>
+      <li><div><a href="https://www.tldraw.com" target="_blank" rel="noopener">Tldraw</a><span class="desc">Modern infinite-canvas tool with friendly sketch UI</span></div></li>
+      <li><div><a href="https://github.com/rough-stuff/rough" target="_blank" rel="noopener">Rough.js</a><span class="desc">JS library that draws SVG/Canvas shapes in a sketchy style</span></div></li>
+      <li><div><a href="https://www.notion.so" target="_blank" rel="noopener">Notion — empty states</a><span class="desc">Hand-drawn illustrations on empty pages — friendly onboarding</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="1.15-liquid-goo.html" class="prev"><span class="label">← Prev</span><span class="title">1.15 Liquid / Goo</span></a>
+      <a href="../2-scroll-animation/index.html" class="next"><span class="label">Next chapter →</span><span class="title">Scroll &amp; Animation</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

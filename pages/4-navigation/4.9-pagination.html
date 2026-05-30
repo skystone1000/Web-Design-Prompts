@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>4.9 Pagination · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .pg-demo {
+    min-height: 620px;
+    background: #FAFAF7;
+    color: #1A1814;
+    border-radius: var(--radius-lg);
+    padding: 40px;
+  }
+  .pg-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 30px;
+  }
+  .pg-tile {
+    aspect-ratio: 4/3;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .pg-tile:hover { transform: translateY(-2px); border-color: rgba(0,0,0,0.15); }
+  .pg-tile .num { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; color: #888; text-transform: uppercase; }
+  .pg-tile h6 { font-family: var(--font-display); font-weight: 400; font-size: 18px; color: #111; letter-spacing: -0.01em; line-height: 1.1; }
+
+  .pg-shell {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    padding-top: 24px;
+  }
+  .pg-info { font-family: var(--font-mono); font-size: 11px; color: #777; letter-spacing: 0.12em; text-transform: uppercase; }
+  .pg-info b { color: #111; font-weight: 600; }
+  .pg-nav { display: flex; align-items: center; gap: 4px; }
+  .pg-btn {
+    min-width: 36px; height: 36px;
+    padding: 0 10px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: #555;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .pg-btn:hover { background: #fff; border-color: rgba(0,0,0,0.1); color: #111; }
+  .pg-btn.active { background: #1A1814; color: #fff; border-color: #1A1814; }
+  .pg-btn.disabled { opacity: 0.4; pointer-events: none; }
+  .pg-btn.gap { color: #999; cursor: default; }
+  .pg-btn.gap:hover { background: transparent; border-color: transparent; }
+
+  /* Variant: animated pill */
+  .pg-pill {
+    margin-top: 40px;
+    padding: 24px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+  }
+  .pg-pill-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; color: #777; text-transform: uppercase; margin-bottom: 14px; }
+  .pg-pill-track {
+    display: inline-flex;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 12px;
+    padding: 4px;
+    gap: 2px;
+    position: relative;
+  }
+  .pg-pill-track .pg-pill-bg {
+    position: absolute;
+    top: 4px;
+    height: calc(100% - 8px);
+    background: #1A1814;
+    border-radius: 8px;
+    transition: left 0.28s var(--ease-out-back), width 0.28s var(--ease-out-back);
+    z-index: 1;
+  }
+  .pg-pill-btn {
+    position: relative;
+    z-index: 2;
+    min-width: 38px; height: 36px;
+    padding: 0 12px;
+    border: 0; background: transparent;
+    color: #555;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .pg-pill-btn.active { color: #fff; }
+
+  @media (max-width: 720px) {
+    .pg-list { grid-template-columns: 1fr 1fr; }
+    .pg-shell { flex-direction: column; gap: 16px; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Navigation</a>
+      <span class="sep">/</span>
+      <span class="here">Pagination</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">4.9 · Navigation</span>
+    <h1 class="title">Pagination.</h1>
+    <p class="tagline">Numbered page navigation with truncation. Two variants: the classic stripe, and a small animated pill version for tighter spaces.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Pagination splits long lists across multiple pages with a numbered control at the bottom — prev / 1 / 2 / 3 / … / 12 / next. The standard pattern for blogs, archives, search results, and admin tables. Different from "Load More" or infinite scroll because users get a sense of where they are and can jump to any page. Crucially: always truncate the middle with ellipses on long sets (don't show all 50 pages).</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>An array of page numbers is rendered as a row of buttons. JS calculates which to show: always page 1, always the last page, always the current page ±1, and ellipses for any gap. Prev/Next buttons disable when at the first/last page. The active page gets a high-contrast filled style. The second variant (animated pill) uses a pill-marker background that springs between active buttons for very compact paginators (e.g. dashboard filters).</p>
+      <div class="term-grid">
+        <div><b>Truncation logic</b><span>Always 1 + last + current ± 1, ellipses for gaps. Avoids overflow on big sets.</span></div>
+        <div><b>Disabled prev/next</b><span>Greyed out at boundary pages, not removed — keeps layout stable</span></div>
+        <div><b>aria-current="page"</b><span>Accessibility attribute on the active page button</span></div>
+        <div><b>Tabular-nums</b><span>font-variant-numeric:tabular-nums keeps digits the same width</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Click any number — the page changes (and content swaps). Try clicking 1, then 12, to see truncation re-balance.</p>
+    <div class="demo-shell">
+      <div class="demo pg-demo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#111; border-color:rgba(0,0,0,0.1);">Live · click pages</span>
+        <div class="pg-list" id="pgList"></div>
+        <div class="pg-shell">
+          <div class="pg-info">Showing <b><span id="pgFrom">1</span>–<span id="pgTo">6</span></b> of <b>72</b> results</div>
+          <div class="pg-nav" id="pgNav"></div>
+        </div>
+
+        <div class="pg-pill">
+          <div class="pg-pill-label">Compact variant — animated pill</div>
+          <div class="pg-pill-track" id="pgPillTrack">
+            <div class="pg-pill-bg" id="pgPillBg"></div>
+            <button class="pg-pill-btn active" data-p="1">1</button>
+            <button class="pg-pill-btn" data-p="2">2</button>
+            <button class="pg-pill-btn" data-p="3">3</button>
+            <button class="pg-pill-btn" data-p="4">4</button>
+            <button class="pg-pill-btn" data-p="5">5</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 4.9 Pagination</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a pagination component for a list of 72 items, 6 per page (12 pages total). Layout: a 3-col grid of tile cards above, a footer row below with "Showing X-Y of 72 results" on the left and the page nav on the right. Page nav structure: a Prev button (« icon), then page-number buttons, then a Next button (» icon). Page buttons styled as 36px square monospace buttons (transparent default, hover white background + border, active filled dark). Use TRUNCATION logic to compute which numbers to show: always page 1, always the last page (12), always current page and current±1. Insert "…" gap buttons for any range gaps. Example: current=6 shows "1 … 5 6 7 … 12". Prev/Next disabled (opacity 0.4) at first/last page. Mark active with aria-current="page". Use font-variant-numeric:tabular-nums on all number buttons. Optionally include a SECOND variant — compact animated-pill paginator: a small flex row of buttons with a separate ::bg div that springs between active buttons via transition:left/width with cubic-bezier(0.34, 1.56, 0.64, 1).</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://github.com" target="_blank" rel="noopener">GitHub — issue/PR lists</a><span class="desc">The canonical web pagination — clear, accessible, with truncation</span></div></li>
+      <li><div><a href="https://www.amazon.com" target="_blank" rel="noopener">Amazon</a><span class="desc">Massive-set pagination with smart truncation and skip-to-page</span></div></li>
+      <li><div><a href="https://ui.shadcn.com/docs/components/pagination" target="_blank" rel="noopener">shadcn/ui — Pagination</a><span class="desc">Clean accessible pagination component with code</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="4.8-floating-pill-nav.html" class="prev"><span class="label">← Prev</span><span class="title">4.8 Floating Pill Nav</span></a>
+      <a href="4.10-bottom-tab.html" class="next"><span class="label">Next →</span><span class="title">4.10 Bottom Tab Bar</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const total = 72, per = 6, pageCount = Math.ceil(total / per);
+    let current = 1;
+    const list = document.getElementById('pgList');
+    const nav = document.getElementById('pgNav');
+    const fromEl = document.getElementById('pgFrom');
+    const toEl = document.getElementById('pgTo');
+    const titles = ['Aurora', 'Pulse', 'Drift', 'Margin', 'Salt', 'Hex', 'Margo', 'Quill', 'Field', 'Northwind', 'Argent', 'Obys'];
+
+    function renderList() {
+      let html = '';
+      for (let i = 0; i < per; i++) {
+        const idx = (current - 1) * per + i + 1;
+        if (idx > total) break;
+        const t = titles[(idx - 1) % titles.length];
+        html += `<div class="pg-tile"><div class="num">No. ${String(idx).padStart(3, '0')}</div><h6>${t}<br>vol. ${Math.ceil(idx / 4)}</h6></div>`;
+      }
+      list.innerHTML = html;
+      fromEl.textContent = (current - 1) * per + 1;
+      toEl.textContent = Math.min(total, current * per);
+    }
+
+    function pageNumbers() {
+      const pages = [];
+      const add = (v) => pages.push(v);
+      add(1);
+      if (current > 3) add('…');
+      for (let i = Math.max(2, current - 1); i <= Math.min(pageCount - 1, current + 1); i++) add(i);
+      if (current < pageCount - 2) add('…');
+      if (pageCount > 1) add(pageCount);
+      // unique
+      return pages.filter((p, i) => pages.indexOf(p) === i);
+    }
+
+    function renderNav() {
+      let html = '';
+      html += `<button class="pg-btn ${current === 1 ? 'disabled' : ''}" data-act="prev">«</button>`;
+      pageNumbers().forEach(p => {
+        if (p === '…') html += `<button class="pg-btn gap" disabled>…</button>`;
+        else html += `<button class="pg-btn ${p === current ? 'active' : ''}" data-p="${p}" ${p === current ? 'aria-current="page"' : ''}>${p}</button>`;
+      });
+      html += `<button class="pg-btn ${current === pageCount ? 'disabled' : ''}" data-act="next">»</button>`;
+      nav.innerHTML = html;
+    }
+
+    function goto(p) {
+      current = Math.max(1, Math.min(pageCount, p));
+      renderList(); renderNav();
+    }
+    nav.addEventListener('click', (e) => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      const act = b.getAttribute('data-act');
+      const p = b.getAttribute('data-p');
+      if (act === 'prev') goto(current - 1);
+      else if (act === 'next') goto(current + 1);
+      else if (p) goto(parseInt(p, 10));
+    });
+    renderList(); renderNav();
+
+    // Pill variant
+    const pillTrack = document.getElementById('pgPillTrack');
+    const pillBg = document.getElementById('pgPillBg');
+    function movePill(btn) {
+      pillTrack.querySelectorAll('.pg-pill-btn').forEach(b => b.classList.toggle('active', b === btn));
+      pillBg.style.left = btn.offsetLeft + 'px';
+      pillBg.style.width = btn.offsetWidth + 'px';
+    }
+    pillTrack.addEventListener('click', (e) => {
+      const b = e.target.closest('.pg-pill-btn');
+      if (b) movePill(b);
+    });
+    requestAnimationFrame(() => movePill(pillTrack.querySelector('.active')));
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

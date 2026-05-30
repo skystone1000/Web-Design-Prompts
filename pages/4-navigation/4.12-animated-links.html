@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>4.12 Animated Underline Links · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .al-demo {
+    min-height: 620px;
+    background: #FAFAF7;
+    color: #111;
+    padding: 56px 40px;
+    border-radius: var(--radius-lg);
+  }
+  .al-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+    max-width: 920px;
+    margin: 0 auto;
+  }
+  .al-card {
+    padding: 28px;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 14px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .al-card .name { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #888; margin-bottom: 14px; }
+  .al-card .link {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 32px;
+    color: #111;
+    letter-spacing: -0.02em;
+    cursor: pointer;
+    position: relative;
+    align-self: flex-start;
+  }
+  .al-card .code { font-family: var(--font-mono); font-size: 12px; color: #888; margin-top: 12px; }
+  .al-card .code b { color: #111; }
+
+  /* --- 1. Slide-in from left --- */
+  .al-1 .link::after { content: ""; position: absolute; left: 0; bottom: -3px; width: 0; height: 2px; background: #e63946; transition: width 0.32s var(--ease-out-back); }
+  .al-1 .link:hover::after { width: 100%; }
+
+  /* --- 2. Reveal from center --- */
+  .al-2 .link::after { content: ""; position: absolute; left: 50%; bottom: -3px; width: 0; height: 2px; background: #2563EB; transition: width 0.3s var(--ease), left 0.3s var(--ease); transform: translateX(0); }
+  .al-2 .link:hover::after { left: 0; width: 100%; }
+
+  /* --- 3. Stacked swap (old slides out, new slides in) --- */
+  .al-3 .link { overflow: hidden; padding-bottom: 4px; height: 1em; line-height: 1; vertical-align: top; }
+  .al-3 .link span { display: block; transition: transform 0.32s cubic-bezier(0.7, 0, 0.2, 1); }
+  .al-3 .link:hover span { transform: translateY(-100%); }
+  .al-3 .link span::after { content: attr(data-after); display: block; color: #16a34a; }
+
+  /* --- 4. Marker highlight sweep --- */
+  .al-4 .link {
+    background-image: linear-gradient(120deg, #fde047 0%, #fde047 100%);
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 0.4em;
+    transition: background-size 0.45s var(--ease);
+    padding: 0 4px;
+  }
+  .al-4 .link:hover { background-size: 100% 0.4em; }
+
+  /* --- 5. Squiggle underline (SVG) --- */
+  .al-5 .link { position: relative; }
+  .al-5 .link::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -6px;
+    height: 8px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8'><path d='M2 5 Q 12.5 0, 25 5 T 50 5 T 75 5 T 98 5' fill='none' stroke='%237C5CFF' stroke-width='2'/></svg>") no-repeat;
+    background-size: 100% 100%;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s var(--ease);
+  }
+  .al-5 .link:hover::after { transform: scaleX(1); }
+
+  /* --- 6. Arrow nudge --- */
+  .al-6 .link::after { content: " →"; display: inline-block; transition: transform 0.25s var(--ease); }
+  .al-6 .link:hover::after { transform: translateX(6px); }
+  .al-6 .link { color: #1A1814; }
+  .al-6 .link:hover { color: #e63946; }
+
+  @media (max-width: 720px) {
+    .al-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Navigation</a>
+      <span class="sep">/</span>
+      <span class="here">Animated Link Underlines</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">4.12 · Navigation</span>
+    <h1 class="title">Animated <em>Link</em><br>Underlines.</h1>
+    <p class="tagline">Six pure-CSS link hover treatments — slide, expand, swap, marker, squiggle, arrow. Drop into any nav.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Small but high-impact hover interactions for navigation links and inline anchors. None of them require JavaScript, only careful CSS — pseudo-elements, background-image gradient tricks, transform transitions. Pick a single style per site and use it consistently across nav links, blog post links, footer links. The right hover gives a site personality without any other visual change.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Hover any link below. Each card uses a different technique.</p>
+    <div class="demo-shell">
+      <div class="demo al-demo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#111; border-color:rgba(0,0,0,0.1);">Live · hover</span>
+        <div class="al-grid">
+
+          <div class="al-card al-1">
+            <div class="name">01 — Slide from left</div>
+            <a class="link">Read the manifesto</a>
+            <div class="code"><b>::after</b> width: 0 → 100%, transition spring</div>
+          </div>
+
+          <div class="al-card al-2">
+            <div class="name">02 — Reveal from center</div>
+            <a class="link">View the process</a>
+            <div class="code"><b>::after</b> grows from center, expanding both ways</div>
+          </div>
+
+          <div class="al-card al-3">
+            <div class="name">03 — Stacked swap</div>
+            <a class="link"><span data-after="See work →">See work →</span></a>
+            <div class="code"><b>overflow:hidden</b> + translateY(-100%) on hover</div>
+          </div>
+
+          <div class="al-card al-4">
+            <div class="name">04 — Marker highlight</div>
+            <a class="link">Find a stockist</a>
+            <div class="code"><b>background-size</b> 0% → 100% on a linear-gradient</div>
+          </div>
+
+          <div class="al-card al-5">
+            <div class="name">05 — Squiggle underline</div>
+            <a class="link">Get the dispatch</a>
+            <div class="code"><b>inline SVG path</b> + scaleX(0 → 1) on hover</div>
+          </div>
+
+          <div class="al-card al-6">
+            <div class="name">06 — Arrow nudge</div>
+            <a class="link">Continue reading</a>
+            <div class="code"><b>::after "→"</b> translateX on hover + color shift</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 4.12 Animated Link Underlines</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a showcase of 6 pure-CSS animated link hover styles. Each in its own card with a label and a one-line technique caption:
+(1) Slide from left: link::after { content:""; position:absolute; left:0; bottom:-3px; width:0; height:2px; background:accent } and on :hover width:100% with transition:width 0.32s cubic-bezier(0.34, 1.56, 0.64, 1).
+(2) Reveal from center: ::after starts at left:50% width:0; on :hover left:0 width:100%.
+(3) Stacked swap: link span { display:block; transition:transform 0.32s ease } with overflow:hidden on the link itself. On :hover translateY(-100%). Use ::after on the span with content:attr(data-after) and a different color so it slides into view.
+(4) Marker highlight: set background-image:linear-gradient(120deg, yellow, yellow), background-repeat:no-repeat, background-position:0 100%, background-size:0% 0.4em. On hover, transition background-size to 100% 0.4em (sweeps across like a highlighter).
+(5) Squiggle underline: inline SVG path of a wavy line as background-image on the link, with transform:scaleX(0) and transform-origin:left default; on hover transform:scaleX(1).
+(6) Arrow nudge: ::after content:" →" with transition:transform. On hover translateX(6px) and shift the link's color to accent. All transitions ease/ease-out-back. No JavaScript required.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://css-tricks.com/css-link-hover-effects" target="_blank" rel="noopener">CSS Tricks — link hover effects</a><span class="desc">A canonical roundup of underline techniques</span></div></li>
+      <li><div><a href="https://hover.dev" target="_blank" rel="noopener">Hover.dev</a><span class="desc">Library of copy-paste hover animations including links</span></div></li>
+      <li><div><a href="https://uiverse.io" target="_blank" rel="noopener">Uiverse.io</a><span class="desc">Community-built CSS components — search "link hover"</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="4.11-stepper.html" class="prev"><span class="label">← Prev</span><span class="title">4.11 Stepper</span></a>
+      <a href="4.13-footer-mega.html" class="next"><span class="label">Next →</span><span class="title">4.13 Footer Mega-Menu</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

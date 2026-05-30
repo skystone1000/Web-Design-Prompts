@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>5.8 Outline / Stroke Text · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .ot-demo {
+    min-height: 720px;
+    background: #0E0E14;
+    color: #fff;
+    padding: 60px 40px;
+    border-radius: var(--radius-lg);
+    display: grid;
+    place-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .ot-demo::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(60% 50% at 50% 50%, rgba(232,179,57,0.12), transparent 70%);
+  }
+  .ot-stage { position: relative; z-index: 2; }
+  .ot-h {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(72px, 14vw, 180px);
+    letter-spacing: -0.06em;
+    line-height: 0.85;
+    color: transparent;
+    -webkit-text-stroke: 2px #F2EFE7;
+    text-stroke: 2px #F2EFE7;
+    transition: color 0.35s var(--ease), -webkit-text-stroke-color 0.35s var(--ease);
+  }
+  .ot-h em {
+    font-style: italic;
+    color: var(--accent);
+    -webkit-text-stroke: 0;
+    text-stroke: 0;
+  }
+  .ot-h:hover { color: var(--accent); -webkit-text-stroke-color: var(--accent); }
+
+  .ot-variants {
+    margin-top: 56px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    max-width: 760px;
+  }
+  .ot-card {
+    padding: 22px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    text-align: left;
+  }
+  .ot-card .name { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 14px; }
+  .ot-card .ex { font-family: var(--font-display); font-size: 38px; font-weight: 800; line-height: 1; letter-spacing: -0.04em; transition: all 0.3s var(--ease); }
+
+  .ot-v1 .ex { color: transparent; -webkit-text-stroke: 1.5px #F2EFE7; text-stroke: 1.5px #F2EFE7; }
+  .ot-v2 .ex { color: #F2EFE7; text-shadow: -1.5px -1.5px 0 var(--accent), 1.5px 1.5px 0 var(--accent-2); }
+  .ot-v3 .ex { color: transparent; -webkit-text-stroke: 1.5px var(--accent); text-stroke: 1.5px var(--accent); }
+  .ot-v3 .ex:hover { color: var(--accent); }
+
+  .ot-card .code { margin-top: 14px; font-family: var(--font-mono); font-size: 11px; color: rgba(255,255,255,0.5); }
+  .ot-card .code b { color: var(--accent); }
+
+  @media (max-width: 720px) { .ot-variants { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Typography &amp; Color</a>
+      <span class="sep">/</span>
+      <span class="here">Outline / Stroke Text</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">5.8 · Type</span>
+    <h1 class="title">Outline / <em>Stroke</em><br>Text.</h1>
+    <p class="tagline">Hollow type with only the outline visible. Hover the big headline below — it fills with color. Three CSS variations: stroke-only, double offset, color-on-hover.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Outline type uses CSS <code>-webkit-text-stroke</code> + <code>color: transparent</code> to render text as just its silhouette. Great for huge display headlines where filled type would feel overwhelming — and reliably opens up the kind of "minus-design" hero hierarchy you see on agency sites and editorial covers. Hover variants that fill the type with color are especially common on portfolio links and section titles.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Two properties: <code>color: transparent</code> hides the fill, and <code>-webkit-text-stroke: 2px white</code> draws the outline. Browser support is excellent (it's been in WebKit/Blink for years and is unprefixed in Firefox via <code>text-stroke</code>). On hover, transition both <code>color</code> and <code>-webkit-text-stroke-color</code> for the fill effect. Three popular variations: pure stroke-only, stroke + filled (offset duplicate text via <code>text-shadow</code>), and color-fill on hover.</p>
+      <div class="term-grid">
+        <div><b>-webkit-text-stroke</b><span>Width + color of the outline. Works in all evergreen browsers.</span></div>
+        <div><b>color: transparent</b><span>Required to see through the fill so only the stroke shows</span></div>
+        <div><b>Hover fill</b><span>Transition color → accent for the satisfying fill effect</span></div>
+        <div><b>text-shadow alternative</b><span>For chromatic offset: text-shadow:-2px -2px 0 pink, 2px 2px 0 cyan</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Hover the giant headline — it fills with amber. The three smaller cards show variations.</p>
+    <div class="demo-shell">
+      <div class="demo ot-demo">
+        <span class="demo-badge">Live · hover headline</span>
+        <div class="ot-stage">
+          <h3 class="ot-h">Built for<br><em>operators.</em></h3>
+          <div class="ot-variants">
+            <div class="ot-card ot-v1"><div class="name">01 — Stroke only</div><div class="ex">Aurora</div><div class="code">color:transparent + <b>-webkit-text-stroke:1.5px</b></div></div>
+            <div class="ot-card ot-v2"><div class="name">02 — Offset chromatic</div><div class="ex">Aurora</div><div class="code">color:white + <b>text-shadow</b> pink/cyan offsets</div></div>
+            <div class="ot-card ot-v3"><div class="name">03 — Fill on hover</div><div class="ex">Aurora</div><div class="code">stroke default → <b>color:accent</b> on :hover</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 5.8 Outline / Stroke Text</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a hero with HUGE outline-only display type. Background near-black with a soft accent radial glow. Headline: font-size clamp(72px, 14vw, 180px), font-weight 800, letter-spacing -0.06em, line-height 0.85. Apply color:transparent and -webkit-text-stroke:2px #F2EFE7 (the off-white) AND text-stroke:2px for non-Webkit. Add transition:color 0.35s ease, -webkit-text-stroke-color 0.35s ease. On :hover, change color and -webkit-text-stroke-color to the accent — the type fills with color. Mark one italic word inside the headline as a separate em with NO stroke and a filled accent color, so it pops against the outlined siblings. Below, show 3 small variant cards: (1) "Stroke only" — basic 1.5px outline; (2) "Offset chromatic" — color:white + text-shadow:-1.5px -1.5px 0 hot-pink, 1.5px 1.5px 0 cyan for a VHS chromatic-aberration look; (3) "Fill on hover" — outline by default, fills on :hover via transition. Each card labeled with its CSS technique.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.obys.agency" target="_blank" rel="noopener">Obys Agency</a><span class="desc">Massive outline headlines throughout their site</span></div></li>
+      <li><div><a href="https://semplice.com/inspiration" target="_blank" rel="noopener">Semplice portfolios</a><span class="desc">Designer portfolios that lean on stroke-text hero treatments</span></div></li>
+      <li><div><a href="https://www.awwwards.com/inspiration/text-stroke" target="_blank" rel="noopener">Awwwards — text-stroke inspiration</a><span class="desc">Curated sites using the technique well</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="5.7-variable-fonts.html" class="prev"><span class="label">← Prev</span><span class="title">5.7 Variable Fonts</span></a>
+      <a href="5.9-marker-highlight.html" class="next"><span class="label">Next →</span><span class="title">5.9 Marker Highlight</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

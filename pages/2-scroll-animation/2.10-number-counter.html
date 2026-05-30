@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.10 Animated Number Counter · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  /* ===== Live demo: Animated Number Counter ===== */
+  .nc-demo {
+    height: 720px;
+    overflow-y: scroll;
+    background: var(--bg-elev);
+    border-radius: var(--radius-lg);
+    color: var(--text);
+  }
+  .nc-hint {
+    position: sticky;
+    top: 18px;
+    z-index: 10;
+    width: fit-content;
+    margin: 18px auto 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 8px 14px;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(10px);
+    border-radius: 999px;
+    border: 1px solid var(--border);
+  }
+  .nc-spacer {
+    height: 700px;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 40px 32px;
+  }
+  .nc-spacer h4 {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 4vw, 42px);
+    color: var(--text-muted);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+  .nc-spacer h4 em { font-style: italic; color: var(--accent); }
+
+  .nc-stats {
+    padding: 80px 32px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 28px;
+    background:
+      radial-gradient(60% 80% at 30% 0%, rgba(232,179,57,0.12), transparent 60%),
+      var(--bg-elev);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .nc-stat {
+    text-align: left;
+    padding: 0 20px;
+    border-left: 1px solid var(--border);
+  }
+  .nc-stat:first-child { border-left: 0; padding-left: 0; }
+  .nc-num {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(48px, 7vw, 84px);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    display: flex;
+    align-items: baseline;
+  }
+  .nc-num .pre, .nc-num .suf {
+    font-size: 0.45em;
+    color: var(--text-muted);
+    margin: 0 2px;
+    font-weight: 400;
+  }
+  .nc-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 10px;
+  }
+  .nc-sub {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--text-soft);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 900px) {
+    .nc-stats { grid-template-columns: 1fr 1fr; }
+    .nc-stat { border-left: 0; padding-left: 0; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+  }
+  @media (max-width: 520px) {
+    .nc-stats { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Number Counter</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.10 · Animation</span>
+    <h1 class="title">Animated<br>Number <em>Counter</em>.</h1>
+    <p class="tagline">Stats sit at zero until the section enters the viewport, then tick up to their target over ~1.8s. The signature "by-the-numbers" moment on every modern marketing page.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>When a stats section scrolls into view, the numbers visibly count from zero up to their final value over about 1.5 to 2 seconds with an ease-out curve. It's a small, slightly theatrical detail — but it consistently makes the reader pause on the impressive numbers instead of skimming past them. Used by GitHub, Vercel, every annual-report page, every "by the numbers" section.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Each number element has a <code>data-target</code> attribute with the final value. An IntersectionObserver watches them — once a stat is at least 30% visible, an animation runs that lerps the displayed value from 0 to the target over ~1800ms, using <code>requestAnimationFrame</code> and an ease-out curve (like <code>1 - (1-t)^3</code>). The displayed value is formatted with thousand separators (<code>Intl.NumberFormat</code>) and the suffix/prefix (e.g. "k", "%", "$") is rendered as a smaller span next to it.</p>
+      <div class="term-grid">
+        <div><b>IntersectionObserver</b><span>Triggers the count only when the element is genuinely visible</span></div>
+        <div><b>requestAnimationFrame</b><span>Per-frame value updates, ~60fps smooth on every device</span></div>
+        <div><b>Ease-out cubic</b><span>1 - Math.pow(1 - t, 3) — fast start, gentle stop. Feels theatrical, not robotic.</span></div>
+        <div><b>tabular-nums</b><span>CSS font-variant-numeric: tabular-nums keeps digits the same width — no jitter</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="tip"><b>Tip.</b> Only animate once. After the count completes, unobserve the element so scrolling back up doesn't re-trigger the animation (which feels broken).</div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. The stats start at zero — they count up the moment they enter the viewport.</p>
+    <div class="demo-shell">
+      <div class="demo nc-demo" id="ncDemo">
+        <span class="demo-badge">Live · scroll inside</span>
+        <div class="nc-hint">↓ scroll down to trigger</div>
+        <div class="nc-spacer"><h4>Keep scrolling — <em>the magic happens below.</em></h4></div>
+        <div class="nc-stats" id="ncStats">
+          <div class="nc-stat">
+            <div class="nc-num"><span class="pre">$</span><span data-counter data-target="84000000">0</span></div>
+            <div class="nc-label">Funded</div>
+            <div class="nc-sub">Across 47 projects in 2025.</div>
+          </div>
+          <div class="nc-stat">
+            <div class="nc-num"><span data-counter data-target="12408">0</span></div>
+            <div class="nc-label">Active makers</div>
+            <div class="nc-sub">Up 38% year on year.</div>
+          </div>
+          <div class="nc-stat">
+            <div class="nc-num"><span data-counter data-target="99.96">0</span><span class="suf">%</span></div>
+            <div class="nc-label">Uptime</div>
+            <div class="nc-sub">Measured across 12 months.</div>
+          </div>
+          <div class="nc-stat">
+            <div class="nc-num"><span data-counter data-target="11">0</span><span class="suf">m</span></div>
+            <div class="nc-label">Support reply</div>
+            <div class="nc-sub">Median, in business hours.</div>
+          </div>
+        </div>
+        <div class="nc-spacer"><h4>That's the whole trick — <em>scroll back up to reset</em>.</h4></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 2.10 Animated Number Counter</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Build a "by the numbers" stats section with animated counters. Each stat is a 4-column grid item with a giant number (font-size clamp(48px,7vw,84px), font-weight 300, font-variant-numeric:tabular-nums so digits don't jitter) above a small uppercase monospace label. Add an optional prefix ($) or suffix (% / k / m) as a smaller span next to the number. Each number element has data-counter and data-target="X" attributes. Use IntersectionObserver (threshold 0.3) to detect when each stat enters the viewport — on first intersection, run a requestAnimationFrame loop that lerps the displayed value from 0 to data-target over 1800ms with an ease-out-cubic curve (1 - Math.pow(1 - t, 3)). Format the displayed value with Intl.NumberFormat for thousand separators. Unobserve after the animation completes so it doesn't re-trigger on scroll-back. Stat values: $84,000,000 funded · 12,408 active makers · 99.96% uptime · 11m support reply.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://vercel.com" target="_blank" rel="noopener">Vercel.com</a><span class="desc">Performance stats that tick up as you scroll</span></div></li>
+      <li><div><a href="https://github.com/about" target="_blank" rel="noopener">GitHub — About / Octoverse</a><span class="desc">Massive animated counters for repo and contributor counts</span></div></li>
+      <li><div><a href="https://countup.js.org" target="_blank" rel="noopener">CountUp.js</a><span class="desc">Tiny dependency-free library that does this with prefix/suffix support</span></div></li>
+      <li><div><a href="https://stripe.com" target="_blank" rel="noopener">Stripe — annual report pages</a><span class="desc">Editorial use of counting stats</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.9-3d-tilt.html" class="prev"><span class="label">← Prev</span><span class="title">2.9 3D Tilt</span></a>
+      <a href="2.11-stacking-cards.html" class="next"><span class="label">Next →</span><span class="title">2.11 Stacking Cards</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    const root = document.getElementById('ncDemo');
+    if (!root) return;
+    const formatter = new Intl.NumberFormat('en-US');
+    function ease(t) { return 1 - Math.pow(1 - t, 3); }
+    function count(el) {
+      const target = parseFloat(el.getAttribute('data-target'));
+      const decimals = (el.getAttribute('data-target').split('.')[1] || '').length;
+      const duration = 1800;
+      const start = performance.now();
+      function tick(now) {
+        const elapsed = now - start;
+        const t = Math.min(1, elapsed / duration);
+        const v = target * ease(t);
+        el.textContent = decimals > 0
+          ? v.toFixed(decimals)
+          : formatter.format(Math.round(v));
+        if (t < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          count(e.target);
+          io.unobserve(e.target);
+        }
+      });
+    }, { root, threshold: 0.3 });
+    root.querySelectorAll('[data-counter]').forEach(el => io.observe(el));
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.13 SVG Path Drawing · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .sv-demo {
+    height: 720px;
+    overflow-y: scroll;
+    background: var(--bg-elev);
+    color: var(--text);
+    border-radius: var(--radius-lg);
+  }
+  .sv-spacer { height: 200px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); }
+  .sv-stage { padding: 60px 40px; max-width: 760px; margin: 0 auto; }
+
+  .sv-item { margin-bottom: 100px; }
+  .sv-eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+  .sv-item h4 { font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 4vw, 40px); letter-spacing: -0.02em; line-height: 1.05; margin-bottom: 20px; }
+  .sv-item h4 em { font-style: italic; color: var(--accent); }
+
+  .sv-canvas {
+    width: 100%;
+    display: block;
+  }
+  /* All draw-paths share these properties */
+  .sv-canvas .draw {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: var(--len, 800);
+    stroke-dashoffset: var(--len, 800);
+    transition: stroke-dashoffset 2.2s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .sv-item.in .draw { stroke-dashoffset: 0; }
+  .sv-item p { font-size: 15.5px; color: var(--text-soft); line-height: 1.55; margin-top: 18px; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">SVG Path Draw</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.13 · Animation</span>
+    <h1 class="title">SVG Path <em>Drawing</em>.</h1>
+    <p class="tagline">Lines, signatures, logos and underlines that draw themselves on scroll using the stroke-dasharray trick. Pure CSS — no library needed.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>An SVG path animates from invisible to fully drawn, as if a hand is sketching it in real time. The technique works on anything you can draw as an SVG path: a signature, a logo outline, decorative underlines, mountain ranges, line charts, illustrated icons. The reveal feels organic and editorial — perfect for portfolio sites, brand pages, and case studies.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>The trick uses two CSS properties: <code>stroke-dasharray</code> defines a long dash equal to the path's total length, and <code>stroke-dashoffset</code> shifts that dash off the visible area. So initially, the entire path is "in the gap" and invisible. Transitioning <code>stroke-dashoffset</code> back to 0 walks the dash into the visible area, drawing the path. You need the path's <code>getTotalLength()</code> JS value (or just use a number larger than any reasonable path, like 2000, and round). IntersectionObserver fires the draw on scroll.</p>
+      <div class="term-grid">
+        <div><b>stroke-dasharray: L</b><span>One dash of length L (= path length), with no gap pattern</span></div>
+        <div><b>stroke-dashoffset: L → 0</b><span>Shifts the dash from off-screen to drawn — animate this</span></div>
+        <div><b>path.getTotalLength()</b><span>JS method that returns the exact path length in user units</span></div>
+        <div><b>stroke-linecap: round</b><span>Rounds the endpoints so lines don't end on a square stub</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. Each path draws itself when it enters view.</p>
+    <div class="demo-shell">
+      <div class="demo sv-demo" id="svDemo">
+        <span class="demo-badge">Live · scroll inside</span>
+        <div class="sv-spacer">↓ scroll to draw</div>
+        <div class="sv-stage">
+
+          <!-- 1: Underline -->
+          <div class="sv-item" data-draw>
+            <div class="sv-eyebrow">01 / Underline</div>
+            <h4>Quiet by <em>design</em>, fast by default.</h4>
+            <svg class="sv-canvas" viewBox="0 0 600 30" preserveAspectRatio="none" height="30">
+              <path class="draw" d="M10 22 Q 150 5, 300 18 T 590 14" />
+            </svg>
+            <p>Hand-drawn underline used as a custom emphasis under a key phrase.</p>
+          </div>
+
+          <!-- 2: Signature -->
+          <div class="sv-item" data-draw>
+            <div class="sv-eyebrow">02 / Signature</div>
+            <h4>Sincerely yours,</h4>
+            <svg class="sv-canvas" viewBox="0 0 400 100" height="120">
+              <path class="draw" d="M20 70 Q 50 20, 80 60 T 140 60 Q 170 30, 200 60 Q 230 90, 260 50 Q 290 10, 320 60 L 360 50" />
+            </svg>
+            <p>Drawing-style signature commonly used at the bottom of editorial pieces and brand homepages.</p>
+          </div>
+
+          <!-- 3: Mountain range chart -->
+          <div class="sv-item" data-draw>
+            <div class="sv-eyebrow">03 / Chart</div>
+            <h4>Six months of <em>growth</em>.</h4>
+            <svg class="sv-canvas" viewBox="0 0 600 200" height="200">
+              <path class="draw" d="M0 170 L 100 140 L 200 155 L 280 110 L 380 100 L 460 60 L 560 40 L 600 20" />
+              <path class="draw" d="M0 180 L 600 180" style="stroke: var(--border); stroke-dasharray: 0; stroke-dashoffset: 0; opacity: 0.4;" />
+            </svg>
+            <p>Line charts that draw left-to-right on scroll are an excellent way to make data feel narrative.</p>
+          </div>
+
+          <!-- 4: Logo outline -->
+          <div class="sv-item" data-draw>
+            <div class="sv-eyebrow">04 / Logo mark</div>
+            <h4>The studio mark.</h4>
+            <svg class="sv-canvas" viewBox="0 0 160 160" height="200">
+              <path class="draw" d="M80 20 L 140 80 L 80 140 L 20 80 Z" />
+              <circle class="draw" cx="80" cy="80" r="34" />
+            </svg>
+            <p>A geometric logo outline drawn as a single sequence. Often used for splash screens and logo reveals.</p>
+          </div>
+
+        </div>
+        <div class="sv-spacer">— end —</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.13 SVG Path Draw</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build an SVG path-drawing animation triggered on scroll. For each SVG path you want to animate, give it class="draw" with these CSS properties: fill:none, stroke:accent-color, stroke-width:2.5, stroke-linecap:round, stroke-dasharray:var(--len), stroke-dashoffset:var(--len). Initial state: the entire path is "in the gap" so invisible. On JS load, for each .draw path, call path.getTotalLength() and set its --len custom property to that value (so dasharray and dashoffset match the path exactly). Use IntersectionObserver on each parent container — when the container enters view (threshold 0.3), add an .in class that transitions stroke-dashoffset to 0 over 2.2 seconds with cubic-bezier(0.65, 0, 0.35, 1). Demonstrate four variations: (1) a wavy underline under a key phrase, (2) a script "signature" with looping curves, (3) a line-chart polyline that draws left-to-right, (4) a geometric logo combining a diamond path + an inscribed circle. Unobserve after first trigger.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://maxwellantonucci.com" target="_blank" rel="noopener">Maxwell Antonucci portfolio</a><span class="desc">Hand-drawn signature draws on scroll — perfect implementation</span></div></li>
+      <li><div><a href="https://css-tricks.com/svg-line-animation-works" target="_blank" rel="noopener">CSS-Tricks — "How SVG Line Animation Works"</a><span class="desc">The canonical explainer of the dasharray/dashoffset trick</span></div></li>
+      <li><div><a href="https://maxwellito.github.io/vivus" target="_blank" rel="noopener">Vivus.js</a><span class="desc">Tiny JS library that animates any SVG path drawing</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.12-clip-reveal.html" class="prev"><span class="label">← Prev</span><span class="title">2.12 Clip-Path Reveal</span></a>
+      <a href="2.14-marquee.html" class="next"><span class="label">Next →</span><span class="title">2.14 Marquee Banner</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const root = document.getElementById('svDemo');
+    // Set --len for each draw path to its real total length
+    root.querySelectorAll('.draw').forEach(p => {
+      try {
+        const len = Math.ceil(p.getTotalLength ? p.getTotalLength() : 800);
+        p.style.setProperty('--len', len);
+      } catch (e) {}
+    });
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { root, threshold: 0.3 });
+    root.querySelectorAll('[data-draw]').forEach(el => io.observe(el));
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

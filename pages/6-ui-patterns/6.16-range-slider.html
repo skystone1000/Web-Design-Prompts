@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>6.16 Range Slider · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .rs-demo {
+    min-height: 620px;
+    background: var(--bg-elev);
+    color: var(--text);
+    padding: 56px 40px;
+    border-radius: var(--radius-lg);
+  }
+  .rs-stage {
+    max-width: 580px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+  .rs-block { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
+  .rs-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 18px; }
+  .rs-head .lab { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); }
+  .rs-head .val { font-family: var(--font-display); font-size: 26px; font-weight: 500; color: var(--text); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .rs-head .val em { font-style: italic; color: var(--accent); }
+
+  /* === Single range === */
+  .rs-single {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(90deg, var(--accent) 0%, var(--accent) var(--p, 30%), rgba(255,255,255,0.08) var(--p, 30%), rgba(255,255,255,0.08) 100%);
+    border-radius: 999px;
+    outline: none;
+    cursor: pointer;
+  }
+  .rs-single::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px; height: 24px;
+    background: #fff;
+    border-radius: 50%;
+    border: 4px solid var(--accent);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    cursor: grab;
+    transition: transform 0.15s var(--ease-out-back);
+  }
+  .rs-single::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  .rs-single::-webkit-slider-thumb:active { cursor: grabbing; transform: scale(1.25); }
+  .rs-single::-moz-range-thumb {
+    width: 24px; height: 24px;
+    background: #fff;
+    border-radius: 50%;
+    border: 4px solid var(--accent);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+
+  /* Tick labels */
+  .rs-ticks {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* === Dual range === */
+  .rs-dual {
+    position: relative;
+    height: 24px;
+    margin: 8px 0 4px;
+  }
+  .rs-dual-track {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0; right: 0;
+    height: 6px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 999px;
+  }
+  .rs-dual-fill {
+    position: absolute;
+    top: 0; bottom: 0;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    border-radius: 999px;
+  }
+  .rs-dual input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    width: 100%;
+    height: 24px;
+    background: transparent;
+    pointer-events: none;
+    margin: 0;
+  }
+  .rs-dual input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    pointer-events: auto;
+    width: 22px; height: 22px;
+    background: #fff;
+    border-radius: 50%;
+    border: 4px solid var(--accent);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    cursor: grab;
+  }
+  .rs-dual input[type="range"]::-moz-range-thumb {
+    pointer-events: auto;
+    width: 22px; height: 22px;
+    background: #fff;
+    border-radius: 50%;
+    border: 4px solid var(--accent);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+
+  /* histogram above the dual slider */
+  .rs-hist {
+    display: grid;
+    grid-template-columns: repeat(20, 1fr);
+    gap: 2px;
+    height: 48px;
+    align-items: end;
+    margin-bottom: 8px;
+  }
+  .rs-hist span {
+    background: rgba(255,255,255,0.08);
+    border-radius: 2px;
+    transition: background 0.2s;
+  }
+  .rs-hist span.in { background: linear-gradient(180deg, var(--accent), var(--accent-2)); }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">UI Patterns</a>
+      <span class="sep">/</span>
+      <span class="here">Range Slider</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">6.16 · UI Pattern</span>
+    <h1 class="title">Range <em>Slider</em>.</h1>
+    <p class="tagline">A single-value slider, then a dual-thumb price range with a price histogram above it (Airbnb / Booking pattern). Custom-styled native inputs.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A range slider lets users pick a number on a continuous scale by dragging a thumb. Single-thumb for one value (volume, font size); dual-thumb for a min/max range (price filters, date ranges). The browser's native <code>&lt;input type="range"&gt;</code> handles all the keyboard + touch + accessibility — your job is just to dress it up.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Single slider: style the track with a <code>linear-gradient</code> that uses a CSS custom property for the fill stop position, updated from the input's value on every change. Style the thumb with vendor pseudo-elements (<code>::-webkit-slider-thumb</code>, <code>::-moz-range-thumb</code>). Dual slider: overlay two transparent input ranges in the same space, with <code>pointer-events: none</code> on the inputs but <code>pointer-events: auto</code> on the thumbs — so users can grab either. Render the colored "fill" between thumbs as a separate div whose left/right are set from the two values.</p>
+      <div class="term-grid">
+        <div><b>::-webkit-slider-thumb</b><span>Browser pseudo-element — required to style the draggable handle</span></div>
+        <div><b>Gradient fill</b><span>Track background uses linear-gradient with a JS-updated stop %</span></div>
+        <div><b>Dual via overlap</b><span>Two transparent ranges overlapped, only thumbs receive pointer events</span></div>
+        <div><b>Histogram backdrop</b><span>Bar chart above the slider showing distribution — Airbnb pattern</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <div class="demo-shell">
+      <div class="demo rs-demo">
+        <span class="demo-badge">Live · drag thumbs</span>
+        <div class="rs-stage">
+
+          <div class="rs-block">
+            <div class="rs-head">
+              <span class="lab">Brightness</span>
+              <span class="val" id="rs1Val">30<em>%</em></span>
+            </div>
+            <input type="range" class="rs-single" id="rs1" min="0" max="100" value="30" style="--p: 30%" />
+            <div class="rs-ticks"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+          </div>
+
+          <div class="rs-block">
+            <div class="rs-head">
+              <span class="lab">Price range</span>
+              <span class="val"><em>$</em><span id="rs2Min">220</span> — <em>$</em><span id="rs2Max">680</span></span>
+            </div>
+            <div class="rs-hist" id="rsHist"></div>
+            <div class="rs-dual" id="rsDual">
+              <div class="rs-dual-track"></div>
+              <div class="rs-dual-fill" id="rs2Fill"></div>
+              <input type="range" id="rs2A" min="0" max="1000" step="10" value="220" />
+              <input type="range" id="rs2B" min="0" max="1000" step="10" value="680" />
+            </div>
+            <div class="rs-ticks"><span>$0</span><span>$250</span><span>$500</span><span>$750</span><span>$1000</span></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 6.16 Range Slider</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build TWO range sliders inside cards: SINGLE: a native &lt;input type="range"&gt; styled with -webkit-appearance:none. The track is 8px tall, border-radius:999px, with background: linear-gradient(90deg, accent 0%, accent var(--p), rgba(255,255,255,0.08) var(--p), rgba(255,255,255,0.08) 100%) — update --p custom property from value on every input event. Thumb (::-webkit-slider-thumb AND ::-moz-range-thumb): 24px white circle with 4px accent border, drop shadow, scale-up on :hover and grab cursor. Show current value above as a big display-serif tabular-nums number with italic accent unit. Show tick labels below.
+
+DUAL: a price-range slider with two thumbs. Container position:relative, 24px tall. Track div absolutely positioned (6px tall gray). A FILL div sits between the two thumb values — its left and right inset are calculated from min and max value percentages. Two transparent input[type=range] elements overlap inside the container with pointer-events:none on the inputs themselves but pointer-events:auto on their thumbs — so users can grab either thumb. On input of either, ensure min &lt;= max (swap or clamp), update the fill div's left/right, and update the displayed values. Add a histogram of 20 bars ABOVE the slider — each bar's height is a fixed random value, but bars whose price falls inside the selected range get the accent gradient, others stay muted — the histogram updates live as the user drags. Airbnb price-filter pattern.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://airbnb.com" target="_blank" rel="noopener">Airbnb — price filter</a><span class="desc">The dual-thumb + histogram pattern that defined the genre</span></div></li>
+      <li><div><a href="https://booking.com" target="_blank" rel="noopener">Booking.com</a><span class="desc">Range filters across every facet</span></div></li>
+      <li><div><a href="https://www.radix-ui.com/primitives/docs/components/slider" target="_blank" rel="noopener">Radix UI — Slider</a><span class="desc">Fully accessible primitive used by many design systems</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="6.15-tag-input.html" class="prev"><span class="label">← Prev</span><span class="title">6.15 Tag Input</span></a>
+      <a href="6.17-image-compare.html" class="next"><span class="label">Next →</span><span class="title">6.17 Image Compare</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    // Single
+    const rs1 = document.getElementById('rs1');
+    const rs1Val = document.getElementById('rs1Val');
+    rs1.addEventListener('input', () => {
+      rs1.style.setProperty('--p', rs1.value + '%');
+      rs1Val.innerHTML = rs1.value + '<em>%</em>';
+    });
+
+    // Dual
+    const a = document.getElementById('rs2A');
+    const b = document.getElementById('rs2B');
+    const fill = document.getElementById('rs2Fill');
+    const minEl = document.getElementById('rs2Min');
+    const maxEl = document.getElementById('rs2Max');
+    const hist = document.getElementById('rsHist');
+    const max = +a.max;
+
+    // Build histogram with fixed heights
+    const heights = [30, 50, 45, 70, 80, 90, 75, 60, 55, 85, 95, 80, 70, 65, 50, 45, 30, 25, 15, 10];
+    hist.innerHTML = heights.map((h, i) => `<span data-i="${i}" style="height:${h}%"></span>`).join('');
+    const bars = hist.querySelectorAll('span');
+
+    function updateHistogram(minV, maxV) {
+      const slice = max / bars.length;
+      bars.forEach((bar, i) => {
+        const barMin = i * slice;
+        const barMax = (i + 1) * slice;
+        bar.classList.toggle('in', barMin >= minV && barMax <= maxV);
+      });
+    }
+
+    function update() {
+      let av = +a.value, bv = +b.value;
+      if (av > bv - 20) {
+        // keep at least 20 apart, snap the active one
+        if (document.activeElement === a) av = bv - 20;
+        else bv = av + 20;
+      }
+      a.value = av; b.value = bv;
+      const lp = (av / max) * 100;
+      const rp = (bv / max) * 100;
+      fill.style.left = lp + '%';
+      fill.style.right = (100 - rp) + '%';
+      minEl.textContent = av;
+      maxEl.textContent = bv;
+      updateHistogram(av, bv);
+    }
+    a.addEventListener('input', update);
+    b.addEventListener('input', update);
+    update();
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

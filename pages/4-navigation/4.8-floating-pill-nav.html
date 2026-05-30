@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>4.8 Floating Pill Navigation · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .pn-demo {
+    min-height: 720px;
+    background:
+      radial-gradient(60% 40% at 50% 0%, rgba(124,92,255,0.12), transparent 60%),
+      #0E0E14;
+    color: #fff;
+    border-radius: var(--radius-lg);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .pn-pill {
+    position: absolute;
+    top: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 999px;
+    box-shadow: 0 14px 40px rgba(0,0,0,0.4);
+  }
+  .pn-pill .brand {
+    padding: 8px 14px 8px 12px;
+    font-family: var(--font-display);
+    font-size: 16px;
+    color: #fff;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    margin-right: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pn-pill .brand::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+
+  .pn-link {
+    position: relative;
+    padding: 8px 14px;
+    color: rgba(255,255,255,0.7);
+    font-size: 13.5px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: color 0.2s;
+    z-index: 2;
+  }
+  .pn-link:hover { color: #fff; }
+  .pn-link.active { color: #1A1300; }
+  .pn-pill-bg {
+    position: absolute;
+    top: 6px;
+    height: calc(100% - 12px);
+    background: var(--accent);
+    border-radius: 999px;
+    transition: left 0.32s var(--ease-out-back), width 0.32s var(--ease-out-back);
+    z-index: 1;
+  }
+
+  .pn-cta {
+    margin-left: 4px;
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.95);
+    color: #1A1300;
+    border-radius: 999px;
+    font-size: 13.5px;
+    font-weight: 600;
+  }
+
+  .pn-hero {
+    padding: 140px 32px 80px;
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .pn-hero h3 { font-family: var(--font-display); font-weight: 400; font-size: clamp(40px, 6vw, 64px); letter-spacing: -0.03em; line-height: 1.05; color: #fff; }
+  .pn-hero h3 em { font-style: italic; color: var(--accent); }
+  .pn-hero p { color: rgba(255,255,255,0.65); font-size: 17px; margin-top: 18px; max-width: 48ch; margin-left: auto; margin-right: auto; line-height: 1.5; }
+
+  /* Mobile collapse to icons + dropdown */
+  @media (max-width: 640px) {
+    .pn-pill .brand { border-right: 0; margin-right: 0; padding-right: 8px; }
+    .pn-pill .pn-link { display: none; }
+    .pn-pill .pn-link.active { display: inline-flex; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Navigation</a>
+      <span class="sep">/</span>
+      <span class="here">Floating Pill Nav</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">4.8 · Navigation</span>
+    <h1 class="title">Floating Pill <em>Navigation</em>.</h1>
+    <p class="tagline">A frosted-glass island that floats over the hero. Click any link — an accent pill slides under it like a marble in a track.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Instead of a full-width top bar, the navigation is a small, rounded, floating pill anchored to the top center. Frosted-glass background, brand mark + links + CTA all squeezed in. An animated pill marker slides under the active link. Used heavily by modern marketing sites — Vercel, Linear's landing, Liner, Mintlify, every newer Y Combinator startup.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>One container with <code>position: absolute</code> (or fixed in production), centered with <code>left: 50%; transform: translateX(-50%)</code>. Inside, a flex row holds the brand, link buttons, and a CTA. The active-link pill is a separate absolutely-positioned <code>div</code> inside the container — on click of any link, JS measures the target link's <code>offsetLeft</code> + <code>offsetWidth</code> and animates the pill's <code>left</code> and <code>width</code> to match with a springy cubic-bezier. Frosted glass via <code>backdrop-filter: blur(20px) saturate(160%)</code>.</p>
+      <div class="term-grid">
+        <div><b>position: absolute centered</b><span>top:22px, left:50%, transform:translateX(-50%) — floats above content</span></div>
+        <div><b>backdrop-filter glass</b><span>blur(20px) saturate(160%) — picks up tints of whatever's behind</span></div>
+        <div><b>Animated pill marker</b><span>Separate div whose left+width transition to match the active link</span></div>
+        <div><b>Spring easing</b><span>cubic-bezier(0.34, 1.56, 0.64, 1) — pill bounces into place</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Click any link in the floating pill — the accent marker springs to its position.</p>
+    <div class="demo-shell">
+      <div class="demo pn-demo">
+        <span class="demo-badge">Live · click links</span>
+
+        <nav class="pn-pill" id="pnPill">
+          <div class="brand">Aurora</div>
+          <div class="pn-pill-bg" id="pnBg"></div>
+          <a class="pn-link active" data-pn>Product</a>
+          <a class="pn-link" data-pn>Pricing</a>
+          <a class="pn-link" data-pn>Customers</a>
+          <a class="pn-link" data-pn>Docs</a>
+          <a class="pn-link" data-pn>Changelog</a>
+          <a class="pn-cta">Get started</a>
+        </nav>
+
+        <div class="pn-hero">
+          <h3>The hero stays clean.<br>The nav <em>floats</em>.</h3>
+          <p>A small frosted island above the content. Less visual weight, more focus on the message.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 4.8 Floating Pill Nav</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a floating-pill navigation. One container: position:fixed (or absolute), top:22px, left:50%, transform:translateX(-50%), display:flex with 4px gaps, padding:6px, border-radius:999px, frosted glass background (rgba(255,255,255,0.06), backdrop-filter:blur(20px) saturate(160%), 1px white-12% border, deep box-shadow). Inside: a brand mark with a glowing dot indicator + thin vertical divider, 5 link buttons styled as small pills (8px 14px padding, 13.5px font, muted color), then a high-contrast white CTA pill on the right. Add a SEPARATE absolutely-positioned div ".pill-bg" inside the nav — that's the animated accent marker. On click of any link, calculate target link's offsetLeft and offsetWidth, then set the pill-bg's left and width to match with transition:left 0.32s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.32s same. Active link gets a dark text color so it reads on the accent background. On mobile under 640px, hide all links except the active one (use ::-webkit-details-marker or a separate hamburger button to expand).</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://vercel.com" target="_blank" rel="noopener">Vercel.com</a><span class="desc">The reference floating pill nav with animated active marker</span></div></li>
+      <li><div><a href="https://www.mintlify.com" target="_blank" rel="noopener">Mintlify</a><span class="desc">Docs platform with a clean floating glass nav</span></div></li>
+      <li><div><a href="https://getliner.com" target="_blank" rel="noopener">Liner</a><span class="desc">AI search product with a perfect pill nav</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="4.7-command-palette.html" class="prev"><span class="label">← Prev</span><span class="title">4.7 Command Palette</span></a>
+      <a href="4.9-pagination.html" class="next"><span class="label">Next →</span><span class="title">4.9 Pagination</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const nav = document.getElementById('pnPill');
+    const bg = document.getElementById('pnBg');
+    if (!nav || !bg) return;
+    const links = nav.querySelectorAll('.pn-link');
+    function moveTo(link) {
+      links.forEach(l => l.classList.toggle('active', l === link));
+      const r = link.getBoundingClientRect();
+      const nr = nav.getBoundingClientRect();
+      bg.style.left = (r.left - nr.left) + 'px';
+      bg.style.width = r.width + 'px';
+    }
+    links.forEach(l => l.addEventListener('click', () => moveTo(l)));
+    // initial
+    requestAnimationFrame(() => moveTo(nav.querySelector('.pn-link.active')));
+    window.addEventListener('resize', () => moveTo(nav.querySelector('.pn-link.active')));
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

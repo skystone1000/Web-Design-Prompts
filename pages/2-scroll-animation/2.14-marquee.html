@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.14 Marquee Text Banner · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .mq-demo {
+    min-height: 620px;
+    background: #0E0E14;
+    color: #fff;
+    border-radius: var(--radius-lg);
+    padding: 50px 0;
+    overflow: hidden;
+  }
+
+  .mq-band {
+    width: 100%;
+    overflow: hidden;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 26px 0;
+    position: relative;
+  }
+  .mq-band .track {
+    display: flex;
+    gap: 56px;
+    width: max-content;
+    animation: mq-l 28s linear infinite;
+    will-change: transform;
+  }
+  .mq-band .track.r { animation-name: mq-r; animation-duration: 36s; }
+  .mq-band.huge .track { animation-duration: 40s; }
+  .mq-band .track:hover { animation-play-state: paused; }
+  @keyframes mq-l { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes mq-r { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+  .mq-band .item {
+    display: inline-flex;
+    align-items: center;
+    gap: 18px;
+    flex-shrink: 0;
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: rgba(255,255,255,0.9);
+  }
+  .mq-band .item em { font-style: italic; color: var(--accent); }
+  .mq-band .item::after {
+    content: "✦";
+    color: var(--accent-2);
+    font-family: var(--font-mono);
+    font-size: 16px;
+    margin-left: -2px;
+  }
+
+  .mq-band.huge { padding: 32px 0; background: linear-gradient(90deg, rgba(232,179,57,0.06), transparent 40%, transparent 60%, rgba(232,179,57,0.06)); }
+  .mq-band.huge .item {
+    font-size: clamp(56px, 8vw, 96px);
+    font-weight: 300;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: #fff;
+  }
+  .mq-band.huge .item em { font-style: italic; color: var(--accent); }
+  .mq-band.huge .item::after { font-size: 38px; }
+
+  .mq-mid {
+    text-align: center;
+    padding: 48px 32px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .mq-mid p { color: var(--text-soft); font-size: 16px; line-height: 1.55; }
+  .mq-mid p b { color: var(--accent); font-family: var(--font-display); font-style: italic; }
+
+  /* edge fade */
+  .mq-band::before, .mq-band::after {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 100px;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .mq-band::before { left: 0; background: linear-gradient(90deg, #0E0E14, transparent); }
+  .mq-band::after { right: 0; background: linear-gradient(-90deg, #0E0E14, transparent); }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Marquee Banner</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.14 · Animation</span>
+    <h1 class="title">Marquee <em>Banner</em>.</h1>
+    <p class="tagline">Infinite horizontal text band that scrolls forever. Pure CSS keyframes. Often two bands moving opposite ways — a hallmark of editorial and agency sites.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A band of text — usually a brand mantra, services list, or featured tags — that scrolls horizontally forever. Pause on hover. Two bands often run in opposite directions for a parallax-like rhythm. Very popular on agency, fashion, and newsletter sites where it acts as both decoration and SEO copy.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Container has <code>overflow: hidden</code>. Inside, a flex track holds the items <em>duplicated</em> (you list each item twice so there's no visible jump when the loop seams). A CSS <code>@keyframes</code> translates the track from 0% to -50% over ~30 seconds, infinite. The reverse direction is a separate keyframes set from -50% to 0%. Add a small <code>::before</code>/<code>::after</code> linear-gradient on the container edges to fade items in/out instead of clipping them harshly.</p>
+      <div class="term-grid">
+        <div><b>Duplicate the items</b><span>List each item twice — guarantees seamless loop at -50% translate</span></div>
+        <div><b>translateX 0 → -50%</b><span>Animate the inner track. -50% = exactly one set of duplicates</span></div>
+        <div><b>animation-play-state: paused</b><span>Applied on hover so users can read items</span></div>
+        <div><b>Edge fade</b><span>Linear-gradient pseudo-elements at left+right edges hide harsh cuts</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Three bands: a normal-sized mantra band, an oversized display marquee, and a second mantra reversed. Hover any to pause.</p>
+    <div class="demo-shell">
+      <div class="demo mq-demo">
+        <span class="demo-badge">Live · hover to pause</span>
+
+        <div class="mq-band">
+          <div class="track">
+            <span class="item">Quiet by design</span>
+            <span class="item">Made for <em>operators</em></span>
+            <span class="item">Realtime sync</span>
+            <span class="item">No nudges</span>
+            <span class="item">End-to-end encrypted</span>
+            <span class="item">Built in <em>Brooklyn</em></span>
+            <!-- duplicates -->
+            <span class="item">Quiet by design</span>
+            <span class="item">Made for <em>operators</em></span>
+            <span class="item">Realtime sync</span>
+            <span class="item">No nudges</span>
+            <span class="item">End-to-end encrypted</span>
+            <span class="item">Built in <em>Brooklyn</em></span>
+          </div>
+        </div>
+
+        <div class="mq-mid">
+          <p>Marquee bands set a tone and a tempo. Combine a <b>small</b> band of words with a <b>huge</b> display marquee for editorial rhythm.</p>
+        </div>
+
+        <div class="mq-band huge">
+          <div class="track">
+            <span class="item"><em>Aurora</em></span>
+            <span class="item">Pulse</span>
+            <span class="item"><em>Drift</em></span>
+            <span class="item">Margin</span>
+            <span class="item"><em>Salt</em></span>
+            <!-- duplicates -->
+            <span class="item"><em>Aurora</em></span>
+            <span class="item">Pulse</span>
+            <span class="item"><em>Drift</em></span>
+            <span class="item">Margin</span>
+            <span class="item"><em>Salt</em></span>
+          </div>
+        </div>
+
+        <div class="mq-band">
+          <div class="track r">
+            <span class="item">Editorial design</span>
+            <span class="item">Brand systems</span>
+            <span class="item"><em>Long-form</em> writing</span>
+            <span class="item">Direction</span>
+            <span class="item">Photography</span>
+            <span class="item">Small-batch</span>
+            <!-- duplicates -->
+            <span class="item">Editorial design</span>
+            <span class="item">Brand systems</span>
+            <span class="item"><em>Long-form</em> writing</span>
+            <span class="item">Direction</span>
+            <span class="item">Photography</span>
+            <span class="item">Small-batch</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.14 Marquee Banner</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build 3 stacked infinite-marquee text bands. Container overflow:hidden, hairline top/bottom borders. Inside each band, a flex track containing 6 .item spans, then DUPLICATED — every item listed twice so the loop is seamless at -50% translate. Each item is display-serif font, with a single italic accent-colored ✦ separator between items. Apply CSS keyframes "marquee-left" translating 0% → -50% over 28 seconds linear infinite, and "marquee-right" -50% → 0% for reverse. Pause on hover via animation-play-state. Add ::before and ::after linear-gradient edge fades (100px wide, fade to the container's background color) so the items don't clip harshly at the edges. Three bands: small mantra band (28px), oversized display marquee (clamp(56,8vw,96), 36s duration), small mantra band going right. Each pair of opposite-direction bands creates a hypnotic editorial rhythm.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.linear.app" target="_blank" rel="noopener">Linear.app</a><span class="desc">Subtle marquee of customer logos</span></div></li>
+      <li><div><a href="https://supabase.com" target="_blank" rel="noopener">Supabase</a><span class="desc">Stats marquee mid-page — fast and clean</span></div></li>
+      <li><div><a href="https://www.read.cv" target="_blank" rel="noopener">Read.cv</a><span class="desc">Big italic display marquee with featured names</span></div></li>
+      <li><div><a href="https://www.framer.com" target="_blank" rel="noopener">Framer.com</a><span class="desc">Hero-area marquee of brand names</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.13-svg-draw.html" class="prev"><span class="label">← Prev</span><span class="title">2.13 SVG Path Draw</span></a>
+      <a href="2.15-hover-preview.html" class="next"><span class="label">Next →</span><span class="title">2.15 Hover Preview</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

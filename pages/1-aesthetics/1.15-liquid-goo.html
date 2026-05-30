@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>1.15 Liquid / Goo Effect · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .lq-demo {
+    min-height: 720px;
+    padding: 0;
+    background: #0a0a14;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .lq-stage {
+    position: absolute;
+    inset: 0;
+    filter: url(#goo);
+    -webkit-filter: url(#goo);
+  }
+  .lq-blob {
+    position: absolute;
+    border-radius: 50%;
+    will-change: transform;
+    mix-blend-mode: screen;
+  }
+  .lq-blob.a { width: 220px; height: 220px; background: #FF3DA1; top: 30%; left: 25%; animation: lq-move-a 10s ease-in-out infinite; }
+  .lq-blob.b { width: 180px; height: 180px; background: #8B5CF6; top: 50%; left: 40%; animation: lq-move-b 12s ease-in-out infinite; }
+  .lq-blob.c { width: 240px; height: 240px; background: #00D9FF; top: 35%; left: 55%; animation: lq-move-c 14s ease-in-out infinite; }
+  .lq-blob.d { width: 160px; height: 160px; background: #FFB800; top: 55%; left: 30%; animation: lq-move-d 11s ease-in-out infinite; }
+  @keyframes lq-move-a { 0%,100%{transform:translate(0,0);} 50%{transform:translate(120px,-40px);} }
+  @keyframes lq-move-b { 0%,100%{transform:translate(0,0);} 50%{transform:translate(-80px,80px);} }
+  @keyframes lq-move-c { 0%,100%{transform:translate(0,0);} 50%{transform:translate(-100px,-60px);} }
+  @keyframes lq-move-d { 0%,100%{transform:translate(0,0);} 50%{transform:translate(140px,60px);} }
+
+  .lq-content {
+    position: relative;
+    z-index: 5;
+    padding: 100px 40px;
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .lq-pill { display: inline-block; padding: 7px 14px; border: 1px solid rgba(255,255,255,0.2); border-radius: 999px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.75); margin-bottom: 26px; backdrop-filter: blur(10px); background: rgba(255,255,255,0.04); }
+  .lq-content h3 { font-family: var(--font-display); font-weight: 400; font-size: clamp(40px, 6.5vw, 72px); letter-spacing: -0.03em; line-height: 1; color: #fff; margin-bottom: 16px; }
+  .lq-content h3 em { font-style: italic; background: linear-gradient(90deg, #FF3DA1, #00D9FF); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+  .lq-content p { color: rgba(255,255,255,0.7); font-size: 17px; max-width: 50ch; margin: 0 auto; line-height: 1.55; }
+  .lq-buttons { margin-top: 32px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .lq-btn-row {
+    margin-top: 50px;
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    filter: url(#goo);
+    -webkit-filter: url(#goo);
+  }
+  .lq-pill-btn {
+    padding: 16px 28px;
+    background: #FF3DA1;
+    color: #fff;
+    border-radius: 999px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    border: none;
+  }
+  .lq-pill-btn.b { background: #8B5CF6; }
+  .lq-pill-btn.c { background: #00D9FF; color: #0a0a14; }
+  .lq-pill-btn:hover { transform: scale(1.05); }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Aesthetics</a>
+      <span class="sep">/</span>
+      <span class="here">Liquid / Goo</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">1.15 · Aesthetic</span>
+    <h1 class="title">Liquid / <em>Goo</em> Effect.</h1>
+    <p class="tagline">Color blobs that melt and merge into each other like mercury. A single SVG filter does all of it.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>The "goo" effect makes neighboring elements appear to physically merge into a single liquid shape when they get close enough. Each element keeps its color and shape, but the edges fuse into curving necks rather than overlapping flat. It's the visual signature of a lot of music and creative-coding sites, and works equally well for animated backgrounds and for clusters of buttons or pills.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Define an inline SVG <code>&lt;filter&gt;</code> on the page with two primitives: <code>feGaussianBlur</code> heavily blurs the contents, then <code>feColorMatrix</code> with a custom alpha matrix re-sharpens the edges of any pixel above a threshold. Apply <code>filter: url(#goo)</code> to any container — its children visually fuse when their blurred halos touch, but stay sharp-edged otherwise. Animate the children's position (or just hover them) to make the liquid shapes deform smoothly.</p>
+      <div class="term-grid">
+        <div><b>feGaussianBlur</b><span>SVG primitive that blurs the entire contents of the filter target</span></div>
+        <div><b>feColorMatrix</b><span>Re-sharpens alpha above a threshold — the second half of the goo trick</span></div>
+        <div><b>filter: url(#goo)</b><span>Applied to the parent container — its children fuse where their halos touch</span></div>
+        <div><b>mix-blend-mode: screen</b><span>Optional — blobs blend additively for richer color mixing</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Background blobs drift and merge. The button row at the bottom is also gooified — hover any pill.</p>
+    <div class="demo-shell">
+      <div class="demo lq-demo">
+        <span class="demo-badge">Live · SVG filter</span>
+        <svg style="position:absolute; width:0; height:0;" aria-hidden="true">
+          <defs>
+            <filter id="goo">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="14" result="blur"/>
+              <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10" result="goo"/>
+              <feComposite in="SourceGraphic" in2="goo" operator="atop"/>
+            </filter>
+          </defs>
+        </svg>
+
+        <div class="lq-stage">
+          <div class="lq-blob a"></div>
+          <div class="lq-blob b"></div>
+          <div class="lq-blob c"></div>
+          <div class="lq-blob d"></div>
+        </div>
+
+        <div class="lq-content">
+          <span class="lq-pill">★ Studio Mercury · est. 2024</span>
+          <h3>Interfaces that <em>flow</em>.</h3>
+          <p>Color, motion, and surface — treated as one continuous material. Try hovering the buttons below.</p>
+          <div class="lq-btn-row">
+            <button class="lq-pill-btn">Start</button>
+            <button class="lq-pill-btn b">Process</button>
+            <button class="lq-pill-btn c">Studio</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 1.15 Liquid / Goo Effect</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a hero section with a liquid / goo effect. Add an inline hidden SVG with a filter id="goo" containing: feGaussianBlur stdDeviation=14, then feColorMatrix mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10", then feComposite in="SourceGraphic" in2="goo" operator="atop". Create a stage container with filter:url(#goo) holding 4 absolutely-positioned colored circles (hot pink, violet, cyan, amber) at varied positions, each with a CSS @keyframes that translates 80-140px in a slow 10-14 second ease-in-out infinite loop. The blobs will visibly merge into liquid mercury when their edges meet. Hero content sits at z-index above. Also apply the same filter to a button row at the bottom (3 colored pill buttons spaced ~14px apart) — the buttons will fuse on hover/proximity. Use mix-blend-mode:screen on the blobs for extra color richness. Background near-black #0a0a14 so colors pop.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://css-tricks.com/gooey-effect" target="_blank" rel="noopener">CSS-Tricks — Gooey Effect (Lucas Bebber)</a><span class="desc">The classic explainer with full SVG filter code</span></div></li>
+      <li><div><a href="https://codepen.io/lbebber/pen/LELBEo" target="_blank" rel="noopener">CodePen — Gooey menu</a><span class="desc">Hamburger-to-X with goo melt — incredible reference</span></div></li>
+      <li><div><a href="https://github.com/lucasbebber/Gooey-Effect" target="_blank" rel="noopener">Gooey-Effect GitHub</a><span class="desc">Original library / repo demonstrating the technique</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="1.14-swiss-grid.html" class="prev"><span class="label">← Prev</span><span class="title">1.14 Swiss / Grid</span></a>
+      <a href="1.16-sketch.html" class="next"><span class="label">Next →</span><span class="title">1.16 Sketch / Hand-drawn</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

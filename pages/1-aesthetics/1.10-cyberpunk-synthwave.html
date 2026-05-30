@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>1.10 Cyberpunk / Synthwave · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=VT323&display=swap" rel="stylesheet" />
+<style>
+  /* ===== Live demo: Cyberpunk / Synthwave ===== */
+  .cy-demo {
+    min-height: 720px;
+    padding: 0;
+    background: linear-gradient(180deg, #0a0420 0%, #1a0640 40%, #fd1d7c 80%, #ffb800 100%);
+    color: #fff;
+    overflow: hidden;
+    position: relative;
+    font-family: 'Orbitron', sans-serif;
+  }
+  /* Sun */
+  .cy-sun {
+    position: absolute;
+    bottom: 38%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, #fff 0%, #ffd84c 30%, #fd1d7c 75%, #6e0080 100%);
+    box-shadow: 0 0 60px rgba(255,189,76,0.6), 0 0 120px rgba(253,29,124,0.4);
+  }
+  /* Horizontal stripes carved into the sun (synthwave classic) */
+  .cy-sun::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 12px, rgba(10,4,32,0.6) 12px 16px),
+      transparent;
+    mask: linear-gradient(180deg, transparent 0%, transparent 50%, #000 55%, #000 100%);
+    -webkit-mask: linear-gradient(180deg, transparent 0%, transparent 50%, #000 55%, #000 100%);
+  }
+  /* Floor grid */
+  .cy-floor {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 38%;
+    background:
+      linear-gradient(180deg, rgba(10,4,32,0) 0%, rgba(10,4,32,0.5) 80%, #0a0420 100%),
+      linear-gradient(180deg, transparent 0%, #2a0a50 100%);
+    perspective: 360px;
+    perspective-origin: 50% 0%;
+    overflow: hidden;
+  }
+  .cy-grid {
+    position: absolute;
+    inset: -20% -10% -2% -10%;
+    transform: rotateX(60deg);
+    background:
+      linear-gradient(90deg, transparent calc(8.33% - 1px), #ff2ec4 calc(8.33% - 1px), #ff2ec4 8.33%, transparent 8.33%) 0 0/8.33% 100%,
+      linear-gradient(0deg, transparent calc(8.33% - 1px), #ff2ec4 calc(8.33% - 1px), #ff2ec4 8.33%, transparent 8.33%) 0 100%/100% 8.33%;
+    box-shadow: inset 0 0 100px rgba(253,29,124,0.5);
+    animation: cy-scroll 4s linear infinite;
+  }
+  @keyframes cy-scroll {
+    from { background-position: 0 0, 0 100%; }
+    to   { background-position: 0 0, 0 calc(100% - 8.33%); }
+  }
+
+  /* Mountains silhouette */
+  .cy-mtn {
+    position: absolute;
+    bottom: 38%;
+    left: 0; right: 0;
+    height: 100px;
+    background:
+      conic-gradient(from 220deg at 10% 100%, transparent 0 40deg, #0a0420 40deg 60deg, transparent 60deg),
+      conic-gradient(from 220deg at 28% 100%, transparent 0 34deg, #0a0420 34deg 60deg, transparent 60deg),
+      conic-gradient(from 220deg at 50% 100%, transparent 0 38deg, #0a0420 38deg 60deg, transparent 60deg),
+      conic-gradient(from 220deg at 72% 100%, transparent 0 34deg, #0a0420 34deg 60deg, transparent 60deg),
+      conic-gradient(from 220deg at 90% 100%, transparent 0 40deg, #0a0420 40deg 60deg, transparent 60deg);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* Stars */
+  .cy-stars {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 60%;
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, #fff, transparent),
+      radial-gradient(1px 1px at 60% 20%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 80% 40%, #fff, transparent),
+      radial-gradient(1px 1px at 35% 55%, #fff, transparent),
+      radial-gradient(1px 1px at 90% 15%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 12% 50%, #fff, transparent),
+      radial-gradient(1px 1px at 50% 8%, #fff, transparent),
+      radial-gradient(1px 1px at 70% 60%, #fff, transparent);
+    opacity: 0.8;
+  }
+
+  .cy-content {
+    position: relative;
+    z-index: 3;
+    padding: 60px 36px 30px;
+    text-align: center;
+  }
+  .cy-tag {
+    display: inline-block;
+    padding: 6px 18px;
+    border: 1px solid #00f6ff;
+    color: #00f6ff;
+    font-family: 'VT323', monospace;
+    font-size: 18px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px #00f6ff;
+    background: rgba(0,246,255,0.06);
+    margin-bottom: 22px;
+  }
+  .cy-content h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: clamp(40px, 7vw, 76px);
+    line-height: 1;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #fff;
+    text-shadow:
+      0 0 12px #ff2ec4,
+      0 0 32px rgba(255,46,196,0.6),
+      3px 3px 0 #00f6ff;
+  }
+  .cy-content p {
+    margin-top: 20px;
+    font-family: 'VT323', monospace;
+    font-size: 22px;
+    letter-spacing: 0.08em;
+    color: #ffd84c;
+    text-shadow: 0 0 8px rgba(255,216,76,0.6);
+  }
+  .cy-content .cta {
+    margin-top: 32px;
+    display: inline-block;
+    padding: 14px 32px;
+    background: linear-gradient(90deg, #fd1d7c, #ff2ec4);
+    color: #0a0420;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: 2px solid #00f6ff;
+    box-shadow: 0 0 30px rgba(0,246,255,0.4), 4px 4px 0 #00f6ff;
+    cursor: pointer;
+  }
+
+  /* HUD corners */
+  .cy-hud {
+    position: absolute;
+    z-index: 4;
+    font-family: 'VT323', monospace;
+    font-size: 13px;
+    color: #00f6ff;
+    text-shadow: 0 0 6px #00f6ff;
+    letter-spacing: 0.12em;
+    padding: 8px 14px;
+    border: 1px solid rgba(0,246,255,0.5);
+    background: rgba(10,4,32,0.4);
+    backdrop-filter: blur(6px);
+  }
+  .cy-hud.tl { top: 14px; left: 14px; }
+  .cy-hud.tr { top: 14px; right: 14px; }
+  .cy-hud.bl { bottom: 14px; left: 14px; z-index: 5; }
+  .cy-hud.br { bottom: 14px; right: 14px; z-index: 5; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Aesthetics</a>
+      <span class="sep">/</span>
+      <span class="here">Cyberpunk / Synthwave</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">1.10 · Aesthetic</span>
+    <h1 class="title">Cyberpunk / <em>Synthwave</em>.</h1>
+    <p class="tagline">Neon grid horizon, sunset gradient sky, glitched serif type, HUD overlays. The 80s-future revival that game studios and dev tools love.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Synthwave (a sub-genre of cyberpunk aesthetics) borrows directly from 1980s VHS box-art, retro arcade games, and Tron — neon pink-and-cyan grids receding into a horizon, a stylized sun behind layered mountains, chrome-or-glow type. Cyberpunk extends it with HUD-like overlay chrome (corner brackets, monospace status text, scanlines). Used for game studios, hackathons, NFT projects, and any product that wants to feel "from the future, but a future that already happened."</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>The receding floor grid is a flat element with a magenta line pattern rotated using <code>transform: rotateX(60deg)</code> in a perspective container — that single CSS trick gives the iconic 3D vanishing-point effect. The "sun" is a circle with a pink-to-amber vertical gradient, partially covered by horizontal stripes (mask + repeating-linear-gradient). Mountain silhouettes are <code>conic-gradient</code> triangles in front of the sun. Stars are a stack of small <code>radial-gradient</code>s in the sky area. Type uses Orbitron (geometric) for the headline and VT323 (pixel) for HUD text, both with <code>text-shadow</code> neon glow.</p>
+      <div class="term-grid">
+        <div><b>perspective + rotateX</b><span>Container has perspective:360px, grid rotates 60deg on X — creates vanishing-point floor</span></div>
+        <div><b>conic-gradient triangles</b><span>Mountain silhouettes built without SVG or images</span></div>
+        <div><b>Neon text-shadow</b><span>Multi-layer text-shadow: small magenta + larger cyan glow + offset cyan stroke</span></div>
+        <div><b>VT323 / Orbitron</b><span>Free Google fonts that nail the retro-future feel</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <div class="demo-shell">
+      <div class="demo cy-demo">
+        <span class="demo-badge" style="background:rgba(10,4,32,0.6); color:#00f6ff; border-color:rgba(0,246,255,0.5);">Live · animated grid</span>
+        <div class="cy-stars" aria-hidden="true"></div>
+        <div class="cy-sun"></div>
+        <div class="cy-mtn"></div>
+        <div class="cy-floor"><div class="cy-grid"></div></div>
+
+        <div class="cy-hud tl">SYS_STATUS // ONLINE</div>
+        <div class="cy-hud tr">VER_4.0.42</div>
+        <div class="cy-hud bl">FPS // 60.00</div>
+        <div class="cy-hud br">NEON_GRID // READY</div>
+
+        <div class="cy-content">
+          <div class="cy-tag">★ NEW DROP — 24.05.30</div>
+          <h3>The neon<br>future is here.</h3>
+          <p>// run the demo. log in to the grid. //</p>
+          <a class="cta">ENTER →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 1.10 Cyberpunk / Synthwave</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Build a synthwave / cyberpunk hero section. Background: vertical gradient from deep purple #0a0420 to magenta #fd1d7c to amber #ffb800 (top to bottom). Import Orbitron and VT323 from Google Fonts. Build the iconic vanishing-point floor grid: a div at bottom 38% of the screen with perspective:360px, containing a child grid built from two repeating linear-gradients (magenta lines), rotated transform:rotateX(60deg) so it recedes to the horizon. Animate the grid translating slowly to simulate motion. Add a "sun": a centered circle (260px) with a vertical gradient (white → amber → magenta → purple) and horizontal stripe lines carved into the bottom half via mask + repeating-linear-gradient. Place black conic-gradient triangle mountains in front of the sun. Scatter small radial-gradient star dots across the sky. Headline in Orbitron 900, uppercase, with neon multi-layer text-shadow (magenta inner glow + cyan offset). HUD overlay text in VT323 font at four corners showing fake status strings ("SYS_STATUS // ONLINE", "FPS // 60.00"). CTA button: hot pink gradient with 2px cyan border and a cyan offset box-shadow.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://cyberpunk.net" target="_blank" rel="noopener">Cyberpunk 2077 official site</a><span class="desc">The reference for the full cyberpunk aesthetic — HUD, glitch, neon</span></div></li>
+      <li><div><a href="https://www.riotgames.com" target="_blank" rel="noopener">Riot Games / Valorant pages</a><span class="desc">Game marketing sites that use grid horizons and neon glow</span></div></li>
+      <li><div><a href="https://codepen.io/collection/DkEMov" target="_blank" rel="noopener">CodePen — Synthwave collection</a><span class="desc">CSS-only synthwave grids and sun setups, ready to study</span></div></li>
+      <li><div><a href="https://dribbble.com/tags/synthwave" target="_blank" rel="noopener">Dribbble — Synthwave UI</a><span class="desc">Hundreds of reference designs in the genre</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="1.9-aurora-mesh.html" class="prev"><span class="label">← Prev</span><span class="title">1.9 Aurora / Mesh</span></a>
+      <a href="1.11-editorial-magazine.html" class="next"><span class="label">Next →</span><span class="title">1.11 Editorial / Magazine</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

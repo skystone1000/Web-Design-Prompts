@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>5.9 Marker / Highlight on Text · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .mh-demo {
+    min-height: 620px;
+    background: #FAFAF7;
+    color: #1A1814;
+    padding: 60px 40px;
+    border-radius: var(--radius-lg);
+    display: grid;
+    place-items: center;
+    text-align: center;
+  }
+  .mh-stage {
+    max-width: 760px;
+    font-family: 'Georgia', serif;
+    color: #1A1814;
+  }
+  .mh-h {
+    font-family: 'Georgia', serif;
+    font-weight: 700;
+    font-size: clamp(36px, 5.5vw, 56px);
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    margin-bottom: 24px;
+  }
+  .mh-p {
+    font-size: 19px;
+    line-height: 1.6;
+    color: #2a2722;
+    margin-bottom: 22px;
+  }
+
+  /* Variants */
+  .mh-marker { /* persistent yellow marker behind a word */
+    background-image: linear-gradient(120deg, #fde047 0%, #fde047 100%);
+    background-repeat: no-repeat;
+    background-position: 0 88%;
+    background-size: 100% 35%;
+    padding: 0 4px;
+  }
+  .mh-sweep { /* sweeps in on hover */
+    background-image: linear-gradient(120deg, #fde047 0%, #fde047 100%);
+    background-repeat: no-repeat;
+    background-position: 0 88%;
+    background-size: 0% 35%;
+    transition: background-size 0.5s var(--ease);
+    padding: 0 4px;
+    cursor: pointer;
+  }
+  .mh-sweep:hover { background-size: 100% 35%; }
+
+  .mh-marker-pink {
+    background-image: linear-gradient(120deg, #fbcfe8 0%, #fbcfe8 100%);
+    background-repeat: no-repeat;
+    background-position: 0 88%;
+    background-size: 100% 50%;
+    padding: 0 3px;
+  }
+
+  .mh-strike { /* hand-drawn strikethrough */
+    position: relative;
+    color: rgba(26,24,20,0.55);
+  }
+  .mh-strike::after {
+    content: "";
+    position: absolute;
+    left: -4px; right: -4px;
+    top: 55%;
+    height: 6px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 6'><path d='M2 4 Q 25 0, 50 4 T 98 4' fill='none' stroke='%23e63946' stroke-width='2.2' stroke-linecap='round'/></svg>") no-repeat;
+    background-size: 100% 100%;
+  }
+
+  .mh-circle { /* hand-drawn circle around a word */
+    position: relative;
+    padding: 0 14px;
+  }
+  .mh-circle::before {
+    content: "";
+    position: absolute;
+    inset: -10px -2px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 60'><ellipse cx='60' cy='30' rx='55' ry='24' fill='none' stroke='%23e63946' stroke-width='2.2'/></svg>") no-repeat center / 100% 100%;
+  }
+
+  /* Demo selector cards */
+  .mh-cards {
+    margin-top: 36px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    text-align: left;
+  }
+  .mh-card {
+    padding: 16px;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #555;
+  }
+  .mh-card b { display: block; color: #111; margin-bottom: 4px; letter-spacing: 0.14em; text-transform: uppercase; }
+  @media (max-width: 720px) { .mh-cards { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Typography &amp; Color</a>
+      <span class="sep">/</span>
+      <span class="here">Marker Highlight</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">5.9 · Type</span>
+    <h1 class="title">Marker / <em>Highlight</em><br>on Text.</h1>
+    <p class="tagline">Yellow marker behind a key word, sweeping in on hover. Plus hand-drawn strikethroughs and circle annotations. Editorial energy without a single image.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A persistent or hover-triggered marker stripe behind specific words in body copy. Mimics highlighting a textbook with a yellow marker. Variants extend to hand-drawn strikethroughs (for "old prices" or struck-out words) and rough circles drawn around emphasized words. Editorial sites (The Verge, Stratechery, Substack newsletters) lean on these heavily because they add personality without breaking the prose flow.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Pure CSS, no images for the marker: <code>background-image: linear-gradient(120deg, yellow, yellow)</code> with <code>background-position: 0 88%</code> and <code>background-size: 100% 35%</code> creates a horizontal yellow bar through the lower third of the text — like a highlight. For the sweep-in variant, start <code>background-size: 0% 35%</code> and transition to 100% on hover. Strikethroughs and circle marks use inline SVG paths as <code>background-image</code> for the squiggly hand-drawn feel.</p>
+      <div class="term-grid">
+        <div><b>background-image gradient</b><span>Solid 2-stop gradient becomes a colored band behind the text</span></div>
+        <div><b>background-position + size</b><span>Position low + tall enough to look like a marker stripe</span></div>
+        <div><b>Sweep variant</b><span>Start width 0%, transition to 100% — animates in like a marker drag</span></div>
+        <div><b>SVG annotations</b><span>For circles + strikethroughs, inline SVG paths give a hand-drawn feel</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Hover the "deliberately" word — the marker sweeps in. The other annotations are persistent.</p>
+    <div class="demo-shell">
+      <div class="demo mh-demo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#1A1814; border-color:rgba(0,0,0,0.1);">Live · hover key words</span>
+        <div class="mh-stage">
+          <h3 class="mh-h">Some products are made on autopilot. Ours are made <span class="mh-marker">deliberately</span>.</h3>
+          <p class="mh-p">The <span class="mh-sweep">whole point</span> of this batch was patience. We doubled the bath time, ran the dye for an extra night, and let the cloth rest. The result is a softer hand and a deeper finish.</p>
+          <p class="mh-p">Each jacket is sewn by <span class="mh-circle">five hands</span>, finished by one, and numbered <span class="mh-strike">in marker</span> with a real fountain pen.</p>
+          <p class="mh-p" style="font-size:16px; color:#555;">Pricing is now <span class="mh-strike">$485</span> <span class="mh-marker-pink">$385</span> through the weekend.</p>
+        </div>
+
+        <div class="mh-cards" style="margin-top: 36px;">
+          <div class="mh-card"><b>Marker</b>linear-gradient, position 0 88%, size 100% 35%</div>
+          <div class="mh-card"><b>Sweep on hover</b>start size 0% — transition to 100%</div>
+          <div class="mh-card"><b>Circle</b>inline SVG ellipse path as background-image</div>
+          <div class="mh-card"><b>Strikethrough</b>inline SVG squiggle path under the text</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 5.9 Marker / Highlight on Text</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build four text annotation styles, all using pure CSS:
+(1) PERSISTENT MARKER: wrap a word in span.mh-marker { background-image:linear-gradient(120deg, #fde047 0%, #fde047 100%); background-repeat:no-repeat; background-position:0 88%; background-size:100% 35%; padding:0 4px } — creates a static yellow highlight bar behind the text.
+(2) SWEEP MARKER (hover): same as above but start background-size:0% 35%; transition:background-size 0.5s ease; on :hover background-size:100% 35% — highlight sweeps in left to right like a marker stroke.
+(3) HAND-DRAWN STRIKETHROUGH: span.mh-strike { position:relative; color:rgba(0,0,0,0.55) }, with ::after positioned absolute, inset -4px to -4px, top 55%, height 6px, background:url(inline-svg of a wavy stroke path in red) no-repeat — wavy stroke through the word like marker.
+(4) HAND-DRAWN CIRCLE: span.mh-circle { position:relative; padding:0 14px }, ::before absolute inset -10px -2px, background:url(inline-svg of an ellipse path in red) no-repeat center / 100% 100% — rough circle around the word.
+Demo using a serif paragraph (Georgia or Fraunces): show one of each annotation in a flowing paragraph. Include a bonus: old-price strikethrough + new-price marker side by side ("~~$485~~ [$385]").</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://stratechery.com" target="_blank" rel="noopener">Stratechery</a><span class="desc">Editorial newsletter heavy with marker highlights</span></div></li>
+      <li><div><a href="https://www.theverge.com" target="_blank" rel="noopener">The Verge</a><span class="desc">Big yellow marker headlines on product reviews</span></div></li>
+      <li><div><a href="https://roughnotation.com" target="_blank" rel="noopener">Rough Notation</a><span class="desc">JS library that draws annotation overlays (circle, underline, strikethrough)</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="5.8-outline-text.html" class="prev"><span class="label">← Prev</span><span class="title">5.8 Outline Text</span></a>
+      <a href="5.10-3d-shadow-text.html" class="next"><span class="label">Next →</span><span class="title">5.10 3D Layered Shadow</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

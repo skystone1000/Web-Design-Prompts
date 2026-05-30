@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>6.14 Empty State · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .es-demo {
+    min-height: 620px;
+    background: var(--bg-elev);
+    color: var(--text);
+    padding: 40px;
+    border-radius: var(--radius-lg);
+  }
+  .es-tabs { display: flex; gap: 6px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
+  .es-tab {
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-soft);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .es-tab:hover { color: var(--text); border-color: var(--border-strong); }
+  .es-tab.active { background: var(--accent); color: #1A1300; border-color: var(--accent); }
+
+  .es-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 80px 32px;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .es-state { display: none; }
+  .es-state.on { display: block; animation: es-fade 0.3s var(--ease); }
+  @keyframes es-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .es-illus {
+    width: 120px; height: 120px;
+    margin: 0 auto 28px;
+  }
+  .es-state h4 { font-family: var(--font-display); font-weight: 500; font-size: 26px; color: var(--text); margin-bottom: 10px; letter-spacing: -0.02em; }
+  .es-state h4 em { font-style: italic; color: var(--accent); }
+  .es-state p { color: var(--text-muted); font-size: 15px; line-height: 1.55; max-width: 40ch; margin: 0 auto 24px; }
+  .es-cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 12px 22px;
+    background: var(--accent);
+    color: #1A1300;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    border: 0;
+    transition: transform 0.15s;
+  }
+  .es-cta:hover { transform: translateY(-1px); }
+  .es-cta.ghost { background: transparent; color: var(--text); border: 1px solid var(--border); margin-left: 8px; }
+  .es-cta.ghost:hover { background: var(--bg-elev); }
+  .es-kbd {
+    display: inline-block;
+    margin-top: 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .es-kbd kbd { padding: 2px 6px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: 4px; color: var(--text); margin: 0 2px; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">UI Patterns</a>
+      <span class="sep">/</span>
+      <span class="here">Empty State</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">6.14 · UI Pattern</span>
+    <h1 class="title">Empty <em>State</em>.</h1>
+    <p class="tagline">The screen when there's nothing to show yet. Friendly illustration, warm message, clear primary CTA. Five common variants below.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>An empty state is the screen you see when a list, inbox, or workspace has nothing in it — either because you're new, you've completed everything, or you applied a filter that returned no results. It's the single most undervalued screen in product design. A good empty state turns "huh, nothing here" into "oh, here's what to do next" — with a friendly illustration, a one-line orientation, and a clear primary action.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Centered card with three vertical layers: (1) a hand-drawn or geometric illustration / icon at the top (~120px tall) that suggests the absent content; (2) a short serif headline that names the situation in plain words ("No projects yet" / "Your inbox is calm"); (3) one sentence of orientation + one primary action button + optional secondary link. Common variants: <code>first-time</code> (welcome + create), <code>zero-results</code> (after filter — clear filter), <code>inbox-zero</code> (positive celebration), <code>error</code> (something broke + retry), <code>permission</code> (you don't have access).</p>
+      <div class="term-grid">
+        <div><b>Illustration first</b><span>120-160px illustration or icon at top — sets the emotional tone</span></div>
+        <div><b>Headline names the state</b><span>Plain words: "No projects yet" not "Empty state"</span></div>
+        <div><b>One primary action</b><span>The next obvious thing to do, with a high-contrast button</span></div>
+        <div><b>Variants per situation</b><span>First-time / zero-results / inbox-zero / error / permission</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Switch between the 5 empty-state variants.</p>
+    <div class="demo-shell">
+      <div class="demo es-demo">
+        <span class="demo-badge">Live · switch state</span>
+        <div class="es-tabs" id="esTabs">
+          <button class="es-tab active" data-s="first">First-time</button>
+          <button class="es-tab" data-s="zero">Zero results</button>
+          <button class="es-tab" data-s="inbox">Inbox zero</button>
+          <button class="es-tab" data-s="error">Error</button>
+          <button class="es-tab" data-s="permission">No access</button>
+        </div>
+
+        <div class="es-card" id="esCard">
+
+          <div class="es-state on" data-state="first">
+            <svg class="es-illus" viewBox="0 0 120 120" fill="none">
+              <rect x="20" y="40" width="80" height="60" rx="8" stroke="var(--accent)" stroke-width="2"/>
+              <rect x="20" y="40" width="80" height="14" rx="8" fill="var(--accent)" fill-opacity="0.18"/>
+              <circle cx="28" cy="47" r="2.5" fill="var(--accent)"/>
+              <circle cx="36" cy="47" r="2.5" fill="var(--accent)"/>
+              <circle cx="44" cy="47" r="2.5" fill="var(--accent)"/>
+              <path d="M40 75h40M40 85h28" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="92" cy="32" r="14" fill="var(--accent)"/>
+              <path d="M92 26v12M86 32h12" stroke="#1A1300" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+            <h4>Start with your <em>first project</em>.</h4>
+            <p>Projects organize everything — tasks, docs, files, conversations. Make one now to see it all come together.</p>
+            <button class="es-cta">+ New project</button>
+            <button class="es-cta ghost">Browse templates</button>
+            <div class="es-kbd">or press <kbd>⌘</kbd><kbd>N</kbd></div>
+          </div>
+
+          <div class="es-state" data-state="zero">
+            <svg class="es-illus" viewBox="0 0 120 120" fill="none">
+              <circle cx="50" cy="50" r="28" stroke="var(--text-muted)" stroke-width="2.5"/>
+              <line x1="70" y1="70" x2="92" y2="92" stroke="var(--text-muted)" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M42 50l16-16M58 50l-16-16" stroke="var(--accent-2)" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+            <h4>No results for <em>"banana"</em>.</h4>
+            <p>Try a shorter query, check spelling, or clear the active filter to see everything.</p>
+            <button class="es-cta">Clear search</button>
+          </div>
+
+          <div class="es-state" data-state="inbox">
+            <svg class="es-illus" viewBox="0 0 120 120" fill="none">
+              <rect x="22" y="48" width="76" height="50" rx="6" stroke="var(--accent-3)" stroke-width="2"/>
+              <path d="M22 54l38 26 38-26" stroke="var(--accent-3)" stroke-width="2"/>
+              <circle cx="60" cy="36" r="14" fill="var(--accent-3)" fill-opacity="0.16" stroke="var(--accent-3)" stroke-width="2"/>
+              <path d="M54 36l4 4 8-8" stroke="var(--accent-3)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h4>Inbox zero. <em>Quietly done.</em></h4>
+            <p>You're caught up. Nothing to reply to, nothing pending. Go for a walk.</p>
+            <button class="es-cta ghost">Archive view</button>
+          </div>
+
+          <div class="es-state" data-state="error">
+            <svg class="es-illus" viewBox="0 0 120 120" fill="none">
+              <circle cx="60" cy="60" r="40" stroke="#f87171" stroke-width="2" stroke-opacity="0.5"/>
+              <line x1="60" y1="40" x2="60" y2="66" stroke="#f87171" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="60" cy="78" r="3" fill="#f87171"/>
+            </svg>
+            <h4>Something <em>broke</em> on our end.</h4>
+            <p>We couldn't load this page. It's probably temporary — we're already looking at it.</p>
+            <button class="es-cta">↻ Try again</button>
+            <button class="es-cta ghost">Report issue</button>
+          </div>
+
+          <div class="es-state" data-state="permission">
+            <svg class="es-illus" viewBox="0 0 120 120" fill="none">
+              <rect x="36" y="56" width="48" height="40" rx="6" stroke="var(--text-muted)" stroke-width="2"/>
+              <path d="M46 56v-12a14 14 0 0 1 28 0v12" stroke="var(--text-muted)" stroke-width="2"/>
+              <circle cx="60" cy="76" r="4" fill="var(--accent)"/>
+              <path d="M60 80v6" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+            <h4>You don't have <em>access</em> to this workspace.</h4>
+            <p>Ask the owner for an invite, or switch to a workspace you belong to.</p>
+            <button class="es-cta">Request access</button>
+            <button class="es-cta ghost">Switch workspace</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 6.14 Empty State</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build 5 empty-state variants in a centered card with switchable tabs. Card: padding 80px 32px, centered text, max-width 600px. Common structure: a 120×120 inline SVG illustration (use stroke=currentColor with accent-tinted fills for visual personality, NOT raster icons), then a display-serif h4 with italic accent on a key word, a muted paragraph (max 40ch), and one or two CTA buttons (primary filled accent + optional ghost outline). Variants: (1) FIRST-TIME — "Start with your first project" + + New project button + ghost Templates + kbd hint "⌘N", illustration of a card/window with a + plus icon; (2) ZERO RESULTS — "No results for 'banana'" + Clear search button, illustration of a magnifying glass with an × inside the lens; (3) INBOX ZERO — celebration "Inbox zero. Quietly done." + ghost Archive view button, illustration of an envelope with a ✓ above; (4) ERROR — red-tinted "Something broke" + Try again + Report issue, exclamation circle illustration; (5) PERMISSION — locked-out "You don't have access" + Request access + Switch workspace, padlock icon illustration. Only one state visible at a time, swap with .on class via JS tab buttons.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.notion.so" target="_blank" rel="noopener">Notion</a><span class="desc">Charming first-time empty states with hand-drawn illustrations</span></div></li>
+      <li><div><a href="https://linear.app" target="_blank" rel="noopener">Linear</a><span class="desc">Restrained empty states matching the minimalist aesthetic</span></div></li>
+      <li><div><a href="https://emptystat.es" target="_blank" rel="noopener">EmptyStat.es</a><span class="desc">Gallery of empty-state designs from real products</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="6.13-data-table.html" class="prev"><span class="label">← Prev</span><span class="title">6.13 Data Table</span></a>
+      <a href="6.15-tag-input.html" class="next"><span class="label">Next →</span><span class="title">6.15 Tag / Chip Input</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  document.getElementById('esTabs').addEventListener('click', (e) => {
+    const b = e.target.closest('.es-tab');
+    if (!b) return;
+    const s = b.dataset.s;
+    document.querySelectorAll('.es-tab').forEach(t => t.classList.toggle('active', t === b));
+    document.querySelectorAll('.es-state').forEach(st => st.classList.toggle('on', st.dataset.state === s));
+  });
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

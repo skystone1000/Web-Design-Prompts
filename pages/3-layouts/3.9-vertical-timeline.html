@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>3.9 Vertical Timeline · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .tl-demo {
+    height: 720px;
+    overflow-y: scroll;
+    background: var(--bg-elev);
+    border-radius: var(--radius-lg);
+    color: var(--text);
+    padding: 0;
+    position: relative;
+  }
+  .tl-hero {
+    padding: 60px 32px 40px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .tl-hero .eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+  .tl-hero h3 { font-family: var(--font-display); font-weight: 400; font-size: clamp(32px, 4.5vw, 48px); letter-spacing: -0.02em; color: var(--text); }
+  .tl-hero h3 em { font-style: italic; color: var(--accent); }
+  .tl-hero p { color: var(--text-muted); margin-top: 8px; font-size: 15px; }
+
+  .tl-wrap {
+    position: relative;
+    padding: 56px 32px;
+    max-width: 880px;
+    margin: 0 auto;
+  }
+  /* Central spine */
+  .tl-wrap::before {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 50%;
+    width: 2px;
+    background: var(--border);
+    transform: translateX(-50%);
+  }
+  /* Progress line filled by scroll */
+  .tl-wrap .progress {
+    position: absolute;
+    top: 0; left: 50%;
+    width: 2px;
+    height: 0;
+    background: linear-gradient(180deg, var(--accent), var(--accent-2));
+    transform: translateX(-50%);
+    transition: height 0.1s linear;
+  }
+  .tl-item {
+    position: relative;
+    width: 50%;
+    padding: 0 56px 56px 0;
+    box-sizing: border-box;
+  }
+  .tl-item:nth-child(odd) {
+    margin-left: 0;
+    text-align: right;
+  }
+  .tl-item:nth-child(even) {
+    margin-left: 50%;
+    padding: 0 0 56px 56px;
+    text-align: left;
+  }
+  /* Dot */
+  .tl-dot {
+    position: absolute;
+    top: 8px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--bg-elev);
+    border: 2px solid var(--text-muted);
+    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    z-index: 2;
+  }
+  .tl-item:nth-child(odd) .tl-dot { right: -10px; }
+  .tl-item:nth-child(even) .tl-dot { left: -10px; }
+  .tl-item.in .tl-dot {
+    border-color: var(--accent);
+    background: var(--accent);
+    transform: scale(1.15);
+    box-shadow: 0 0 0 6px rgba(232,179,57,0.18);
+  }
+
+  .tl-year {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .tl-item.in .tl-year { color: var(--accent); }
+  .tl-item h5 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .tl-item h5 em { font-style: italic; color: var(--accent); }
+  .tl-item p { font-size: 14.5px; color: var(--text-soft); line-height: 1.55; max-width: 38ch; margin-left: auto; }
+  .tl-item:nth-child(even) p { margin-left: 0; margin-right: auto; }
+  .tl-item .tag {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 720px) {
+    .tl-wrap::before, .tl-wrap .progress { left: 18px; }
+    .tl-item, .tl-item:nth-child(odd), .tl-item:nth-child(even) {
+      width: 100%; margin-left: 0;
+      padding: 0 0 36px 44px;
+      text-align: left;
+    }
+    .tl-item:nth-child(odd) .tl-dot, .tl-item:nth-child(even) .tl-dot {
+      left: 9px; right: auto;
+    }
+    .tl-item p { margin-left: 0; max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Layouts</a>
+      <span class="sep">/</span>
+      <span class="here">Vertical Timeline</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">3.9 · Layout</span>
+    <h1 class="title">Vertical <em>Timeline</em>.</h1>
+    <p class="tagline">Central spine with alternating-side events. Dots light up and a gradient progress line fills as you scroll past each milestone.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A vertical line down the page with events alternating between the left and right sides. Each event has a date, title, description, and a dot on the spine. As the reader scrolls, the dot for the current event becomes active and a colored progress line fills from the top down. Used on company history pages, product changelogs, conference agendas, and personal portfolios.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>The container has a <code>::before</code> pseudo-element 2px wide running the full height, centered horizontally — that's the spine. Each event is a 50%-width block that alternates side via <code>:nth-child(odd/even)</code> rules: odd items are right-aligned with margin-left:0, even items have margin-left:50%. The dot is absolutely-positioned at the inner edge of each block. An IntersectionObserver adds an <code>.in</code> class when each item enters view, lighting up the dot. A second absolutely-positioned line (the progress) has its <code>height</code> updated on scroll to fill from the top.</p>
+      <div class="term-grid">
+        <div><b>Central spine</b><span>::before pseudo-element, 2px wide, full container height, centered</span></div>
+        <div><b>:nth-child(odd/even)</b><span>Alternates which side each event sits on</span></div>
+        <div><b>Active dot state</b><span>IntersectionObserver toggles .in — dot scales up, gets accent color + glow</span></div>
+        <div><b>Progress fill</b><span>Second absolute line whose height updates on scroll — colored gradient</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. Watch the dots activate and the amber line fill from the top.</p>
+    <div class="demo-shell">
+      <div class="demo tl-demo" id="tlDemo">
+        <span class="demo-badge">Live · scroll inside</span>
+        <div class="tl-hero">
+          <div class="eyebrow">— Field Co. · est. 2019</div>
+          <h3>Seven years, <em>twelve batches</em>.</h3>
+          <p>A short history, one jacket at a time.</p>
+        </div>
+        <div class="tl-wrap" id="tlWrap">
+          <div class="progress" id="tlProgress"></div>
+
+          <div class="tl-item">
+            <span class="tl-dot"></span>
+            <div class="tl-year">2019 · Q3</div>
+            <h5>Two people, <em>one sewing machine</em>.</h5>
+            <p>The studio opens in a 240 sq ft loft. Batch 01 ships to 12 friends.</p>
+            <span class="tag">Founded</span>
+          </div>
+
+          <div class="tl-item">
+            <span class="tl-dot"></span>
+            <div class="tl-year">2020 · Q2</div>
+            <h5>Batch 04 sells out in <em>11 hours</em>.</h5>
+            <p>The first one we couldn't make fast enough. We learn to forecast.</p>
+            <span class="tag">Milestone</span>
+          </div>
+
+          <div class="tl-item">
+            <span class="tl-dot"></span>
+            <div class="tl-year">2021 · Q4</div>
+            <h5>First permanent stockist.</h5>
+            <p>A small concept shop in Reykjavík takes 18 jackets on consignment.</p>
+            <span class="tag">Distribution</span>
+          </div>
+
+          <div class="tl-item">
+            <span class="tl-dot"></span>
+            <div class="tl-year">2023 · Q1</div>
+            <h5>We hire <em>three more makers</em>.</h5>
+            <p>The team is now five. Average shipping time falls from 6 weeks to 9 days.</p>
+            <span class="tag">Team</span>
+          </div>
+
+          <div class="tl-item">
+            <span class="tl-dot"></span>
+            <div class="tl-year">2024 · Q3</div>
+            <h5>Re-waxing service launches.</h5>
+            <p>Send any jacket back. We strip, re-wax, and return it for $40. 1,400 served in year one.</p>
+            <span class="tag">Service</span>
+          </div>
+
+          <div class="tl-item">
+            <span class="tl-dot"></span>
+            <div class="tl-year">2026 · Q2</div>
+            <h5>Batch 12 is shipping.</h5>
+            <p>240 numbered pieces. The biggest run we've ever done. Quietly.</p>
+            <span class="tag">Latest</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 3.9 Vertical Timeline</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Build a vertical timeline component for a company history page. Container has position:relative, max-width:880px. Add a ::before pseudo-element that's a 2px-wide line running the full height, centered horizontally — that's the spine. Also add an absolutely-positioned "progress" line at the same position with height:0, background:linear-gradient(amber → cyan). Each event is a div, width:50%, with :nth-child(odd) margin-left:0 + text-align:right + padding-right:56px, and :nth-child(even) margin-left:50% + text-align:left + padding-left:56px. Each event has a date (uppercase monospace), title (display serif), description, and tag pill. Each event has an absolutely-positioned circular dot (18px, 2px border) on the inner edge of the block — :nth-child(odd) dot is at right:-10px, :nth-child(even) dot is at left:-10px. Use IntersectionObserver (threshold 0.4) to add an .in class to each item as it enters view — .in dot scales up, gets accent background, glow shadow. On scroll, update the progress line's height to (scrollTop / scrollHeight) * containerHeight. On mobile (under 720px), collapse to a single left-side layout — spine moves to left:18px, all items use padding-left:44px and text-align:left.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://stripe.com/about" target="_blank" rel="noopener">Stripe — About / History</a><span class="desc">Company history as a timeline with milestones and dot navigation</span></div></li>
+      <li><div><a href="https://linear.app/changelog" target="_blank" rel="noopener">Linear — Changelog</a><span class="desc">Single-side timeline (all dots on the left) — minimal and beautiful</span></div></li>
+      <li><div><a href="https://github.com/about/timeline" target="_blank" rel="noopener">GitHub — Anniversary timelines</a><span class="desc">Annual recap timelines done well</span></div></li>
+      <li><div><a href="https://codrops.com" target="_blank" rel="noopener">Codrops — timeline patterns</a><span class="desc">Tutorials and demos for animated timeline variants</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="3.8-diagonal-sections.html" class="prev"><span class="label">← Prev</span><span class="title">3.8 Diagonal Sections</span></a>
+      <a href="3.10-z-pattern.html" class="next"><span class="label">Next →</span><span class="title">3.10 Z-Pattern</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    const scroller = document.getElementById('tlDemo');
+    const wrap = document.getElementById('tlWrap');
+    const progress = document.getElementById('tlProgress');
+    if (!scroller || !wrap) return;
+    const items = wrap.querySelectorAll('.tl-item');
+
+    // IntersectionObserver to activate items
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        e.target.classList.toggle('in', e.isIntersecting && e.intersectionRatio > 0.4);
+      });
+    }, { root: scroller, threshold: [0.4, 0.6] });
+    items.forEach(i => io.observe(i));
+
+    // Progress line fill on scroll
+    function updateProgress() {
+      const wrapRect = wrap.getBoundingClientRect();
+      const scRect = scroller.getBoundingClientRect();
+      const start = wrapRect.top - scRect.top;
+      const totalHeight = wrap.offsetHeight;
+      const viewportPos = scRect.height * 0.5;
+      const traveled = Math.max(0, viewportPos - start);
+      const h = Math.min(totalHeight, Math.max(0, traveled));
+      progress.style.height = h + 'px';
+    }
+    scroller.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

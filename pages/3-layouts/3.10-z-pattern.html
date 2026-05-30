@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>3.10 Z-Pattern Layout · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .zp-demo {
+    min-height: 720px;
+    background: #FAFAF7;
+    color: #1A1814;
+    padding: 56px 40px;
+    border-radius: var(--radius-lg);
+    position: relative;
+    overflow: hidden;
+  }
+  /* Z guide arrows */
+  .zp-arrow { position: absolute; pointer-events: none; opacity: 0; transition: opacity 0.3s; z-index: 1; }
+  .zp-demo.show-z .zp-arrow { opacity: 0.65; }
+  .zp-arrow svg { width: 100%; height: 100%; }
+  .zp-a1 { top: 100px; left: 130px; right: 130px; height: 2px; }
+  .zp-a1 svg path { stroke: #e63946; stroke-width: 3; }
+  .zp-a2 { top: 110px; left: 130px; width: 70%; height: 280px; }
+  .zp-a3 { top: 380px; left: 130px; right: 130px; height: 2px; }
+
+  .zp-toggle {
+    position: absolute;
+    top: 16px; right: 16px;
+    padding: 6px 12px;
+    border: 1px solid rgba(0,0,0,0.18);
+    background: #fff;
+    color: #111;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    z-index: 5;
+  }
+
+  .zp-stage {
+    max-width: 980px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+  .zp-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    align-items: center;
+    margin-bottom: 60px;
+  }
+  .zp-row.r { grid-template-columns: 1fr 1fr; }
+  .zp-row.r .text { order: 2; }
+  .zp-row.r .img { order: 1; }
+
+  .zp-eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #e63946; margin-bottom: 12px; }
+  .zp-row h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(28px, 4vw, 40px);
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin-bottom: 12px;
+  }
+  .zp-row h3 em { font-style: italic; color: #e63946; }
+  .zp-row p { color: #444; font-size: 16px; line-height: 1.55; max-width: 42ch; }
+  .zp-cta {
+    margin-top: 18px;
+    display: inline-block;
+    padding: 12px 22px;
+    background: #1A1814;
+    color: #fff;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .zp-art {
+    aspect-ratio: 4/3;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #E8B339, #D96F5A);
+    position: relative;
+    overflow: hidden;
+  }
+  .zp-art.b { background: linear-gradient(135deg, #6FB5A8, #1A1814); }
+  .zp-art.c { background: linear-gradient(135deg, #c4a35d, #6b4f1e); }
+  .zp-art::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.22), transparent 65%);
+  }
+
+  @media (max-width: 720px) {
+    .zp-row, .zp-row.r { grid-template-columns: 1fr; }
+    .zp-row.r .text { order: 1; }
+    .zp-arrow { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Layouts</a>
+      <span class="sep">/</span>
+      <span class="here">Z-Pattern</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">3.10 · Layout</span>
+    <h1 class="title">Z-Pattern <em>Layout</em>.</h1>
+    <p class="tagline">Alternating image-text rows that pull the eye through a zigzag — top-left → top-right → bottom-left → bottom-right. The marketing-page workhorse.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Where the F-pattern (3.1) describes text-heavy reading, the Z-pattern describes how eyes scan image-heavy marketing pages. Rows alternate image-left/text-right, then text-left/image-right, then image-left again — pulling the eye through a Z shape. Used by basically every SaaS marketing page that isn't pure hero+grid: Notion, Figma, Stripe product pages, Apple feature pages.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Stack 3–5 rows of CSS Grid (two equal columns each). Each row holds an image block and a text block. Alternate the order via a <code>.reverse</code> class on every other row (use CSS <code>order</code> property or just swap which child gets which grid column). Keep the columns vertically centered with <code>align-items: center</code>. The Z is invisible to the user but governs how their attention naturally flows down the page.</p>
+      <div class="term-grid">
+        <div><b>Two-column CSS Grid</b><span>grid-template-columns:1fr 1fr per row, gap:28px</span></div>
+        <div><b>Alternate via order</b><span>.reverse swaps which child sits in which column</span></div>
+        <div><b>align-items: center</b><span>Vertically center text with the image for clean balance</span></div>
+        <div><b>3-5 rows max</b><span>More than that and the zigzag becomes monotonous</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Click "Show Z" to reveal the invisible eye-flow path overlay.</p>
+    <div class="demo-shell">
+      <div class="demo zp-demo" id="zpDemo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#111; border-color:rgba(0,0,0,0.1);">Live</span>
+        <button class="zp-toggle" id="zpToggle">Show Z</button>
+
+        <div class="zp-arrow zp-a1"><svg viewBox="0 0 600 4" preserveAspectRatio="none"><line x1="2" y1="2" x2="598" y2="2" stroke-dasharray="4 6"/></svg></div>
+        <div class="zp-arrow zp-a2"><svg viewBox="0 0 600 280" preserveAspectRatio="none"><line x1="580" y1="20" x2="20" y2="260" stroke="#e63946" stroke-width="3" stroke-dasharray="4 6"/></svg></div>
+        <div class="zp-arrow zp-a3"><svg viewBox="0 0 600 4" preserveAspectRatio="none"><line x1="2" y1="2" x2="598" y2="2" stroke="#e63946" stroke-width="3" stroke-dasharray="4 6"/></svg></div>
+
+        <div class="zp-stage">
+          <div class="zp-row">
+            <div class="text">
+              <div class="zp-eyebrow">— Step one</div>
+              <h3>Start <em>writing</em>.</h3>
+              <p>The blank page is the only feature you really need. Begin with words. Everything else can wait.</p>
+              <span class="zp-cta">Try writing →</span>
+            </div>
+            <div class="img"><div class="zp-art"></div></div>
+          </div>
+          <div class="zp-row r">
+            <div class="text">
+              <div class="zp-eyebrow">— Step two</div>
+              <h3>Then <em>organize</em>.</h3>
+              <p>Structure follows draft. Drop blocks, drag sections, rename headings until the shape feels right.</p>
+              <span class="zp-cta">See organize →</span>
+            </div>
+            <div class="img"><div class="zp-art b"></div></div>
+          </div>
+          <div class="zp-row">
+            <div class="text">
+              <div class="zp-eyebrow">— Step three</div>
+              <h3>Then <em>ship</em>.</h3>
+              <p>One keyboard shortcut and your draft becomes a public page, a newsletter, or a deploy. No middle step.</p>
+              <span class="zp-cta">See publishing →</span>
+            </div>
+            <div class="img"><div class="zp-art c"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 3.10 Z-Pattern Layout</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a Z-pattern marketing page with 3 alternating image-text rows. Each row is a CSS Grid with grid-template-columns:1fr 1fr, gap:28px, align-items:center. Inside each row: a text column (small red uppercase eyebrow, large display-serif headline with one italic accent word, body paragraph max-width 42ch, dark CTA button) and an image column (aspect-ratio:4/3, border-radius:14px, colored gradient placeholder). Row 1: image on the right. Row 2 (.reverse): image on the LEFT, text on the right — flip the visual order using CSS order property. Row 3: image on the right again. The alternation pulls the reader's eye diagonally through a Z, which is the natural scan path for image-heavy marketing pages. Add an optional "Show Z" toggle button that overlays dashed red SVG arrows tracing the Z-shape across the page. On mobile (under 720px) collapse to single column and stack text-then-image consistently.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://notion.so" target="_blank" rel="noopener">Notion.so feature pages</a><span class="desc">Classic Z-pattern with alternating screenshot rows</span></div></li>
+      <li><div><a href="https://figma.com" target="_blank" rel="noopener">Figma.com</a><span class="desc">Same pattern, masterfully done</span></div></li>
+      <li><div><a href="https://stripe.com/payments" target="_blank" rel="noopener">Stripe — Payments page</a><span class="desc">Multi-row Z with each row introducing a new sub-feature</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="3.9-vertical-timeline.html" class="prev"><span class="label">← Prev</span><span class="title">3.9 Vertical Timeline</span></a>
+      <a href="3.11-card-stack.html" class="next"><span class="label">Next →</span><span class="title">3.11 Card Stack</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  document.getElementById('zpToggle')?.addEventListener('click', (e) => {
+    const d = document.getElementById('zpDemo');
+    d.classList.toggle('show-z');
+    e.target.textContent = d.classList.contains('show-z') ? 'Hide Z' : 'Show Z';
+  });
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

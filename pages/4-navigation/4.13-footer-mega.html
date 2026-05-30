@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>4.13 Footer Mega-Menu · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .fm-demo {
+    min-height: 720px;
+    background: #0E0E14;
+    color: #fff;
+    padding: 56px 36px;
+    border-radius: var(--radius-lg);
+  }
+  .fm-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 40px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .fm-brand h6 { font-family: var(--font-display); font-weight: 400; font-size: 28px; letter-spacing: -0.02em; color: #fff; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+  .fm-brand h6::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+  .fm-brand p { color: rgba(255,255,255,0.55); font-size: 14px; line-height: 1.55; max-width: 32ch; margin-bottom: 16px; }
+  .fm-newsletter {
+    display: flex; gap: 6px; max-width: 320px;
+  }
+  .fm-newsletter input {
+    flex: 1; padding: 10px 14px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 13.5px;
+  }
+  .fm-newsletter input::placeholder { color: rgba(255,255,255,0.4); }
+  .fm-newsletter button {
+    padding: 10px 16px;
+    background: var(--accent);
+    color: #1A1300;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13.5px;
+    border: 0;
+    cursor: pointer;
+  }
+
+  .fm-col h6 {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+  .fm-col ul { display: flex; flex-direction: column; gap: 9px; }
+  .fm-col ul li { font-size: 13.5px; color: rgba(255,255,255,0.78); cursor: pointer; display: flex; align-items: center; gap: 8px; transition: color 0.2s; }
+  .fm-col ul li:hover { color: #fff; }
+  .fm-col ul li .badge { font-family: var(--font-mono); font-size: 9px; padding: 2px 6px; background: rgba(232,179,57,0.18); color: var(--accent); border-radius: 4px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  .fm-bottom {
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+  .fm-bottom .socials { display: flex; gap: 10px; }
+  .fm-bottom .socials a {
+    width: 32px; height: 32px;
+    display: grid; place-items: center;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 50%;
+    color: rgba(255,255,255,0.7);
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .fm-bottom .socials a:hover { border-color: var(--accent); color: var(--accent); }
+  .fm-bottom .socials svg { width: 14px; height: 14px; }
+  .fm-bottom .legal { display: flex; gap: 22px; }
+  .fm-bottom .legal a { color: rgba(255,255,255,0.55); }
+  .fm-bottom .legal a:hover { color: #fff; }
+  .fm-status { display: flex; align-items: center; gap: 8px; }
+  .fm-status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #16a34a; box-shadow: 0 0 8px #16a34a; }
+
+  @media (max-width: 900px) { .fm-grid { grid-template-columns: 1fr 1fr; } .fm-brand { grid-column: 1 / -1; } }
+  @media (max-width: 600px) { .fm-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Navigation</a>
+      <span class="sep">/</span>
+      <span class="here">Footer Mega-Menu</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">4.13 · Navigation</span>
+    <h1 class="title">Footer <em>Mega-Menu</em>.</h1>
+    <p class="tagline">The sprawling sitemap footer. Brand block + newsletter + 4 columns of links + social row + status indicator + legal. The Stripe / Vercel / Linear pattern.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>The catch-all bottom-of-site navigation that exposes every secondary destination — pricing, docs, changelog, careers, customers, blog, legal, status page, social. Replaces both the limited top nav and a separate sitemap page. Usually 4–6 columns plus a brand/newsletter block, finished with a row of legal links, social icons, and a live system-status indicator.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Outer container uses CSS Grid with one wide brand column and 4 narrow link columns (<code>grid-template-columns: 2fr 1fr 1fr 1fr 1fr</code>). Each link column has a small uppercase mono header and a stacked list of muted links. The brand column holds the logo, a one-line product description, and a newsletter form. Below the grid: a hairline divider, then a flex row with copyright + legal links on one side and social icons on the other. A green-dot "All systems operational" indicator next to the copyright links to the status page.</p>
+      <div class="term-grid">
+        <div><b>2fr 1fr×4 grid</b><span>Brand block wider than each link column — proven Stripe/Vercel layout</span></div>
+        <div><b>Uppercase mono headers</b><span>Column labels in mono caps differentiate from link rows</span></div>
+        <div><b>Newsletter inline</b><span>Email input + button inside the brand block — captures intent at exit</span></div>
+        <div><b>Status indicator</b><span>Green dot + "all systems operational" — link to the public status page</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <div class="demo-shell">
+      <div class="demo fm-demo">
+        <span class="demo-badge">Live</span>
+        <div class="fm-grid">
+          <div class="fm-brand">
+            <h6>Aurora</h6>
+            <p>The quiet workspace. Made by five operators in Brooklyn.</p>
+            <form class="fm-newsletter" onsubmit="event.preventDefault();">
+              <input type="email" placeholder="you@company.com" />
+              <button type="submit">Subscribe</button>
+            </form>
+          </div>
+          <div class="fm-col">
+            <h6>Product</h6>
+            <ul>
+              <li>Features</li>
+              <li>Pricing</li>
+              <li>Changelog <span class="badge">New</span></li>
+              <li>Integrations</li>
+              <li>Roadmap</li>
+              <li>Download</li>
+            </ul>
+          </div>
+          <div class="fm-col">
+            <h6>Resources</h6>
+            <ul>
+              <li>Documentation</li>
+              <li>Guides</li>
+              <li>API reference</li>
+              <li>Help center</li>
+              <li>Templates</li>
+              <li>Community</li>
+            </ul>
+          </div>
+          <div class="fm-col">
+            <h6>Company</h6>
+            <ul>
+              <li>About</li>
+              <li>Customers</li>
+              <li>Manifesto</li>
+              <li>Careers <span class="badge">7</span></li>
+              <li>Press kit</li>
+              <li>Contact</li>
+            </ul>
+          </div>
+          <div class="fm-col">
+            <h6>Legal</h6>
+            <ul>
+              <li>Privacy</li>
+              <li>Terms</li>
+              <li>Security</li>
+              <li>DPA</li>
+              <li>Cookies</li>
+              <li>Subprocessors</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="fm-bottom">
+          <div class="fm-status">All systems operational</div>
+          <div class="legal">
+            <a>© 2026 Aurora Inc.</a>
+            <a>Privacy</a>
+            <a>Terms</a>
+            <a>Cookies</a>
+          </div>
+          <div class="socials">
+            <a aria-label="X / Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2H22L13.5 12 23 22h-7L11 15.5 5 22H1l9-10L1 2h7l4.5 6L18 2z"/></svg></a>
+            <a aria-label="GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></a>
+            <a aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h4v16H4zM6 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM10 8h4v2c.5-1 2-2 4-2 4 0 5 3 5 6v8h-4v-7c0-2-.5-3-2-3s-2 1-2 3v7h-4z"/></svg></a>
+            <a aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2s-.2-1.4-.8-2c-.7-.8-1.6-.8-2-.8C16 4 12 4 12 4s-4 0-6.8.4c-.4 0-1.3 0-2 .8-.6.6-.8 2-.8 2S2 8.8 2 10.4v3.2c0 1.6.2 3.2.2 3.2s.2 1.4.8 2c.7.8 1.7.8 2.1.9C7 20 12 20 12 20s4 0 6.8-.4c.4 0 1.3 0 2-.8.6-.6.8-2 .8-2s.2-1.6.2-3.2v-3.2c0-1.6-.2-3.2-.2-3.2zM10 14.5v-6l5 3-5 3z"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 4.13 Footer Mega-Menu</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a comprehensive footer mega-menu. Dark background (#0E0E14). Outer CSS Grid: grid-template-columns:2fr 1fr 1fr 1fr 1fr, gap:40px, padding-bottom and hairline border-bottom. (1) BRAND COLUMN (wide): large brand name in display serif with a glowing accent dot before it, one-line product description (max 32ch muted text), and a horizontal newsletter form (email input + accent-colored "Subscribe" button). (2) FOUR LINK COLUMNS each with: a small uppercase mono header in muted color, then a vertical list of 6 link items. Some items have an accent-colored "New" or count badge (e.g., "Changelog [New]", "Careers [7]"). Hover on links shifts color from muted-white to pure white. Below the grid: a hairline divider, then a flex row with: a green "All systems operational" pill on the left (small green glowing dot + text), copyright + legal links in the middle, and 4 social-icon circles on the right (X, GitHub, LinkedIn, YouTube — each is a 32px round button with 1px border that turns accent color on hover). Mobile: collapse to 2 columns under 900px, 1 column under 600px.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://stripe.com" target="_blank" rel="noopener">Stripe.com — footer</a><span class="desc">The most-copied footer mega-menu in B2B SaaS</span></div></li>
+      <li><div><a href="https://vercel.com" target="_blank" rel="noopener">Vercel.com — footer</a><span class="desc">Clean grid with status indicator and changelog badges</span></div></li>
+      <li><div><a href="https://linear.app" target="_blank" rel="noopener">Linear.app — footer</a><span class="desc">Minimal mega-footer with category icons</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="4.12-animated-links.html" class="prev"><span class="label">← Prev</span><span class="title">4.12 Animated Links</span></a>
+      <a href="4.14-drawer.html" class="next"><span class="label">Next →</span><span class="title">4.14 Slide-out Drawer</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

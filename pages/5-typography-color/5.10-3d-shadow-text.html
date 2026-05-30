@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>5.10 3D Layered Text Shadow · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .td-demo {
+    min-height: 720px;
+    background: #f8e5b3;
+    color: #1A1814;
+    padding: 60px 40px;
+    border-radius: var(--radius-lg);
+    display: grid;
+    place-items: center;
+    text-align: center;
+  }
+  .td-stage { max-width: 760px; }
+
+  .td-h {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(72px, 12vw, 160px);
+    letter-spacing: -0.05em;
+    line-height: 0.95;
+    color: #E63946;
+    /* The 3D depth: stacked offset shadows */
+    text-shadow:
+      1px 1px 0 #c1303d,
+      2px 2px 0 #c1303d,
+      3px 3px 0 #c1303d,
+      4px 4px 0 #c1303d,
+      5px 5px 0 #c1303d,
+      6px 6px 0 #c1303d,
+      7px 7px 0 #1A1814,
+      8px 8px 0 #1A1814,
+      9px 9px 0 #1A1814,
+      10px 10px 0 #1A1814,
+      11px 11px 30px rgba(0,0,0,0.35);
+  }
+  .td-h em { color: #1A1814; font-style: italic; text-shadow:
+    1px 1px 0 #555,
+    2px 2px 0 #555,
+    3px 3px 0 #555,
+    4px 4px 0 #555,
+    5px 5px 0 #555,
+    6px 6px 30px rgba(0,0,0,0.4);
+  }
+
+  .td-sub {
+    margin-top: 30px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #1A1814;
+  }
+
+  .td-variants {
+    margin-top: 56px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .td-card {
+    background: rgba(255,255,255,0.6);
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 12px;
+    padding: 28px 18px;
+    text-align: center;
+  }
+  .td-card .name { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #555; margin-bottom: 18px; }
+  .td-card .ex { font-family: var(--font-display); font-weight: 800; font-size: 44px; letter-spacing: -0.04em; line-height: 1; }
+
+  /* Variant 1: long shadow */
+  .td-v1 .ex {
+    color: #E8B339;
+    text-shadow:
+      1px 1px #b8851d, 2px 2px #b8851d, 3px 3px #b8851d, 4px 4px #b8851d,
+      5px 5px #b8851d, 6px 6px #b8851d, 7px 7px #b8851d, 8px 8px #b8851d,
+      9px 9px #b8851d, 10px 10px #b8851d, 11px 11px #b8851d, 12px 12px #b8851d,
+      13px 13px 0 #b8851d, 14px 14px 24px rgba(0,0,0,0.2);
+  }
+  /* Variant 2: neon glow */
+  .td-v2 .ex {
+    color: #fff;
+    text-shadow:
+      0 0 4px #fff,
+      0 0 8px #fff,
+      0 0 14px #00E5FF,
+      0 0 28px #00E5FF,
+      0 0 50px #00E5FF;
+  }
+  .td-v2 { background: #0a0a14; }
+  .td-v2 .name { color: rgba(255,255,255,0.5); }
+  /* Variant 3: emboss / engraved */
+  .td-v3 .ex {
+    color: #FAFAF7;
+    text-shadow:
+      -1px -1px 0 rgba(0,0,0,0.4),
+      1px 1px 0 rgba(255,255,255,0.7);
+  }
+  .td-v3 { background: #d9d3c6; }
+  @media (max-width: 720px) { .td-variants { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Typography &amp; Color</a>
+      <span class="sep">/</span>
+      <span class="here">3D Shadow Text</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">5.10 · Type</span>
+    <h1 class="title">3D Layered <em>Shadow</em>.</h1>
+    <p class="tagline">Stack many small offset shadows to give type physical depth. Variants for retro 3D, long shadow, neon glow, and embossed engraving.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>By stacking many <code>text-shadow</code> values with progressively larger offsets, CSS can render text as if extruded into 3D — like a physical object with a beveled side. The trick is purely additive: 10–15 stacked one-pixel shadows of the same color creates the depth, then a final blurred shadow adds the cast shadow. Used by retro brands, gaming sites, ice-cream/snack labels, and any product that wants a tactile, sticker-like feel.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>For retro 3D: stack 6–10 shadows offset by 1px each in the same direction with the same darker color — that's the extruded side. Optionally swap to black for the last few layers to suggest a deeper shadow. Add a final large blurred shadow for cast shadow on the surface. For long-shadow: same technique but 12+ layers. For neon glow: zero-offset shadows with progressively larger blur radii and a glowing accent color. For embossed: one inset-feeling shadow (dark, negative offset) + one highlight (white, positive offset).</p>
+      <div class="term-grid">
+        <div><b>Stacked offsets</b><span>1px, 2px, 3px… each shadow at the same color = extruded depth</span></div>
+        <div><b>Final blur</b><span>Last shadow uses blur radius for the cast shadow on the surface</span></div>
+        <div><b>Long shadow</b><span>Same idea, more layers, often diagonal at 45deg</span></div>
+        <div><b>Neon glow</b><span>0-offset, growing blur radius, accent color repeated 3-5 times</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <div class="demo-shell">
+      <div class="demo td-demo">
+        <span class="demo-badge" style="background:#1A1814; color:#f8e5b3; border-color:#1A1814;">Live</span>
+        <div class="td-stage">
+          <h3 class="td-h">SMALL<br><em>BATCH.</em></h3>
+          <div class="td-sub">★ Vol. 04 · drops 30.05.26</div>
+
+          <div class="td-variants">
+            <div class="td-card td-v1"><div class="name">Long Shadow</div><div class="ex">Aurora</div></div>
+            <div class="td-card td-v2"><div class="name">Neon Glow</div><div class="ex">Aurora</div></div>
+            <div class="td-card td-v3"><div class="name">Embossed</div><div class="ex">Aurora</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 5.10 3D Layered Text Shadow</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a hero with chunky 3D-extruded headline type. Background warm cream #f8e5b3. Headline: font-size clamp(72,12vw,160px), font-weight 800, letter-spacing -0.05em, line-height 0.95, color red #E63946. Apply text-shadow with a STACK of progressively-offset shadows in the darker red #c1303d for layers 1-6 (1 1, 2 2, 3 3, 4 4, 5 5, 6 6 — all 0 blur), then darker still #1A1814 for layers 7-10, finally an 11px-offset 30px-blurred rgba(0,0,0,0.35) for the cast shadow. The cumulative effect: text looks physically extruded 10px diagonally with a soft shadow on the surface. For the italic em-word inside the headline, use a darker base color with grey extrusion. Show 3 variant cards below: (1) "Long Shadow" — same technique with 14+ layers in amber #E8B339; (2) "Neon Glow" — on dark background, white text with 0-offset growing-blur shadows in cyan (4px → 50px) creating a tube-light effect; (3) "Embossed" — single 1px shadow with negative offset in dark + single 1px shadow with positive offset in white = engraved-into-surface look.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.codrops.com" target="_blank" rel="noopener">Codrops — text-shadow tricks</a><span class="desc">Tutorials covering 3D / extruded / neon shadow stacks</span></div></li>
+      <li><div><a href="https://www.gumroad.com" target="_blank" rel="noopener">Gumroad</a><span class="desc">Brand-name marketing pages often use chunky 3D type</span></div></li>
+      <li><div><a href="https://generator.lvh.me" target="_blank" rel="noopener">Long Shadow Generator</a><span class="desc">Tools to generate the 14-layer long shadow CSS automatically</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="5.9-marker-highlight.html" class="prev"><span class="label">← Prev</span><span class="title">5.9 Marker Highlight</span></a>
+      <a href="5.11-animated-gradient.html" class="next"><span class="label">Next →</span><span class="title">5.11 Animated Gradient</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

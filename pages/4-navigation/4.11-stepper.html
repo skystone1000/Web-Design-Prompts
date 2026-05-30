@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>4.11 Stepper / Multi-step Progress · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .sp-demo {
+    min-height: 620px;
+    background: #FAFAF7;
+    color: #111;
+    padding: 56px 40px;
+    border-radius: var(--radius-lg);
+  }
+  .sp-stage { max-width: 720px; margin: 0 auto; }
+
+  .sp-stepper {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-bottom: 36px;
+    position: relative;
+  }
+  .sp-step {
+    text-align: center;
+    position: relative;
+  }
+  .sp-circle {
+    width: 36px; height: 36px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid rgba(0,0,0,0.16);
+    display: grid;
+    place-items: center;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(0,0,0,0.5);
+    transition: all 0.35s var(--ease);
+    position: relative;
+    z-index: 2;
+  }
+  .sp-circle svg { width: 16px; height: 16px; opacity: 0; transition: opacity 0.2s; }
+  .sp-step .lab { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(0,0,0,0.45); transition: color 0.3s; }
+
+  /* Connector line between steps */
+  .sp-step::before {
+    content: "";
+    position: absolute;
+    top: 17px;
+    right: 50%;
+    width: 100%;
+    height: 2px;
+    background: rgba(0,0,0,0.12);
+    z-index: 1;
+  }
+  .sp-step:first-child::before { display: none; }
+
+  .sp-step.done .sp-circle { background: #16a34a; border-color: #16a34a; color: transparent; }
+  .sp-step.done .sp-circle svg { opacity: 1; color: #fff; }
+  .sp-step.done::before { background: #16a34a; }
+  .sp-step.done .lab { color: #16a34a; }
+
+  .sp-step.current .sp-circle { background: #1A1814; border-color: #1A1814; color: #fff; box-shadow: 0 0 0 6px rgba(26,24,20,0.12); transform: scale(1.05); }
+  .sp-step.current .lab { color: #1A1814; }
+  .sp-step.current::before { background: #16a34a; }
+
+  /* Step body card */
+  .sp-card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 14px;
+    padding: 28px;
+    min-height: 200px;
+  }
+  .sp-card h4 { font-family: var(--font-display); font-weight: 500; font-size: 22px; color: #111; margin-bottom: 8px; letter-spacing: -0.01em; }
+  .sp-card p { color: #555; font-size: 14.5px; line-height: 1.55; margin-bottom: 18px; }
+  .sp-field { margin-bottom: 14px; }
+  .sp-field label { display: block; font-size: 12px; color: #666; margin-bottom: 6px; font-weight: 500; }
+  .sp-field input, .sp-field select {
+    width: 100%; padding: 11px 14px;
+    border: 1px solid #E5E7EB; border-radius: 9px;
+    font-size: 14.5px; color: #111;
+  }
+  .sp-actions {
+    margin-top: 18px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .sp-btn {
+    padding: 11px 22px;
+    background: #1A1814;
+    color: #fff;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    border: 0;
+    cursor: pointer;
+  }
+  .sp-btn.ghost { background: transparent; color: #555; border: 1px solid #E5E7EB; }
+  .sp-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .sp-body { display: none; }
+  .sp-body.on { display: block; animation: sp-fade 0.25s; }
+  @keyframes sp-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Navigation</a>
+      <span class="sep">/</span>
+      <span class="here">Stepper</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">4.11 · Navigation</span>
+    <h1 class="title">Stepper / <em>Multi-step</em> Progress.</h1>
+    <p class="tagline">A numbered horizontal track showing the user where they are in a multi-step flow — checkout, signup, onboarding. Past steps mark "done"; current step highlights.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A row of numbered circles connected by lines, each representing one step of a process. Completed steps show a checkmark and a green connector; the current step is highlighted; future steps are muted. Standard pattern on checkouts (cart → shipping → payment → confirm), multi-step signup forms, and onboarding wizards. The pattern reduces friction by telling the user exactly how many more steps remain.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>A grid of N equal columns, each a step element with a circle + label. Each step uses <code>position: relative</code> with a <code>::before</code> pseudo-element that draws the connector line to the previous step. State classes — <code>.done</code> (checkmark + green), <code>.current</code> (filled dark + glow ring), default (outlined gray). The form panel below swaps via JS as the user clicks Next; only the active body has <code>.on</code> class. Validation should block "Next" until the current step's fields are filled.</p>
+      <div class="term-grid">
+        <div><b>State classes</b><span>.done (✓ green), .current (filled dark + glow), default (outlined)</span></div>
+        <div><b>Connector lines</b><span>::before pseudo-element draws line back to previous step</span></div>
+        <div><b>Body swap</b><span>One panel visible at a time, fade-up transition on switch</span></div>
+        <div><b>Validation gate</b><span>Block Next button until required fields in current step are filled</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Click "Next" to advance — past steps get checkmarks, the connector goes green.</p>
+    <div class="demo-shell">
+      <div class="demo sp-demo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#111; border-color:rgba(0,0,0,0.1);">Live · click Next</span>
+        <div class="sp-stage">
+          <div class="sp-stepper" id="spStep">
+            <div class="sp-step current" data-i="0">
+              <div class="sp-circle"><span>1</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="lab">Account</div>
+            </div>
+            <div class="sp-step" data-i="1">
+              <div class="sp-circle"><span>2</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="lab">Workspace</div>
+            </div>
+            <div class="sp-step" data-i="2">
+              <div class="sp-circle"><span>3</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="lab">Plan</div>
+            </div>
+            <div class="sp-step" data-i="3">
+              <div class="sp-circle"><span>4</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="lab">Done</div>
+            </div>
+          </div>
+
+          <div class="sp-card">
+            <div class="sp-body on" data-body="0">
+              <h4>Create your account</h4>
+              <p>Just an email and a password to start.</p>
+              <div class="sp-field"><label>Work email</label><input type="email" placeholder="you@company.com" /></div>
+              <div class="sp-field"><label>Password</label><input type="password" placeholder="At least 8 characters" /></div>
+            </div>
+            <div class="sp-body" data-body="1">
+              <h4>Name your workspace</h4>
+              <p>You can change this later in settings.</p>
+              <div class="sp-field"><label>Workspace name</label><input type="text" placeholder="e.g. Field Co." /></div>
+              <div class="sp-field"><label>Industry</label><select><option>Design / Creative</option><option>Engineering</option><option>Marketing</option><option>Other</option></select></div>
+            </div>
+            <div class="sp-body" data-body="2">
+              <h4>Pick a plan</h4>
+              <p>Start free — upgrade any time. We'll never auto-charge.</p>
+              <div class="sp-field"><label>Plan</label><select><option>Solo — $0/mo (Recommended)</option><option>Pro — $29/mo</option><option>Team — $99/mo</option></select></div>
+              <div class="sp-field"><label>Promo code (optional)</label><input type="text" placeholder="QUIET2026" /></div>
+            </div>
+            <div class="sp-body" data-body="3">
+              <h4>You're all set ✓</h4>
+              <p>Your workspace is ready. Click "Open workspace" to begin.</p>
+              <div class="sp-field"><label>Send me</label><select><option>Weekly digest of activity</option><option>Daily summary</option><option>Nothing — quiet mode</option></select></div>
+            </div>
+            <div class="sp-actions">
+              <button class="sp-btn ghost" id="spBack">← Back</button>
+              <button class="sp-btn" id="spNext">Next →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 4.11 Stepper / Multi-step Progress</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a 4-step signup stepper. Top: a stepper bar with 4 equal columns, each containing a 36px circle (with the step number AND a checkmark SVG inside, switched via opacity), and a small uppercase mono label below ("Account / Workspace / Plan / Done"). Connector lines drawn via ::before pseudo-elements on each step (except the first) connecting back to the previous circle. State classes: .done (green background, green border, checkmark visible, connector green, label green); .current (dark background, glow ring via box-shadow 0 0 0 6px alpha, slight scale-up, dark label); default (white background, gray border, gray label). Below: a white card panel with the active step body. Each step body has its own form fields (email/password, workspace name/industry, plan select, etc.) and only one body has .on class at a time — others display:none. Bottom of card: Back + Next buttons. On click Next: validate current step's required fields, mark current as .done, set next step to .current, swap which body is visible with a fade-up. Back disabled at step 1, Next becomes "Open workspace" at step 4.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://stripe.com/docs/checkout" target="_blank" rel="noopener">Stripe Checkout</a><span class="desc">The reference for clean multi-step checkout flows</span></div></li>
+      <li><div><a href="https://shopify.com" target="_blank" rel="noopener">Shopify cart → shipping → payment</a><span class="desc">High-traffic e-commerce stepper</span></div></li>
+      <li><div><a href="https://ui.shadcn.com" target="_blank" rel="noopener">shadcn/ui</a><span class="desc">Composable React stepper components</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="4.10-bottom-tab.html" class="prev"><span class="label">← Prev</span><span class="title">4.10 Bottom Tab Bar</span></a>
+      <a href="4.12-animated-links.html" class="next"><span class="label">Next →</span><span class="title">4.12 Animated Link Underlines</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const steps = document.querySelectorAll('.sp-step');
+    const bodies = document.querySelectorAll('.sp-body');
+    const next = document.getElementById('spNext');
+    const back = document.getElementById('spBack');
+    let cur = 0;
+    function render() {
+      steps.forEach((s, i) => {
+        s.classList.toggle('done', i < cur);
+        s.classList.toggle('current', i === cur);
+      });
+      bodies.forEach((b, i) => b.classList.toggle('on', i === cur));
+      back.disabled = cur === 0;
+      next.textContent = cur === steps.length - 1 ? 'Open workspace →' : 'Next →';
+    }
+    next.addEventListener('click', () => { if (cur < steps.length - 1) { cur++; render(); } });
+    back.addEventListener('click', () => { if (cur > 0) { cur--; render(); } });
+    render();
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>6.13 Data Table · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .dt-demo {
+    min-height: 720px;
+    background: var(--bg-elev);
+    color: var(--text);
+    padding: 32px;
+    border-radius: var(--radius-lg);
+  }
+  .dt-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .dt-toolbar {
+    display: flex;
+    gap: 12px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .dt-search {
+    position: relative;
+    flex: 1;
+    min-width: 220px;
+  }
+  .dt-search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--text-muted); }
+  .dt-search input {
+    width: 100%;
+    padding: 9px 12px 9px 34px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 13.5px;
+  }
+  .dt-search input:focus { outline: none; border-color: var(--accent); }
+
+  .dt-filter {
+    padding: 9px 14px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 13.5px;
+    cursor: pointer;
+    font-family: var(--font-body);
+  }
+  .dt-selected {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .dt-selected b { color: var(--accent); }
+  .dt-action {
+    padding: 9px 14px;
+    background: var(--accent);
+    color: #1A1300;
+    border: 0;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    display: none;
+  }
+  .dt-action.show { display: inline-block; }
+
+  .dt-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  .dt-table thead th {
+    text-align: left;
+    padding: 12px 18px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 500;
+    background: var(--bg-elev);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+  }
+  .dt-table thead th[data-sort]:hover { color: var(--text); }
+  .dt-table thead th[data-sort].asc::after { content: " ↑"; color: var(--accent); }
+  .dt-table thead th[data-sort].desc::after { content: " ↓"; color: var(--accent); }
+  .dt-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  .dt-table tbody tr:hover { background: rgba(255,255,255,0.03); }
+  .dt-table tbody tr.selected { background: rgba(232,179,57,0.06); }
+  .dt-table tbody tr.selected:hover { background: rgba(232,179,57,0.1); }
+  .dt-table td { padding: 12px 18px; color: var(--text); }
+  .dt-table td.muted { color: var(--text-muted); }
+  .dt-table td.mono { font-family: var(--font-mono); }
+
+  .dt-cb { width: 14px; height: 14px; border: 1.5px solid var(--border-strong); border-radius: 4px; cursor: pointer; appearance: none; -webkit-appearance: none; position: relative; }
+  .dt-cb:checked { background: var(--accent); border-color: var(--accent); }
+  .dt-cb:checked::after { content: "✓"; position: absolute; inset: 0; display: grid; place-items: center; color: #1A1300; font-size: 11px; font-weight: 700; }
+
+  .dt-status {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .dt-status.active { background: rgba(34,197,94,0.18); color: #4ade80; }
+  .dt-status.pending { background: rgba(251,191,36,0.18); color: #fbbf24; }
+  .dt-status.failed { background: rgba(239,68,68,0.18); color: #f87171; }
+  .dt-status.archived { background: rgba(255,255,255,0.08); color: var(--text-muted); }
+
+  .dt-who { display: flex; align-items: center; gap: 10px; }
+  .dt-av { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #1A1300; font-size: 11px; font-weight: 700; display: grid; place-items: center; flex-shrink: 0; }
+
+  .dt-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 18px;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .dt-pg { display: flex; gap: 4px; }
+  .dt-pg button {
+    min-width: 30px; height: 30px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    color: var(--text-soft);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    cursor: pointer;
+    padding: 0 8px;
+  }
+  .dt-pg button:hover { background: var(--bg-elev); border-color: var(--border); color: var(--text); }
+  .dt-pg button.active { background: var(--accent); color: #1A1300; border-color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">UI Patterns</a>
+      <span class="sep">/</span>
+      <span class="here">Data Table</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">6.13 · UI Pattern</span>
+    <h1 class="title">Data <em>Table</em>.</h1>
+    <p class="tagline">Sortable headers, row selection with bulk-action bar, live search filter, status pills, pagination footer. The whole admin-table playbook.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A table that lets users do real work with structured data: sort by any column (click the header), search across all rows (type in the toolbar input), select multiple rows (checkbox column + bulk action button appears), see status at a glance (colored pill cells), and paginate. The backbone of every dashboard, CRM, admin tool, ops console.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Render the data array as a <code>&lt;table&gt;</code>. Click any sortable <code>&lt;th data-sort&gt;</code> to toggle <code>.asc</code> / <code>.desc</code> classes and re-sort. The search input filters the array case-insensitively across every visible column. A select-all checkbox in the header row toggles all visible row checkboxes; row checkbox clicks update a "N selected" counter and reveal a bulk-action button. Use proper semantic <code>&lt;thead&gt;</code> / <code>&lt;tbody&gt;</code> and accessible aria attributes.</p>
+      <div class="term-grid">
+        <div><b>Sortable headers</b><span>Click th to toggle asc / desc, re-render with sorted array</span></div>
+        <div><b>Live filter</b><span>Input.oninput → filter array, re-render rows</span></div>
+        <div><b>Bulk-action bar</b><span>Counter "X selected" appears + action button enables when rows checked</span></div>
+        <div><b>Status pills</b><span>Colored capsules — green active, amber pending, red failed</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Click any header to sort. Type to filter. Tick rows to enable bulk delete.</p>
+    <div class="demo-shell">
+      <div class="demo dt-demo">
+        <span class="demo-badge">Live · interactive</span>
+        <div class="dt-card">
+          <div class="dt-toolbar">
+            <div class="dt-search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+              <input id="dtSearch" type="search" placeholder="Search customers, plans, status…" autocomplete="off" />
+            </div>
+            <button class="dt-filter">+ Add filter</button>
+            <span class="dt-selected" id="dtCount">0 selected</span>
+            <button class="dt-action" id="dtAction">Delete selected</button>
+          </div>
+          <div style="overflow-x: auto;">
+            <table class="dt-table">
+              <thead>
+                <tr>
+                  <th style="width: 36px;"><input type="checkbox" class="dt-cb" id="dtAll" /></th>
+                  <th data-sort="name">Customer</th>
+                  <th data-sort="plan">Plan</th>
+                  <th data-sort="mrr">MRR</th>
+                  <th data-sort="status">Status</th>
+                  <th data-sort="joined">Joined</th>
+                </tr>
+              </thead>
+              <tbody id="dtBody"></tbody>
+            </table>
+          </div>
+          <div class="dt-foot">
+            <div>Showing <b id="dtFrom">1</b>–<b id="dtTo">8</b> of <b id="dtTotal">24</b></div>
+            <div class="dt-pg" id="dtPg"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 6.13 Data Table</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build an admin data table component with these layers: (1) TOOLBAR row: search input with magnifier icon + "Add filter" pill + "N selected" counter that turns accent color when count > 0 + a "Delete selected" accent button that's hidden until rows are selected. (2) TABLE: 6 columns — checkbox / Customer (avatar + name) / Plan / MRR / Status pill / Joined date. thead rows are sticky-able, with uppercase mono labels in muted color; click any th to toggle .asc / .desc class showing ↑ or ↓ next to header text. tbody rows: hairline borders, hover background tint, .selected class with accent-tinted background when row checkbox is on. Status pills: colored capsules (green active, amber pending, red failed, gray archived) in uppercase mono. (3) FOOTER row: "Showing X–Y of N" on left, page number buttons on right with accent active state. Behavior: search input filters rows in real time by substring across all fields. Select-all checkbox toggles every visible row. Click any sortable header to toggle sort. Bulk delete removes all selected rows. Pagination: 8 per page. Use real data with 20+ rows of customer records.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://linear.app" target="_blank" rel="noopener">Linear — issues</a><span class="desc">Beautiful keyboard-driven data table</span></div></li>
+      <li><div><a href="https://ui.shadcn.com/docs/components/data-table" target="_blank" rel="noopener">shadcn/ui — Data Table</a><span class="desc">TanStack Table + Tailwind reference implementation</span></div></li>
+      <li><div><a href="https://tanstack.com/table" target="_blank" rel="noopener">TanStack Table</a><span class="desc">Headless table engine used by half the web</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="6.12-dropzone.html" class="prev"><span class="label">← Prev</span><span class="title">6.12 Dropzone</span></a>
+      <a href="6.14-empty-state.html" class="next"><span class="label">Next →</span><span class="title">6.14 Empty State</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const data = [
+      { name: 'Northwind Labs', plan: 'Team', mrr: 640, status: 'active', joined: '2024-04-12' },
+      { name: 'Argent Group', plan: 'Pro', mrr: 320, status: 'active', joined: '2024-05-02' },
+      { name: 'Salt & Bone', plan: 'Pro', mrr: 320, status: 'pending', joined: '2025-01-18' },
+      { name: 'Quill', plan: 'Solo', mrr: 24, status: 'active', joined: '2024-09-30' },
+      { name: 'Field Co.', plan: 'Team', mrr: 640, status: 'failed', joined: '2023-11-04' },
+      { name: 'Obys Studio', plan: 'Pro', mrr: 320, status: 'active', joined: '2025-03-22' },
+      { name: 'Resn', plan: 'Enterprise', mrr: 2400, status: 'active', joined: '2022-06-11' },
+      { name: 'Hex Games', plan: 'Pro', mrr: 320, status: 'active', joined: '2024-12-09' },
+      { name: 'Margo Press', plan: 'Solo', mrr: 24, status: 'archived', joined: '2023-07-19' },
+      { name: 'Brat Girl', plan: 'Pro', mrr: 320, status: 'active', joined: '2025-02-04' },
+      { name: 'Field Notes', plan: 'Team', mrr: 640, status: 'pending', joined: '2025-04-01' },
+      { name: 'Aurora Labs', plan: 'Enterprise', mrr: 2400, status: 'active', joined: '2022-09-08' },
+      { name: 'Pulse Health', plan: 'Pro', mrr: 320, status: 'active', joined: '2024-08-15' },
+      { name: 'Drift Studio', plan: 'Solo', mrr: 24, status: 'archived', joined: '2024-01-22' },
+      { name: 'Margin', plan: 'Team', mrr: 640, status: 'active', joined: '2024-10-12' },
+      { name: 'Hannah K. Inc.', plan: 'Pro', mrr: 320, status: 'failed', joined: '2025-01-30' },
+      { name: 'Reykjavík Co.', plan: 'Solo', mrr: 24, status: 'active', joined: '2025-03-11' },
+      { name: 'Theo Mårsson', plan: 'Solo', mrr: 24, status: 'active', joined: '2025-02-18' },
+      { name: 'Vivian T.', plan: 'Pro', mrr: 320, status: 'pending', joined: '2025-04-20' },
+      { name: 'Northwind Tools', plan: 'Team', mrr: 640, status: 'active', joined: '2024-06-17' },
+      { name: 'Argent Studio', plan: 'Pro', mrr: 320, status: 'active', joined: '2025-01-08' },
+      { name: 'Lumen Co.', plan: 'Enterprise', mrr: 2400, status: 'active', joined: '2023-02-14' },
+      { name: 'Salt Press', plan: 'Pro', mrr: 320, status: 'archived', joined: '2024-04-30' },
+      { name: 'Slow Web', plan: 'Solo', mrr: 24, status: 'active', joined: '2025-05-05' },
+    ];
+
+    const per = 8;
+    let page = 0, sortKey = null, sortDir = 'asc', selected = new Set(), filter = '';
+
+    const body = document.getElementById('dtBody');
+    const fromEl = document.getElementById('dtFrom');
+    const toEl = document.getElementById('dtTo');
+    const totalEl = document.getElementById('dtTotal');
+    const countEl = document.getElementById('dtCount');
+    const actionBtn = document.getElementById('dtAction');
+    const pgEl = document.getElementById('dtPg');
+    const allCb = document.getElementById('dtAll');
+
+    function getFiltered() {
+      let arr = filter ? data.filter(d =>
+        Object.values(d).some(v => String(v).toLowerCase().includes(filter))
+      ) : data.slice();
+      if (sortKey) arr.sort((a, b) => {
+        const av = a[sortKey], bv = b[sortKey];
+        if (av < bv) return sortDir === 'asc' ? -1 : 1;
+        if (av > bv) return sortDir === 'asc' ? 1 : -1;
+        return 0;
+      });
+      return arr;
+    }
+
+    function initials(n) { return n.split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase(); }
+    function fmtDate(d) { const dt = new Date(d); return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
+
+    function render() {
+      const f = getFiltered();
+      const total = f.length;
+      const pageCount = Math.max(1, Math.ceil(total / per));
+      if (page >= pageCount) page = 0;
+      const slice = f.slice(page * per, page * per + per);
+
+      body.innerHTML = slice.map((d, i) => {
+        const id = page * per + i;
+        const sel = selected.has(d.name);
+        return `<tr class="${sel ? 'selected' : ''}">
+          <td><input type="checkbox" class="dt-cb dt-row" data-name="${d.name}" ${sel ? 'checked' : ''}/></td>
+          <td><div class="dt-who"><div class="dt-av">${initials(d.name)}</div>${d.name}</div></td>
+          <td class="muted">${d.plan}</td>
+          <td class="mono">$${d.mrr.toLocaleString()}</td>
+          <td><span class="dt-status ${d.status}">${d.status}</span></td>
+          <td class="muted mono">${fmtDate(d.joined)}</td>
+        </tr>`;
+      }).join('');
+
+      fromEl.textContent = total ? page * per + 1 : 0;
+      toEl.textContent = Math.min(total, page * per + per);
+      totalEl.textContent = total;
+      countEl.innerHTML = `<b>${selected.size}</b> selected`;
+      actionBtn.classList.toggle('show', selected.size > 0);
+      allCb.checked = slice.length > 0 && slice.every(d => selected.has(d.name));
+
+      let pgHtml = '';
+      for (let i = 0; i < pageCount; i++) {
+        pgHtml += `<button class="${i === page ? 'active' : ''}" data-page="${i}">${i + 1}</button>`;
+      }
+      pgEl.innerHTML = pgHtml;
+    }
+
+    // Sort
+    document.querySelectorAll('[data-sort]').forEach(th => {
+      th.addEventListener('click', () => {
+        const k = th.getAttribute('data-sort');
+        if (sortKey === k) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+        else { sortKey = k; sortDir = 'asc'; }
+        document.querySelectorAll('[data-sort]').forEach(x => x.classList.remove('asc', 'desc'));
+        th.classList.add(sortDir);
+        render();
+      });
+    });
+    // Search
+    document.getElementById('dtSearch').addEventListener('input', (e) => { filter = e.target.value.toLowerCase(); page = 0; render(); });
+    // Row checkboxes
+    body.addEventListener('click', (e) => {
+      const cb = e.target.closest('.dt-row');
+      if (cb) {
+        if (cb.checked) selected.add(cb.dataset.name); else selected.delete(cb.dataset.name);
+        render();
+      }
+    });
+    // Select-all
+    allCb.addEventListener('change', () => {
+      const slice = getFiltered().slice(page * per, page * per + per);
+      if (allCb.checked) slice.forEach(d => selected.add(d.name));
+      else slice.forEach(d => selected.delete(d.name));
+      render();
+    });
+    // Bulk delete
+    actionBtn.addEventListener('click', () => {
+      Array.from(selected).forEach(n => {
+        const i = data.findIndex(d => d.name === n);
+        if (i > -1) data.splice(i, 1);
+      });
+      selected.clear();
+      render();
+    });
+    // Pagination
+    pgEl.addEventListener('click', (e) => {
+      const b = e.target.closest('button');
+      if (b) { page = +b.dataset.page; render(); }
+    });
+
+    render();
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

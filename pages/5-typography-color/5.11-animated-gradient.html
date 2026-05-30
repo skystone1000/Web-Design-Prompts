@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>5.11 Animated Gradient Text · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .ag-demo {
+    min-height: 620px;
+    background: #050510;
+    color: #fff;
+    padding: 60px 40px;
+    border-radius: var(--radius-lg);
+    display: grid;
+    place-items: center;
+    text-align: center;
+    overflow: hidden;
+  }
+  .ag-stage { max-width: 760px; }
+
+  .ag-h {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(48px, 8vw, 92px);
+    letter-spacing: -0.03em;
+    line-height: 1.0;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+  /* The animated gradient word */
+  .ag-h .ani {
+    background-image: linear-gradient(90deg, #FF6B9D, #7C5CFF, #00D9FF, #FFB800, #FF6B9D);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    font-style: italic;
+    animation: ag-flow 6s linear infinite;
+  }
+  @keyframes ag-flow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: -300% 50%; }
+  }
+
+  .ag-sub { color: rgba(255,255,255,0.65); font-size: 17px; line-height: 1.55; max-width: 50ch; margin: 0 auto; }
+
+  .ag-variants {
+    margin-top: 56px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .ag-card {
+    padding: 22px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    text-align: left;
+  }
+  .ag-card .name { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 14px; }
+  .ag-card .ex {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 30px;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+  .ag-v1 .ex {
+    background-image: conic-gradient(from 0deg at 50% 50%, #FF6B9D, #7C5CFF, #00D9FF, #FFB800, #FF6B9D);
+    background-size: 100% 100%;
+    animation: ag-spin 8s linear infinite;
+  }
+  @keyframes ag-spin { to { filter: hue-rotate(360deg); } }
+  .ag-v2 .ex {
+    background-image: linear-gradient(90deg, #fff 0%, #fff 40%, #FF6B9D 50%, #fff 60%, #fff 100%);
+    background-size: 200% 100%;
+    animation: ag-shimmer 3s ease-in-out infinite;
+  }
+  @keyframes ag-shimmer {
+    0%,100% { background-position: 100% 50%; }
+    50% { background-position: -100% 50%; }
+  }
+  .ag-v3 .ex {
+    background-image: linear-gradient(180deg, #00D9FF, #FF6B9D);
+    background-size: 100% 200%;
+    animation: ag-pump 3s ease-in-out infinite alternate;
+  }
+  @keyframes ag-pump { from { background-position: 0% 0%; } to { background-position: 0% 100%; } }
+  .ag-card .code { margin-top: 14px; font-family: var(--font-mono); font-size: 11px; color: rgba(255,255,255,0.5); }
+  @media (max-width: 720px) { .ag-variants { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Typography &amp; Color</a>
+      <span class="sep">/</span>
+      <span class="here">Animated Gradient Text</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">5.11 · Type</span>
+    <h1 class="title">Animated <em>Gradient</em> Text.</h1>
+    <p class="tagline">A gradient that's wider than the text and slides across forever. Color flows through the letters. Different from the static gradient text in 5.4.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>The static gradient-text technique (5.4) clipped a fixed gradient to text shape. This animates the background position so the gradient endlessly flows through the letters. Used on AI-product hero headlines (the rainbow-iridescent text on Apple Intelligence, OpenAI, Anthropic, every modern AI launch), and on premium product pages where the headline literally needs to shimmer.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Apply <code>background-image: linear-gradient(...)</code> with multiple colors AND <code>background-size: 300% 100%</code> (much wider than the element). Clip to text with <code>background-clip: text; color: transparent</code>. Then animate the background-position from 0% to -300% with infinite linear keyframes. The gradient flows from right to left across the letters. Variants: conic-gradient + hue-rotate for rainbow spin; horizontal shimmer (narrow white band sweeping); vertical pump (color shifts top-to-bottom).</p>
+      <div class="term-grid">
+        <div><b>background-size 300%</b><span>Gradient must be much wider than text — gives space to slide</span></div>
+        <div><b>@keyframes background-position</b><span>Animate from 0% to -300% (one full gradient width) for seamless loop</span></div>
+        <div><b>animation linear infinite</b><span>No easing — consistent flow speed</span></div>
+        <div><b>filter: hue-rotate</b><span>Bonus variant: rotate all hues continuously for full rainbow</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <div class="demo-shell">
+      <div class="demo ag-demo">
+        <span class="demo-badge">Live · animated</span>
+        <div class="ag-stage">
+          <h3 class="ag-h">Built with <span class="ani">intelligence</span>.</h3>
+          <p class="ag-sub">The gradient is 3× wider than the text and slides forever. Multi-color stops give an iridescent flow through the letters.</p>
+          <div class="ag-variants">
+            <div class="ag-card ag-v1"><div class="name">01 — Conic spin</div><div class="ex">Aurora</div><div class="code">conic-gradient + <b>hue-rotate</b> infinite</div></div>
+            <div class="ag-card ag-v2"><div class="name">02 — Shimmer sweep</div><div class="ex">Aurora</div><div class="code">narrow band <b>background-position</b> sweep</div></div>
+            <div class="ag-card ag-v3"><div class="name">03 — Vertical pump</div><div class="ex">Aurora</div><div class="code"><b>background-position-Y</b> alternates 0% → 100%</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 5.11 Animated Gradient Text</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build animated gradient text. On a span inside a hero headline, apply: background-image:linear-gradient(90deg, hot-pink #FF6B9D, violet #7C5CFF, cyan #00D9FF, amber #FFB800, hot-pink #FF6B9D); background-size:300% 100%; -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent; font-style:italic. Add @keyframes named "flow" that animates background-position from 0% 50% to -300% 50% over 6 seconds linear infinite. The gradient flows endlessly from right to left through the text. Notice the gradient must end on the same color it starts on for seamless looping. Also show 3 variants in cards: (1) conic-gradient + filter:hue-rotate(0 → 360deg) for rainbow spin; (2) narrow shimmer — gradient is mostly white with a single hot-pink stripe, background-size:200% 100%, background-position oscillates between 100% and -100% for a sweep effect; (3) vertical pump — 180deg gradient cyan→pink, background-size:100% 200%, background-position-Y alternates 0% → 100% with ease-in-out infinite alternate.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.apple.com/apple-intelligence" target="_blank" rel="noopener">Apple Intelligence</a><span class="desc">Iridescent animated gradient on the hero name</span></div></li>
+      <li><div><a href="https://openai.com" target="_blank" rel="noopener">OpenAI</a><span class="desc">Hero headlines with flowing rainbow gradients</span></div></li>
+      <li><div><a href="https://www.anthropic.com" target="_blank" rel="noopener">Anthropic</a><span class="desc">Subtle animated gradient washes through product names</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="5.10-3d-shadow-text.html" class="prev"><span class="label">← Prev</span><span class="title">5.10 3D Shadow Text</span></a>
+      <a href="5.12-mix-blend-text.html" class="next"><span class="label">Next →</span><span class="title">5.12 Mix-blend Text</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

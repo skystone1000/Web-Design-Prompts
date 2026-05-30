@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>1.12 Vaporwave · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  .vp-demo {
+    min-height: 720px;
+    padding: 0;
+    color: #fff;
+    background:
+      radial-gradient(60% 60% at 20% 100%, #ff77c8 0%, transparent 60%),
+      radial-gradient(50% 50% at 90% 0%, #7be0ff 0%, transparent 60%),
+      linear-gradient(135deg, #f8b8e8 0%, #b6e2ff 60%, #ffd9f0 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  /* fake marble texture overlay */
+  .vp-demo::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(ellipse at 30% 40%, rgba(255,255,255,0.4), transparent 50%),
+      radial-gradient(ellipse at 70% 70%, rgba(0,0,0,0.06), transparent 60%);
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+  /* scanlines */
+  .vp-demo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent 0 2px, rgba(255,255,255,0.04) 2px 3px);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .vp-jp {
+    position: absolute;
+    top: 22px; right: 28px;
+    z-index: 3;
+    font-family: 'Noto Serif JP', serif;
+    color: rgba(255,255,255,0.7);
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-shadow: 0 0 8px rgba(255,46,196,0.5);
+    writing-mode: vertical-rl;
+  }
+  .vp-nav {
+    position: relative; z-index: 3;
+    padding: 22px 36px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.18);
+  }
+  .vp-nav .brand {
+    font-family: 'Anton', sans-serif;
+    font-size: 26px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #fff;
+    text-shadow: 3px 3px 0 #ff2ec4, 6px 6px 0 #7be0ff;
+  }
+  .vp-nav .links { display: flex; gap: 22px; font-family: 'Anton', sans-serif; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; color: #fff; text-shadow: 1px 1px 0 rgba(255,46,196,0.6); }
+  .vp-nav .links span { cursor: pointer; }
+
+  .vp-hero {
+    position: relative; z-index: 3;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 28px;
+    padding: 60px 36px;
+    align-items: center;
+  }
+  .vp-jpsub {
+    font-family: 'Noto Serif JP', serif;
+    color: rgba(255,255,255,0.85);
+    font-size: 14px;
+    margin-bottom: 18px;
+    letter-spacing: 0.08em;
+  }
+  .vp-hero h3 {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(50px, 8vw, 88px);
+    line-height: 0.92;
+    letter-spacing: 0.04em;
+    color: #fff;
+    text-transform: uppercase;
+    text-shadow:
+      4px 4px 0 #ff2ec4,
+      8px 8px 0 rgba(123,224,255,0.85),
+      12px 12px 24px rgba(255,46,196,0.4);
+    margin-bottom: 14px;
+  }
+  .vp-hero p {
+    font-family: 'Noto Serif JP', serif;
+    color: rgba(255,255,255,0.92);
+    font-size: 16px;
+    line-height: 1.5;
+    max-width: 36ch;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+  .vp-tag { display: inline-block; margin-top: 18px; padding: 5px 12px; background: #ff2ec4; color: #fff; font-family: 'Anton', sans-serif; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; border: 1px solid #fff; box-shadow: 3px 3px 0 #fff; }
+
+  /* "Bust" — sculpture silhouette via radial gradients */
+  .vp-bust {
+    position: relative;
+    aspect-ratio: 1;
+    max-width: 320px;
+    margin: 0 auto;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 35% 30%, #fff 0%, #ddd 25%, #999 60%, #555 100%);
+    box-shadow:
+      inset -16px -16px 30px rgba(0,0,0,0.4),
+      inset 12px 12px 24px rgba(255,255,255,0.5),
+      0 0 60px rgba(255,46,196,0.4),
+      0 0 100px rgba(123,224,255,0.4);
+  }
+  .vp-bust::before {
+    content: "𓁹";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 120px;
+    color: rgba(80,60,80,0.4);
+    text-shadow: 2px 2px 4px rgba(255,255,255,0.3);
+  }
+  .vp-bust::after {
+    content: "VAPOR";
+    position: absolute;
+    bottom: -8px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Anton', sans-serif;
+    font-size: 38px;
+    letter-spacing: 0.2em;
+    background: linear-gradient(180deg, #fff, #7be0ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px rgba(255,46,196,0.6);
+  }
+
+  @media (max-width: 720px) {
+    .vp-hero { grid-template-columns: 1fr; }
+    .vp-jp { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Aesthetics</a>
+      <span class="sep">/</span>
+      <span class="here">Vaporwave</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">1.12 · Aesthetic</span>
+    <h1 class="title">Vaporwave.</h1>
+    <p class="tagline">Pastel marble pinks and cyans, Greco-Roman busts, MTV-era 90s typography, ironic Japanese subtitles. The internet's most beloved ironic-luxury aesthetic.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Vaporwave is a music genre that became a visual aesthetic — pastel pinks and cyans, Greco-Roman statues, Japanese characters, glitchy chrome type, and faded 1990s shopping-mall imagery, all assembled with intentional irony. It originated on Tumblr in the early 2010s and is now the default look for nostalgia-themed indie sites, Bandcamp pages, NFT projects, and merch drops.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Background combines large pastel radial gradients (hot pink + cyan blooms on a marble-cream base) with a faint scanline overlay (<code>repeating-linear-gradient</code> at very low opacity). Typography uses a condensed display sans (Anton, Bebas Neue) at huge sizes with multi-layered offset color shadows — a magenta shadow + a cyan shadow at different offsets gives the chromatic-aberration look. Japanese characters in Noto Serif JP, set vertically or as small subtitles, complete the aesthetic. A Greek bust (real image or a CSS sculpture) anchors the composition.</p>
+      <div class="term-grid">
+        <div><b>Pastel marble bg</b><span>Pink + cyan radial gradients on a cream base, with overlay noise/marble texture</span></div>
+        <div><b>Chromatic-aberration shadow</b><span>Offset magenta + cyan text-shadows give the VHS / CRT look</span></div>
+        <div><b>Japanese typography</b><span>Noto Serif JP characters as decorative subtitles — pure vaporwave signature</span></div>
+        <div><b>Greco-Roman bust</b><span>Statue silhouette anchors the composition — irony at its purest</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <div class="demo-shell">
+      <div class="demo vp-demo">
+        <span class="demo-badge" style="background:rgba(255,46,196,0.4); color:#fff; border-color:rgba(255,255,255,0.4); z-index:5;">Live</span>
+        <div class="vp-jp">蒸気波 — 2026年</div>
+        <nav class="vp-nav">
+          <div class="brand">PLAZA ★ FM</div>
+          <div class="links"><span>HOME</span><span>SHOP</span><span>RADIO</span><span>★</span></div>
+        </nav>
+        <div class="vp-hero">
+          <div>
+            <div class="vp-jpsub">永遠の夏 — eternal summer</div>
+            <h3>Aesthetic ★<br>vol. 04</h3>
+            <p>Lo-fi mixes, marble busts, free shipping on dreams. Drops every Friday at midnight.</p>
+            <span class="vp-tag">★ NEW DROP</span>
+          </div>
+          <div class="vp-bust"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 1.12 Vaporwave</span>
+        <button class="copy-btn" aria-label="Copy prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button>
+      </div>
+      <pre class="prompt-body"><code>Build a vaporwave hero section. Import Anton (condensed display sans) and Noto Serif JP from Google Fonts. Background: stack a pastel radial gradient (hot pink #ff77c8 at bottom-left, cyan #7be0ff at top-right) over a cream-marble base (linear gradient pink → light blue). Add a faint scanline overlay using ::after with repeating-linear-gradient at 2px stripes, 4% opacity. Add a marble overlay using ::before with radial gradients in white and black at low opacity, mix-blend-mode:overlay. Headline in Anton, uppercase, font-size clamp(50px,8vw,88px), with a chromatic-aberration text-shadow stack: 4px 4px 0 #ff2ec4, 8px 8px 0 #7be0ff, plus a soft magenta blur. Add vertical Japanese characters in Noto Serif JP at the top-right corner (writing-mode:vertical-rl). Place a circular "marble bust" element (radial gradient sculpting + inset shadows + a 𓁹 unicode glyph) on the right side of the hero. CTA pill: hot pink background, white border, hard offset white shadow. The whole effect should feel like a 1996 shopping mall poster.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.aesthetics.fandom.com/wiki/Vaporwave" target="_blank" rel="noopener">Aesthetics Wiki — Vaporwave</a><span class="desc">The canonical mood board and history of the movement</span></div></li>
+      <li><div><a href="https://dribbble.com/tags/vaporwave" target="_blank" rel="noopener">Dribbble — Vaporwave</a><span class="desc">Modern web/UI takes on the vaporwave aesthetic</span></div></li>
+      <li><div><a href="https://www.are.na/explore/vaporwave" target="_blank" rel="noopener">Are.na — Vaporwave channel</a><span class="desc">Curated visual references from the genre</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="1.11-editorial-magazine.html" class="prev"><span class="label">← Prev</span><span class="title">1.11 Editorial / Magazine</span></a>
+      <a href="1.13-memphis.html" class="next"><span class="label">Next →</span><span class="title">1.13 Memphis Design</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

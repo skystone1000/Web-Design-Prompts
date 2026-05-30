@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>1.11 Editorial / Magazine · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter+Tight:wght@300..600&display=swap" rel="stylesheet" />
+<style>
+  /* ===== Live demo: Editorial / Magazine ===== */
+  .ed-demo {
+    background: #f4ede1;
+    color: #1A1814;
+    min-height: 720px;
+    padding: 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    font-family: 'Fraunces', serif;
+  }
+  .ed-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 18px 36px;
+    border-bottom: 3px double #1A1814;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #1A1814;
+  }
+  .ed-bar .b { font-family: 'Fraunces', serif; font-style: italic; font-weight: 400; font-size: 22px; letter-spacing: -0.02em; text-transform: none; }
+  .ed-bar .meta { display: flex; gap: 20px; }
+  .ed-bar .meta span { padding-bottom: 2px; }
+
+  .ed-head {
+    padding: 32px 36px 18px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 28px;
+    align-items: end;
+    border-bottom: 1px solid rgba(26,24,20,0.2);
+  }
+  .ed-cat {
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #8b1a1a;
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  .ed-head h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(40px, 6vw, 64px);
+    letter-spacing: -0.025em;
+    line-height: 0.95;
+    color: #1A1814;
+  }
+  .ed-head h3 em { font-style: italic; font-weight: 300; }
+  .ed-head .folio {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 200;
+    font-size: 96px;
+    line-height: 1;
+    color: #8b1a1a;
+    letter-spacing: -0.04em;
+  }
+
+  .ed-byline {
+    padding: 14px 36px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #5c554a;
+  }
+  .ed-byline b { color: #1A1814; font-weight: 600; }
+
+  .ed-body {
+    padding: 28px 36px 60px;
+    columns: 3;
+    column-gap: 26px;
+    column-rule: 1px solid rgba(26,24,20,0.18);
+    font-family: 'Fraunces', serif;
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: #2a2722;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    text-align: justify;
+  }
+  .ed-body p { margin-bottom: 12px; }
+  .ed-body .lead::first-letter {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 78px;
+    line-height: 0.85;
+    float: left;
+    margin: 6px 8px 0 0;
+    color: #8b1a1a;
+  }
+  .ed-body .pull {
+    break-inside: avoid;
+    margin: 14px 0;
+    padding: 14px 0;
+    border-top: 1px solid rgba(26,24,20,0.2);
+    border-bottom: 1px solid rgba(26,24,20,0.2);
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 19px;
+    line-height: 1.3;
+    color: #1A1814;
+    text-align: left;
+    -webkit-hyphens: none;
+    hyphens: none;
+  }
+  .ed-body .pull::before { content: "“ "; color: #8b1a1a; }
+  .ed-body .pull::after { content: " ”"; color: #8b1a1a; }
+
+  @media (max-width: 900px) { .ed-body { columns: 2; } }
+  @media (max-width: 600px) { .ed-body { columns: 1; } .ed-head { grid-template-columns: 1fr; } .ed-head .folio { font-size: 64px; } }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Aesthetics</a>
+      <span class="sep">/</span>
+      <span class="here">Editorial / Magazine</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">1.11 · Aesthetic</span>
+    <h1 class="title">Editorial /<br><em>Magazine</em>.</h1>
+    <p class="tagline">Print-inspired layout that landed online. Drop caps, column rules, large italic folio numbers, color-name accents like "rouge." Used by The New Yorker, MIT Tech Review, brand storytelling pages.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>An editorial / magazine aesthetic takes the language of high-end print magazines — variable serifs, drop caps, multi-column body text, column rules, all-caps eyebrows in deep red — and brings it to the screen. It signals authority, slowness, and literary care. Used a lot for long-form journalism, brand storytelling, designer portfolios, fashion lookbooks, and museum sites.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>The body text uses CSS <code>columns: 3</code> with a <code>column-rule: 1px solid</code> (the literal pinstripe dividers between columns in a printed magazine). The opening paragraph gets a drop-cap via <code>p::first-letter</code> with a much larger <code>font-size</code> and <code>float: left</code>. The hero pairs a tall display serif (Fraunces variable, italic axis cranked up) with a small monospace or sans label above ("eyebrow"). A large italic folio number in the corner is a classic print signature. The paper-warm background <code>#f4ede1</code> is essential — pure white doesn't feel editorial.</p>
+      <div class="term-grid">
+        <div><b>Drop cap</b><span>p::first-letter with float:left and a much larger font-size</span></div>
+        <div><b>columns + column-rule</b><span>CSS multi-column with a hairline rule between columns — pure print signature</span></div>
+        <div><b>Folio / page numbers</b><span>Oversized italic numerals in the corner — strong editorial detail</span></div>
+        <div><b>Paper background</b><span>Warm cream #f4ede1 — never pure white for an editorial feel</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <div class="demo-shell">
+      <div class="demo ed-demo">
+        <span class="demo-badge" style="background:rgba(26,24,20,0.7); color:#f4ede1; border-color:rgba(26,24,20,0.4);">Live</span>
+        <header class="ed-bar">
+          <div class="b">The Quietest</div>
+          <div class="meta"><span>Vol. 04</span><span>Issue 24</span><span>May 2026</span></div>
+        </header>
+        <div class="ed-head">
+          <div>
+            <div class="ed-cat">★ Essay — Long Read</div>
+            <h3>The architecture<br>of <em>patience</em>.</h3>
+          </div>
+          <div class="folio">№ 24</div>
+        </div>
+        <div class="ed-byline">
+          <span>By <b>Hannah Kveld</b> &nbsp;·&nbsp; Photographs by <b>Theo Mårsson</b></span>
+          <span>—— 8 min read</span>
+        </div>
+        <div class="ed-body">
+          <p class="lead">Most things you wait for are not worth the wait. A small minority are. The whole project of design is learning to tell which is which, then having the courage to build for the second category even when the first one pays the rent.</p>
+          <p>The longer I work in this industry, the more I believe the best work I have done has been the work nobody talks about. The friction removed. The dialog deleted. The modal that never had to ship.</p>
+          <p class="pull">The best interface is the one that never asks to be remembered.</p>
+          <p>We celebrate the wrong things, partly because the wrong things are easier to point at. A redesign with a big visual change is easier to celebrate than a redesign that simply made everyone faster. A new feature is easier to ship than a setting deleted.</p>
+          <p>The interesting thing is that this idea is older than software. The same instinct that makes a great butler invisible at a dinner party makes a great tool invisible during a workflow.</p>
+          <p>How do you measure something a user did not notice? Not by impressions. Not by clicks. By time spent in the part of the product that matters — and the speed at which they return to it without being prompted.</p>
+          <p>Build the thing. Test the thing. Strip the thing. Test it again. Ship it without telling anyone. If they notice, you've already done too much.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 1.11 Editorial / Magazine</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Build an editorial / magazine-style long-form article page. Background: warm paper cream #f4ede1 (never pure white). Import Fraunces (variable serif, with italic axis) and Inter Tight from Google Fonts. Masthead: thin top bar with magazine name in italic Fraunces, plus "Vol. 04 — Issue 24 — May 2026" in small uppercase Inter Tight, separated by a 3px double border. Article header (2-column grid): left has an all-caps deep-red ★ eyebrow ('★ Essay — Long Read') and a large italic-mix Fraunces headline; right shows a huge italic folio number ('№ 24') in deep red #8b1a1a. Byline row beneath: 'By Author' in semibold + reading time aligned right. Article body uses CSS columns:3, column-gap:26px, column-rule:1px solid rgba(0,0,0,0.18) — the literal pinstripe dividers from print. First paragraph gets a drop cap via p::first-letter (78px italic serif, float:left, deep-red color). Include a pull-quote with break-inside:avoid, hairline top+bottom rules, italic Fraunces, large quote marks in red. Justified body text with hyphens:auto. Collapse to 2 columns on tablet, 1 column on mobile.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.newyorker.com" target="_blank" rel="noopener">The New Yorker</a><span class="desc">The reference for online editorial typography — drop caps, italic display, restrained color</span></div></li>
+      <li><div><a href="https://www.technologyreview.com" target="_blank" rel="noopener">MIT Technology Review</a><span class="desc">Long-form features with magazine layout</span></div></li>
+      <li><div><a href="https://pitchfork.com" target="_blank" rel="noopener">Pitchfork — review pages</a><span class="desc">Bold editorial type system around a single review</span></div></li>
+      <li><div><a href="https://www.itsnicethat.com" target="_blank" rel="noopener">It's Nice That</a><span class="desc">Design editorial that uses serifs and large folio numbers expertly</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="1.10-cyberpunk-synthwave.html" class="prev"><span class="label">← Prev</span><span class="title">1.10 Cyberpunk / Synthwave</span></a>
+      <a href="1.12-vaporwave.html" class="next"><span class="label">Next →</span><span class="title">1.12 Vaporwave</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>6.8 Skeleton Loader / Shimmer · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .sk-demo {
+    min-height: 620px;
+    background: var(--bg-elev);
+    color: var(--text);
+    padding: 40px;
+    border-radius: var(--radius-lg);
+  }
+  .sk-controls {
+    display: flex; gap: 10px; justify-content: center; margin-bottom: 24px;
+  }
+  .sk-controls button {
+    padding: 10px 18px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .sk-controls button.active { background: var(--accent); color: #1A1300; border-color: var(--accent); }
+
+  .sk-stage { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; max-width: 900px; margin: 0 auto; }
+  .sk-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .sk-img { aspect-ratio: 16/10; }
+  .sk-body { padding: 16px; }
+  .sk-line { height: 12px; border-radius: 5px; margin-bottom: 8px; }
+  .sk-tag { display: inline-block; width: 64px; height: 20px; border-radius: 999px; margin-bottom: 12px; }
+
+  /* SKELETON state */
+  .sk-card.loading .sk-img,
+  .sk-card.loading .sk-line,
+  .sk-card.loading .sk-tag,
+  .sk-card.loading .sk-meta {
+    background: linear-gradient(90deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.04) 100%);
+    background-size: 200% 100%;
+    animation: sk-shimmer 1.4s linear infinite;
+    color: transparent !important;
+  }
+  @keyframes sk-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+  .sk-card.loading .sk-line.w-90 { width: 90%; }
+  .sk-card.loading .sk-line.w-60 { width: 60%; }
+  .sk-card.loading .sk-line.w-75 { width: 75%; }
+  .sk-card.loading .sk-meta { height: 14px; width: 50%; margin-top: 12px; }
+  .sk-card.loading .sk-real { display: none; }
+
+  /* LOADED state */
+  .sk-card.loaded .sk-skel { display: none; }
+  .sk-real h5 { font-family: var(--font-display); font-size: 16px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.2; color: var(--text); margin-bottom: 6px; }
+  .sk-real p { font-size: 13px; color: var(--text-muted); line-height: 1.45; margin-bottom: 10px; }
+  .sk-real .tag { display: inline-block; padding: 3px 9px; border-radius: 999px; background: rgba(232,179,57,0.18); color: var(--accent); font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; }
+  .sk-real .meta { font-size: 12px; color: var(--text-muted); }
+
+  /* image gradients for loaded */
+  .sk-card.loaded .sk-img { background: linear-gradient(135deg, #7C5CFF, #2c1a4a); }
+  .sk-card.loaded:nth-child(2) .sk-img { background: linear-gradient(135deg, #FF6B9D, #6e0080); }
+  .sk-card.loaded:nth-child(3) .sk-img { background: linear-gradient(135deg, #00D9FF, #0a3d4d); }
+
+  @media (max-width: 720px) { .sk-stage { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">UI Patterns</a>
+      <span class="sep">/</span>
+      <span class="here">Skeleton Loader</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">6.8 · UI Pattern</span>
+    <h1 class="title">Skeleton <em>Loader</em>.</h1>
+    <p class="tagline">Placeholder shapes with a moving shimmer that mimic the layout of the real content while it loads. The polite alternative to a spinner.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Instead of a spinner that says "something is happening, wait", skeleton loaders show the rough shape of the content that's about to arrive — a tile here, three text lines there, a circle for an avatar — with a soft shimmer sweeping across to indicate liveness. Apps feel faster (perceived performance) because users see the page's bones immediately. Facebook popularized them in 2014, and they're now standard on Slack, YouTube, LinkedIn, every major content app.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Render the same component twice: a skeleton version with empty rectangles + circles that match the real layout's shapes and proportions, and the real content. While loading, show the skeleton. Each placeholder block has a moving gradient background (<code>linear-gradient</code> with three stops, light in the middle) plus <code>background-size: 200%</code> animated horizontally via CSS keyframes. When data is ready, swap from skeleton → real with a quick crossfade. Important: skeletons should mimic the actual layout (3 cards if you'll show 3 cards), not be generic.</p>
+      <div class="term-grid">
+        <div><b>Layout-matched shapes</b><span>Skeleton should mirror the real layout's grid + spacing</span></div>
+        <div><b>Moving gradient</b><span>linear-gradient 3-stop, background-size 200%, animate position</span></div>
+        <div><b>Pulse vs shimmer</b><span>Pulse = opacity in/out; shimmer = gradient swipe. Either works.</span></div>
+        <div><b>Don't outstay welcome</b><span>If content arrives in < 200ms, skip the skeleton entirely</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Toggle between Loading and Loaded states. Watch the shimmer sweep across the placeholders.</p>
+    <div class="demo-shell">
+      <div class="demo sk-demo">
+        <span class="demo-badge">Live · toggle states</span>
+        <div class="sk-controls">
+          <button class="active" data-state="loading">Loading state</button>
+          <button data-state="loaded">Loaded state</button>
+          <button data-state="auto">Auto-cycle ↻</button>
+        </div>
+        <div class="sk-stage" id="skStage">
+          <article class="sk-card loading" data-card>
+            <div class="sk-skel">
+              <div class="sk-img"></div>
+              <div class="sk-body">
+                <div class="sk-tag"></div>
+                <div class="sk-line w-90"></div>
+                <div class="sk-line w-75"></div>
+                <div class="sk-line w-60"></div>
+                <div class="sk-line sk-meta"></div>
+              </div>
+            </div>
+            <div class="sk-real">
+              <div class="sk-img"></div>
+              <div class="sk-body">
+                <span class="tag">Aurora</span>
+                <h5>The blank-page editor, reimagined</h5>
+                <p>For teams who still believe writing should feel like writing — not configuring.</p>
+                <div class="meta">Hannah K. · 7 min</div>
+              </div>
+            </div>
+          </article>
+          <article class="sk-card loading" data-card>
+            <div class="sk-skel">
+              <div class="sk-img"></div>
+              <div class="sk-body">
+                <div class="sk-tag"></div>
+                <div class="sk-line w-75"></div>
+                <div class="sk-line w-90"></div>
+                <div class="sk-line w-60"></div>
+                <div class="sk-line sk-meta"></div>
+              </div>
+            </div>
+            <div class="sk-real">
+              <div class="sk-img"></div>
+              <div class="sk-body">
+                <span class="tag">Process</span>
+                <h5>Why we built batch 12 slower</h5>
+                <p>Forty hours per jacket. The decision that doubled our shipping time on purpose.</p>
+                <div class="meta">Theo M. · 4 min</div>
+              </div>
+            </div>
+          </article>
+          <article class="sk-card loading" data-card>
+            <div class="sk-skel">
+              <div class="sk-img"></div>
+              <div class="sk-body">
+                <div class="sk-tag"></div>
+                <div class="sk-line w-90"></div>
+                <div class="sk-line w-60"></div>
+                <div class="sk-line w-75"></div>
+                <div class="sk-line sk-meta"></div>
+              </div>
+            </div>
+            <div class="sk-real">
+              <div class="sk-img"></div>
+              <div class="sk-body">
+                <span class="tag">Notes</span>
+                <h5>A short list of details we got wrong</h5>
+                <p>What broke at launch, what surprised us, what we'd do differently in batch 13.</p>
+                <div class="meta">Soraya N. · 6 min</div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 6.8 Skeleton Loader</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a skeleton-loader system for a blog-card grid. Render the same 3-card grid in TWO versions inside each card: a .sk-skel skeleton view and a .sk-real loaded view. Skeleton view: a placeholder image block (aspect-ratio:16/10), a small placeholder "tag" pill (64px×20px rounded), 3 placeholder text lines of varying widths (90%, 75%, 60%), and a placeholder meta line. Each placeholder element has class .sk-line/.sk-tag/.sk-img and gets a moving shimmer background: linear-gradient(90deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.04) 100%); background-size:200% 100%; animation:shimmer 1.4s linear infinite (background-position from 200% 0 to -200% 0). Card states via parent class .loading or .loaded: .loading shows .sk-skel and hides .sk-real (display:none); .loaded does the opposite. Loaded view shows: gradient-art image (different per card), a colored category tag pill, a serif headline (line-clamped), an excerpt, and a meta byline. Include 3 demo toggle buttons: Loading state / Loaded state / Auto-cycle (alternates every 2 seconds via setInterval).</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.linkedin.com" target="_blank" rel="noopener">LinkedIn feed</a><span class="desc">Beautifully crafted skeletons matching post layouts</span></div></li>
+      <li><div><a href="https://www.youtube.com" target="_blank" rel="noopener">YouTube</a><span class="desc">Video grid skeletons that look exactly like the real grid</span></div></li>
+      <li><div><a href="https://ui.shadcn.com/docs/components/skeleton" target="_blank" rel="noopener">shadcn/ui — Skeleton</a><span class="desc">Composable React skeleton primitives</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="6.7-toast.html" class="prev"><span class="label">← Prev</span><span class="title">6.7 Toast</span></a>
+      <a href="6.9-avatar-stack.html" class="next"><span class="label">Next →</span><span class="title">6.9 Avatar Stack</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const cards = document.querySelectorAll('[data-card]');
+    const btns = document.querySelectorAll('.sk-controls button');
+    let cycler;
+    function setState(s) {
+      btns.forEach(b => b.classList.toggle('active', b.dataset.state === s));
+      clearInterval(cycler);
+      if (s === 'loading') cards.forEach(c => { c.classList.add('loading'); c.classList.remove('loaded'); });
+      else if (s === 'loaded') cards.forEach(c => { c.classList.remove('loading'); c.classList.add('loaded'); });
+      else if (s === 'auto') {
+        let loading = true;
+        const tick = () => {
+          cards.forEach(c => { c.classList.toggle('loading', loading); c.classList.toggle('loaded', !loading); });
+          loading = !loading;
+        };
+        tick();
+        cycler = setInterval(tick, 2000);
+      }
+    }
+    btns.forEach(b => b.addEventListener('click', () => setState(b.dataset.state)));
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

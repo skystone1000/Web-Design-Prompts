@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>5.12 Mix-blend Text Over Image · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .mb-demo {
+    min-height: 720px;
+    background: #FAFAF7;
+    color: #1A1814;
+    padding: 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Background "image" split: half light cream, half dark photograph */
+  .mb-bg {
+    position: absolute;
+    inset: 0;
+  }
+  .mb-bg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #FAFAF7;
+  }
+  .mb-bg::after {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0; left: 50%; right: 0;
+    background: linear-gradient(135deg, #1A1814, #4a2b6a);
+  }
+  /* Decorative orange circle */
+  .mb-circle {
+    position: absolute;
+    top: 40%; left: 50%;
+    width: 320px; height: 320px;
+    background: #e63946;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+  }
+
+  .mb-overlay {
+    position: relative;
+    z-index: 2;
+    padding: 80px 40px;
+    min-height: 720px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mb-h {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(72px, 12vw, 160px);
+    letter-spacing: -0.05em;
+    line-height: 0.95;
+    color: #fff;
+    mix-blend-mode: difference;
+    text-align: center;
+    max-width: 12ch;
+  }
+
+  .mb-controls {
+    position: absolute;
+    bottom: 24px; left: 24px;
+    z-index: 5;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .mb-controls button {
+    padding: 8px 14px;
+    border: 1px solid rgba(0,0,0,0.18);
+    background: rgba(255,255,255,0.85);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #111;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+  }
+  .mb-controls button.active { background: #1A1814; color: #fff; border-color: #1A1814; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Typography &amp; Color</a>
+      <span class="sep">/</span>
+      <span class="here">Mix-blend Text</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">5.12 · Type</span>
+    <h1 class="title">Mix-blend <em>Text</em><br>Over Image.</h1>
+    <p class="tagline">Text that inverts itself depending on what's behind it — dark on light backgrounds, light on dark backgrounds, every color in between. One CSS property does all of it.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A single piece of text that always reads correctly even as the background changes color across its width. Use it for hero headlines that sit on top of a complex image, a half-and-half split, or a colored callout — the text never needs a manual color swap because <code>mix-blend-mode: difference</code> picks the opposite of whatever is behind each pixel.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Set the text element's <code>color: white</code> and <code>mix-blend-mode: difference</code>. The browser blends each pixel of the text against whatever color is behind it using the "difference" formula — black on white surfaces stays black, white on dark stays white, complementary colors emerge on saturated backgrounds. Alternative blend modes give different effects: <code>exclusion</code> (softer than difference), <code>multiply</code> (always darker), <code>screen</code> (always lighter), <code>overlay</code> (contrast-aware).</p>
+      <div class="term-grid">
+        <div><b>mix-blend-mode: difference</b><span>The hero technique — auto-inverts text against background</span></div>
+        <div><b>color: white</b><span>Start the text white — difference flips it to black on white surfaces</span></div>
+        <div><b>z-index matters</b><span>Text must sit on top of the elements it blends against, in the same stacking context</span></div>
+        <div><b>Other blend modes</b><span>exclusion (gentler), multiply, screen, overlay — each has its place</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">The headline sits over a split background (light/dark) AND a red circle. Each letter blends against whatever's behind it. Try the other blend modes.</p>
+    <div class="demo-shell">
+      <div class="demo mb-demo" id="mbDemo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#fff; border-color:rgba(255,255,255,0.2); z-index:6;">Live · swap modes</span>
+        <div class="mb-bg"></div>
+        <div class="mb-circle"></div>
+        <div class="mb-overlay">
+          <h3 class="mb-h" id="mbH">No matter <em>what's behind</em>.</h3>
+        </div>
+        <div class="mb-controls" id="mbControls">
+          <button data-mode="difference" class="active">difference</button>
+          <button data-mode="exclusion">exclusion</button>
+          <button data-mode="multiply">multiply</button>
+          <button data-mode="screen">screen</button>
+          <button data-mode="overlay">overlay</button>
+          <button data-mode="normal">normal (off)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 5.12 Mix-blend Text Over Image</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a hero where the headline auto-inverts against varied backgrounds using mix-blend-mode. Container with overflow:hidden. Inside, layer (in stacking order): (1) A "background" element split half-light (cream #FAFAF7) and half-dark (linear-gradient(135deg, #1A1814, #4a2b6a)) using pseudo-elements; (2) A large solid red #e63946 circle (320px, border-radius:50%) absolutely-positioned in the middle. (3) On top, a huge display headline with: color:white, mix-blend-mode:difference, font-size clamp(72,12vw,160px), font-weight 800, letter-spacing -0.05em. The text will automatically render dark on the light half, light on the dark half, and a complementary cyan on the red circle. Include a controls strip with toggle buttons for: difference, exclusion, multiply, screen, overlay, normal (off) — clicking each updates the headline's mix-blend-mode so users can see the difference in effect between modes. CRITICAL: the text element and background elements must share the same stacking context for blending to work correctly — usually achieved by putting them all inside one positioned container.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://codepen.io/search/pens?q=mix-blend-mode" target="_blank" rel="noopener">CodePen — mix-blend-mode demos</a><span class="desc">Dozens of creative uses of CSS blend modes for text</span></div></li>
+      <li><div><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/mix-blend-mode" target="_blank" rel="noopener">MDN — mix-blend-mode reference</a><span class="desc">Every available blend mode with a live preview</span></div></li>
+      <li><div><a href="https://www.awwwards.com" target="_blank" rel="noopener">Awwwards — mix-blend hero designs</a><span class="desc">Hero treatments that lean on blend modes for type</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="5.11-animated-gradient.html" class="prev"><span class="label">← Prev</span><span class="title">5.11 Animated Gradient</span></a>
+      <a href="5.13-color-palette.html" class="next"><span class="label">Next →</span><span class="title">5.13 Color Palette Explorer</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const h = document.getElementById('mbH');
+    const ctrls = document.getElementById('mbControls');
+    ctrls.addEventListener('click', (e) => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      ctrls.querySelectorAll('button').forEach(x => x.classList.toggle('active', x === b));
+      h.style.mixBlendMode = b.getAttribute('data-mode');
+    });
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

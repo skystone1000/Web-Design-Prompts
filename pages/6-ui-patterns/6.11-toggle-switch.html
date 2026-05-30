@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>6.11 Toggle Switch · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .tg-demo {
+    min-height: 620px;
+    background: var(--bg-elev);
+    color: var(--text);
+    padding: 40px;
+    border-radius: var(--radius-lg);
+  }
+  .tg-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  .tg-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+  }
+  .tg-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .tg-row:last-child { border-bottom: 0; }
+  .tg-row .lbl b { display: block; font-weight: 600; color: var(--text); font-size: 14.5px; }
+  .tg-row .lbl span { font-size: 12.5px; color: var(--text-muted); }
+
+  /* === Variant 1: iOS-style pill === */
+  .tg-ios {
+    position: relative;
+    width: 50px; height: 28px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.25s var(--ease);
+    flex-shrink: 0;
+  }
+  .tg-ios::after {
+    content: "";
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 22px; height: 22px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    transition: transform 0.25s var(--ease);
+  }
+  .tg-ios.on { background: var(--accent); }
+  .tg-ios.on::after { transform: translateX(22px); }
+
+  /* === Variant 2: Square material === */
+  .tg-mat {
+    position: relative;
+    width: 44px; height: 24px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.25s var(--ease);
+    flex-shrink: 0;
+  }
+  .tg-mat::after {
+    content: "";
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 18px; height: 18px;
+    background: #fff;
+    border-radius: 4px;
+    transition: transform 0.25s var(--ease);
+  }
+  .tg-mat.on { background: var(--accent-3); }
+  .tg-mat.on::after { transform: translateX(20px); }
+
+  /* === Variant 3: With check ✓ / × icons === */
+  .tg-icn {
+    position: relative;
+    width: 56px; height: 28px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.25s var(--ease);
+    flex-shrink: 0;
+  }
+  .tg-icn::before {
+    content: "✓";
+    position: absolute;
+    left: 8px; top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255,255,255,0.6);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .tg-icn::after {
+    content: "×";
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 22px; height: 22px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.25s var(--ease), content 0.25s;
+    color: #1A1814;
+    font-size: 14px;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    font-family: var(--font-mono);
+  }
+  .tg-icn.on { background: #4ade80; }
+  .tg-icn.on::before { opacity: 1; color: rgba(0,0,0,0.4); }
+  .tg-icn.on::after { transform: translateX(28px); content: "✓"; color: #16a34a; }
+
+  /* === Variant 4: Knurled / chunky === */
+  .tg-chk {
+    position: relative;
+    width: 64px; height: 32px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.25s var(--ease);
+    flex-shrink: 0;
+  }
+  .tg-chk::after {
+    content: "";
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 26px; height: 24px;
+    background: linear-gradient(180deg, #fff, #ccc);
+    border-radius: 6px;
+    background-image:
+      linear-gradient(180deg, transparent, rgba(0,0,0,0.1)),
+      repeating-linear-gradient(90deg, transparent 0 3px, rgba(0,0,0,0.08) 3px 4px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    transition: transform 0.25s var(--ease);
+  }
+  .tg-chk.on { background: var(--accent); }
+  .tg-chk.on::after { transform: translateX(32px); }
+
+  /* Header for each card */
+  .tg-card h5 { font-family: var(--font-display); font-weight: 500; font-size: 18px; color: var(--text); margin-bottom: 4px; letter-spacing: -0.01em; }
+  .tg-card .desc { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
+
+  @media (max-width: 640px) { .tg-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">UI Patterns</a>
+      <span class="sep">/</span>
+      <span class="here">Toggle Switch</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">6.11 · UI Pattern</span>
+    <h1 class="title">Toggle <em>Switch</em>.</h1>
+    <p class="tagline">Four styles of toggle: iOS pill, Material square, icon-on-knob, knurled chunky. Click any to flip. All accessible button elements.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A binary input — on or off — styled as a slider that physically moves between two positions. Often replaces a checkbox in settings panels because the state is immediately clear at a glance (the knob's position) without reading the label. Used universally on settings screens, notification preferences, dark mode controls, feature flags.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>A relative-positioned track (the colored capsule), with an absolutely-positioned knob inside. State toggled via a CSS class (<code>.on</code>) that changes the track background color and transitions the knob's <code>transform: translateX</code> to the other end. Implement as a real <code>&lt;button&gt;</code> with <code>role="switch"</code> and <code>aria-checked</code> for accessibility. Variants differ only by knob shape, track color, and decorative details — the underlying mechanic is the same.</p>
+      <div class="term-grid">
+        <div><b>role="switch"</b><span>ARIA role + aria-checked for screen-reader correctness</span></div>
+        <div><b>transform: translateX</b><span>Knob slides via transform (GPU-accelerated, no layout reflow)</span></div>
+        <div><b>transition both</b><span>Track color AND knob position transition for smooth flip</span></div>
+        <div><b>Large hit area</b><span>Make the wrapper button taller than the visible track for touch</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Tap any toggle. Each card shows a different style.</p>
+    <div class="demo-shell">
+      <div class="demo tg-demo">
+        <span class="demo-badge">Live · click toggles</span>
+        <div class="tg-grid">
+
+          <div class="tg-card">
+            <h5>Notifications</h5>
+            <div class="desc">01 — iOS-style pill</div>
+            <div class="tg-row">
+              <div class="lbl"><b>Daily digest</b><span>One email per morning</span></div>
+              <button class="tg-ios on" role="switch" aria-checked="true"></button>
+            </div>
+            <div class="tg-row">
+              <div class="lbl"><b>Mentions</b><span>Notify when someone tags you</span></div>
+              <button class="tg-ios" role="switch" aria-checked="false"></button>
+            </div>
+            <div class="tg-row">
+              <div class="lbl"><b>Weekly summary</b><span>Activity recap, Friday afternoons</span></div>
+              <button class="tg-ios on" role="switch" aria-checked="true"></button>
+            </div>
+          </div>
+
+          <div class="tg-card">
+            <h5>Privacy</h5>
+            <div class="desc">02 — Square / Material</div>
+            <div class="tg-row">
+              <div class="lbl"><b>Public profile</b><span>Show your profile to anyone</span></div>
+              <button class="tg-mat" role="switch" aria-checked="false"></button>
+            </div>
+            <div class="tg-row">
+              <div class="lbl"><b>Show online status</b><span>Tell others when you're active</span></div>
+              <button class="tg-mat on" role="switch" aria-checked="true"></button>
+            </div>
+            <div class="tg-row">
+              <div class="lbl"><b>Allow analytics</b><span>Anonymous usage metrics</span></div>
+              <button class="tg-mat" role="switch" aria-checked="false"></button>
+            </div>
+          </div>
+
+          <div class="tg-card">
+            <h5>Account</h5>
+            <div class="desc">03 — Icon-on-knob</div>
+            <div class="tg-row">
+              <div class="lbl"><b>Two-factor auth</b><span>Required for all sessions</span></div>
+              <button class="tg-icn on" role="switch" aria-checked="true"></button>
+            </div>
+            <div class="tg-row">
+              <div class="lbl"><b>Auto-save drafts</b><span>Save every 30 seconds</span></div>
+              <button class="tg-icn on" role="switch" aria-checked="true"></button>
+            </div>
+            <div class="tg-row">
+              <div class="lbl"><b>Beta features</b><span>Try new things before they ship</span></div>
+              <button class="tg-icn" role="switch" aria-checked="false"></button>
+            </div>
+          </div>
+
+          <div class="tg-card">
+            <h5>Workshop</h5>
+            <div class="desc">04 — Chunky / knurled</div>
+            <div class="tg-row">
+              <div class="lbl"><b>Power saver</b><span>Limit CPU when on battery</span></div>
+              <button class="tg-chk on" role="switch" aria-checked="true"></button>
+            </div>
+            <div class="tg-row">
+              <div class="lbl"><b>Quiet mode</b><span>Mute UI sounds and chimes</span></div>
+              <button class="tg-chk" role="switch" aria-checked="false"></button>
+            </div>
+            <div class="tg-row">
+              <div class="lbl"><b>Hardware accel</b><span>Use GPU rendering</span></div>
+              <button class="tg-chk on" role="switch" aria-checked="true"></button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 6.11 Toggle Switch</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build 4 styles of toggle switch, each in a settings card with 3 toggle-row examples. Common mechanics: each toggle is a real <button> element with role="switch" and aria-checked, with a track + a ::after knob. Click adds/removes .on class which transitions track background color and knob transform:translateX. Variants:
+(1) iOS pill: 50×28 track, 999px border-radius, white circular knob 22px with shadow, off → gray track, on → accent track with knob translateX(22px).
+(2) Material square: 44×24 track with 6px radius, square knob 18px 4px radius, off → gray, on → teal/green.
+(3) Icon-on-knob: 56×28 track with a ✓ on the left side of track (visible only when on) and a × or ✓ INSIDE the knob (changes via content swap), on state green with green check inside knob.
+(4) Chunky/knurled: 64×32 track with 1px border, taller knob (26×24) with subtle stripe texture (background-image repeating-linear-gradient at low opacity for the knurled look), gradient white → light-gray, off gray, on accent.
+Each settings card has a display-serif title, uppercase mono variant label, and 3 toggle rows separated by hairline borders. Each row: bold setting name + muted helper text on the left, the toggle on the right.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://developer.apple.com/design/human-interface-guidelines/toggles" target="_blank" rel="noopener">Apple HIG — Toggles</a><span class="desc">The iOS-style toggle spec</span></div></li>
+      <li><div><a href="https://m3.material.io/components/switch" target="_blank" rel="noopener">Material 3 — Switch</a><span class="desc">Google's spec for material toggles</span></div></li>
+      <li><div><a href="https://ui.shadcn.com/docs/components/switch" target="_blank" rel="noopener">shadcn/ui — Switch</a><span class="desc">Accessible React toggle component</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="6.10-stat-card.html" class="prev"><span class="label">← Prev</span><span class="title">6.10 Stat / KPI Card</span></a>
+      <a href="6.12-dropzone.html" class="next"><span class="label">Next →</span><span class="title">6.12 File Upload Dropzone</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  document.querySelectorAll('[role="switch"]').forEach(t => {
+    t.addEventListener('click', () => {
+      const on = t.classList.toggle('on');
+      t.setAttribute('aria-checked', on);
+    });
+  });
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

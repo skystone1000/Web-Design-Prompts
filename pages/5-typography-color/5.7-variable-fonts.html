@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>5.7 Variable Font Sliders · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<link href="https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..1000,0..1,0..1,0..1&display=swap" rel="stylesheet" />
+<style>
+  .vf-demo {
+    min-height: 720px;
+    background: #FAFAF7;
+    color: #111;
+    padding: 56px 40px;
+    border-radius: var(--radius-lg);
+  }
+  .vf-stage { max-width: 820px; margin: 0 auto; }
+  .vf-specimen {
+    font-family: 'Recursive', sans-serif;
+    font-size: clamp(64px, 11vw, 140px);
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    color: #111;
+    margin-bottom: 40px;
+    transition: font-variation-settings 0.18s ease, color 0.3s;
+    font-variation-settings:
+      'wght' var(--wght, 600),
+      'slnt' var(--slnt, 0),
+      'CASL' var(--casl, 0),
+      'MONO' var(--mono, 0);
+  }
+  .vf-specimen em { color: #e63946; font-style: italic; }
+
+  .vf-panel {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 14px;
+    padding: 28px;
+  }
+  .vf-row { margin-bottom: 22px; }
+  .vf-row:last-child { margin-bottom: 0; }
+  .vf-row .lbl {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #555;
+  }
+  .vf-row .lbl b { color: #111; font-weight: 700; }
+  .vf-row input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: #F0EDE8;
+    border-radius: 999px;
+    outline: none;
+    cursor: pointer;
+  }
+  .vf-row input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px; height: 22px;
+    background: #1A1814;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    cursor: grab;
+  }
+  .vf-row input[type="range"]::-moz-range-thumb {
+    width: 22px; height: 22px;
+    background: #1A1814;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    cursor: grab;
+  }
+  .vf-reset {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 8px 14px;
+    background: transparent;
+    border: 1px solid rgba(0,0,0,0.12);
+    border-radius: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #555;
+    cursor: pointer;
+  }
+  .vf-reset:hover { background: #1A1814; color: #fff; border-color: #1A1814; }
+
+  .vf-info { margin-top: 14px; font-size: 13.5px; color: #555; line-height: 1.55; font-family: 'Recursive', sans-serif; font-variation-settings: 'wght' 400, 'MONO' 0; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Typography &amp; Color</a>
+      <span class="sep">/</span>
+      <span class="here">Variable Fonts</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">5.7 · Type</span>
+    <h1 class="title">Variable <em>Font</em><br>Sliders.</h1>
+    <p class="tagline">One font, four axes. Drag the sliders to morph weight, slant, casual style, and monospace — all in one continuous font file.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A variable font ships <em>one</em> file that contains an infinite range of variations along multiple "axes" — weight, italic, width, optical size, and custom axes like "casual" or "monospace". You set them via CSS <code>font-variation-settings</code> with numeric values. The same font that says "Hello" at weight 100 can say it at 947. The same headline can morph live on hover. This is what makes type feel alive in 2025.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Load a variable font (we use <a href="https://www.recursive.design" target="_blank">Recursive</a>, which has 5 axes). Apply <code>font-variation-settings: 'wght' 600, 'slnt' 0, 'CASL' 0, 'MONO' 0</code> on the element. Wire each axis to a CSS custom property (<code>var(--wght, 600)</code>) and update that property from a <code>&lt;input type="range"&gt;</code> oninput. Transition the variation settings for buttery axis morphing. Common axes: <code>wght</code> (weight), <code>wdth</code> (width), <code>slnt</code> (slant), <code>opsz</code> (optical size), plus designer-specific custom axes.</p>
+      <div class="term-grid">
+        <div><b>font-variation-settings</b><span>CSS property — comma-separated 'axis' value pairs</span></div>
+        <div><b>wght / wdth / slnt / opsz</b><span>Standard axes — weight, width, slant, optical size</span></div>
+        <div><b>Custom axes</b><span>Designer-specific: CASL (casual), MONO (monospace), GRAD (grade), etc.</span></div>
+        <div><b>Transition</b><span>transition:font-variation-settings 0.18s ease — morphs smoothly</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Drag the sliders. Watch the headline morph along each axis in real time.</p>
+    <div class="demo-shell">
+      <div class="demo vf-demo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#111; border-color:rgba(0,0,0,0.1);">Live · drag sliders</span>
+        <div class="vf-stage">
+          <div class="vf-specimen" id="vfSpec">Hello, <em>world</em>.</div>
+          <div class="vf-panel" id="vfPanel">
+            <div class="vf-row">
+              <div class="lbl"><span>Weight</span><b><span id="vWght">600</span> / 1000</b></div>
+              <input type="range" min="300" max="1000" value="600" data-axis="wght" />
+            </div>
+            <div class="vf-row">
+              <div class="lbl"><span>Slant</span><b><span id="vSlnt">0</span>°</b></div>
+              <input type="range" min="-15" max="0" value="0" data-axis="slnt" />
+            </div>
+            <div class="vf-row">
+              <div class="lbl"><span>Casual</span><b><span id="vCasl">0</span>.0</b></div>
+              <input type="range" min="0" max="1" step="0.01" value="0" data-axis="casl" />
+            </div>
+            <div class="vf-row">
+              <div class="lbl"><span>Monospace</span><b><span id="vMono">0</span>.0</b></div>
+              <input type="range" min="0" max="1" step="0.01" value="0" data-axis="mono" />
+            </div>
+            <button class="vf-reset" id="vfReset">↻ Reset all axes</button>
+            <p class="vf-info">Using <b>Recursive</b> — a 5-axis variable font designed for code and UI by Stephen Nixon. Free on Google Fonts.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 5.7 Variable Font Sliders</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build an interactive variable-font playground. Load Recursive from Google Fonts with all 5 axes (slnt, wght, CASL, CRSV, MONO) — use the long axis URL with the variation ranges. Big specimen text "Hello, world." at clamp(64px, 11vw, 140px), font-family Recursive, with font-variation-settings:'wght' var(--wght, 600), 'slnt' var(--slnt, 0), 'CASL' var(--casl, 0), 'MONO' var(--mono, 0). Add transition:font-variation-settings 0.18s ease for smooth morphing. Below it, a panel with 4 styled range sliders (custom thumb design — dark filled circle with white border), each with a label + current numeric value + max-value caption. Wire each slider's oninput to update the corresponding --axis custom property on the specimen via JavaScript. Wght: 300-1000; Slnt: -15 to 0; CASL: 0-1 step 0.01; MONO: 0-1 step 0.01. Add a "Reset all axes" button that restores defaults. Use the appropriate custom property names so the headline visibly morphs as the user drags each slider.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.recursive.design" target="_blank" rel="noopener">Recursive — official site</a><span class="desc">Interactive axis showcase for the font we use here</span></div></li>
+      <li><div><a href="https://v-fonts.com" target="_blank" rel="noopener">v-fonts.com</a><span class="desc">Library of every variable font with axis previews</span></div></li>
+      <li><div><a href="https://fonts.google.com/?vfonly=true" target="_blank" rel="noopener">Google Fonts — Variable</a><span class="desc">Free variable fonts filtered list</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="5.6-dark-light-toggle.html" class="prev"><span class="label">← Prev</span><span class="title">5.6 Dark/Light Toggle</span></a>
+      <a href="5.8-outline-text.html" class="next"><span class="label">Next →</span><span class="title">5.8 Outline / Stroke Text</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const spec = document.getElementById('vfSpec');
+    const panel = document.getElementById('vfPanel');
+    const reset = document.getElementById('vfReset');
+    if (!spec || !panel) return;
+    const labelMap = { wght: 'vWght', slnt: 'vSlnt', casl: 'vCasl', mono: 'vMono' };
+    function setAxis(axis, v) {
+      spec.style.setProperty(`--${axis}`, v);
+      const lab = document.getElementById(labelMap[axis]);
+      if (lab) lab.textContent = (axis === 'casl' || axis === 'mono') ? Number(v).toFixed(2) : v;
+    }
+    panel.addEventListener('input', (e) => {
+      const r = e.target;
+      const axis = r.getAttribute('data-axis');
+      if (axis) setAxis(axis, r.value);
+    });
+    reset.addEventListener('click', () => {
+      const defaults = { wght: 600, slnt: 0, casl: 0, mono: 0 };
+      Object.entries(defaults).forEach(([k, v]) => {
+        setAxis(k, v);
+        const inp = panel.querySelector(`input[data-axis="${k}"]`);
+        if (inp) inp.value = v;
+      });
+    });
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

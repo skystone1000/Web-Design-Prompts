@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>3.14 Split-Screen Hero · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .ss-demo {
+    min-height: 620px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    color: #fff;
+    position: relative;
+    transition: grid-template-columns 0.6s var(--ease);
+  }
+  .ss-demo[data-expand="left"] { grid-template-columns: 1.6fr 1fr; }
+  .ss-demo[data-expand="right"] { grid-template-columns: 1fr 1.6fr; }
+
+  .ss-side {
+    padding: 60px 40px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: filter 0.4s var(--ease);
+  }
+  .ss-side.dim { filter: brightness(0.55); }
+  .ss-side.left { background: linear-gradient(135deg, #1A1814 0%, #4a4742 100%); }
+  .ss-side.right { background: linear-gradient(135deg, #E8B339 0%, #D96F5A 100%); color: #1A1300; }
+  /* radial highlight on each */
+  .ss-side::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 30%, rgba(255,255,255,0.16), transparent 60%);
+    pointer-events: none;
+  }
+
+  .ss-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .ss-side.left .ss-tag { color: rgba(255,255,255,0.6); }
+  .ss-side.right .ss-tag { color: rgba(26,19,0,0.6); }
+
+  .ss-side h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(36px, 5.5vw, 56px);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 14px;
+  }
+  .ss-side h3 em { font-style: italic; }
+  .ss-side p { font-size: 16px; line-height: 1.55; max-width: 38ch; opacity: 0.85; }
+
+  .ss-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 24px;
+    padding: 13px 22px;
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: transform 0.2s, background 0.2s;
+    width: fit-content;
+  }
+  .ss-side.left .ss-cta { background: #E8B339; color: #1A1300; }
+  .ss-side.right .ss-cta { background: #1A1814; color: #fff; }
+  .ss-cta:hover { transform: translateX(4px); }
+
+  /* Center vertical separator */
+  .ss-demo::before {
+    content: "VS";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    color: #1A1814;
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: -0.02em;
+    z-index: 10;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    transition: left 0.6s var(--ease);
+    pointer-events: none;
+  }
+  .ss-demo[data-expand="left"]::before { left: 61.5%; }
+  .ss-demo[data-expand="right"]::before { left: 38.5%; }
+
+  @media (max-width: 720px) {
+    .ss-demo, .ss-demo[data-expand="left"], .ss-demo[data-expand="right"] { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
+    .ss-demo::before { display: none; }
+    .ss-side.dim { filter: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Layouts</a>
+      <span class="sep">/</span>
+      <span class="here">Split-Screen Hero</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">3.14 · Layout</span>
+    <h1 class="title">Split-Screen <em>Hero</em>.</h1>
+    <p class="tagline">Two equal halves, two different brand stories — or audiences, or products. Hover one and it expands; the other dims. The choose-your-path landing pattern.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A landing-page hero that divides the screen vertically into two halves, each holding a parallel story — often "for individuals / for teams" or "shop men's / shop women's" or product A vs product B. Hovering one half expands it while dimming the other, signaling "click here." Used heavily on e-commerce (Sephora, Nike), B2B sites with split audiences, and conference launches that announce two related products.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>A single container with <code>display: grid; grid-template-columns: 1fr 1fr</code>. Each side is a full-bleed coloured panel with its own typography, CTA, and accent. On <code>mouseenter</code> of either side, JS updates a <code>data-expand</code> attribute on the parent ("left" or "right"), which triggers a CSS transition: the grid columns animate to <code>1.6fr 1fr</code> (or reversed) and the OTHER side gets a <code>.dim</code> class that filters its brightness down. A circular "VS" badge in the middle slides with the new center line.</p>
+      <div class="term-grid">
+        <div><b>1fr 1fr grid</b><span>Equal halves by default — the canonical split</span></div>
+        <div><b>grid-template-columns transition</b><span>Animate to 1.6fr 1fr on hover for the expand</span></div>
+        <div><b>filter: brightness</b><span>Dim the un-hovered side — directs the eye to the active half</span></div>
+        <div><b>Center badge</b><span>VS / or / divider element slides with the expand</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Hover either side. Watch it grow while the other dims.</p>
+    <div class="demo-shell">
+      <div class="demo ss-demo" id="ssDemo">
+        <span class="demo-badge" style="z-index:11;">Live · hover</span>
+        <div class="ss-side left" data-side="left">
+          <div>
+            <div class="ss-tag">★ For makers</div>
+            <h3>Build with your<br><em>hands</em>.</h3>
+            <p>Tools, raw materials, and workshops for the people who still want to make things.</p>
+          </div>
+          <a class="ss-cta">Shop the workshop →</a>
+        </div>
+        <div class="ss-side right" data-side="right">
+          <div>
+            <div class="ss-tag">★ For collectors</div>
+            <h3>Live with their<br><em>work</em>.</h3>
+            <p>Limited pieces, signed and shipped. Once they're gone, they're gone.</p>
+          </div>
+          <a class="ss-cta">Shop the gallery →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 3.14 Split-Screen Hero</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a split-screen hero. Container: display:grid, grid-template-columns:1fr 1fr, height ~620px, border-radius and overflow:hidden. Two equal panels: LEFT is a dark gradient (#1A1814 → #4a4742) with white text; RIGHT is a warm amber gradient (#E8B339 → #D96F5A) with dark text. Each panel has padding:60px 40px, a small uppercase mono tag ("★ For makers"), a big italic-mix display headline (clamp(36,5.5vw,56)), a paragraph max-width 38ch, and a pill CTA at the bottom. Add a circular "VS" badge centered at the demo's midpoint (position:absolute, white circle, dark text, big shadow, z-index:10). On mouseenter of either panel, set a data-expand="left"|"right" attribute on the parent — that triggers a CSS transition of grid-template-columns to 1.6fr 1fr (or reversed), and adds .dim class to the OTHER panel which applies filter:brightness(0.55). The VS badge also transitions its left position to follow the new midpoint. On mouseleave the layout returns to 1fr 1fr. On mobile, switch to grid-template-rows:1fr 1fr (stacked vertically) and disable the hover-expand.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.sephora.com" target="_blank" rel="noopener">Sephora — gendered landing</a><span class="desc">Long-running split-screen homepage on e-commerce</span></div></li>
+      <li><div><a href="https://www.nike.com" target="_blank" rel="noopener">Nike — campaign launches</a><span class="desc">Split heroes for parallel product drops</span></div></li>
+      <li><div><a href="https://stripe.com" target="_blank" rel="noopener">Stripe — Startups vs Enterprise</a><span class="desc">Audience-bifurcation pattern on B2B sites</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="3.13-floating-overlap.html" class="prev"><span class="label">← Prev</span><span class="title">3.13 Floating Overlap</span></a>
+      <a href="../4-navigation/index.html" class="next"><span class="label">Next chapter →</span><span class="title">Navigation</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const demo = document.getElementById('ssDemo');
+    if (!demo) return;
+    demo.querySelectorAll('.ss-side').forEach(s => {
+      s.addEventListener('mouseenter', () => {
+        const side = s.getAttribute('data-side');
+        demo.setAttribute('data-expand', side);
+        demo.querySelectorAll('.ss-side').forEach(o => o.classList.toggle('dim', o !== s));
+      });
+    });
+    demo.addEventListener('mouseleave', () => {
+      demo.removeAttribute('data-expand');
+      demo.querySelectorAll('.ss-side').forEach(o => o.classList.remove('dim'));
+    });
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.9 3D Card Tilt on Hover · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  /* ===== Live demo: 3D Tilt ===== */
+  .tl-demo {
+    background:
+      radial-gradient(60% 60% at 30% 20%, rgba(124,92,255,0.18), transparent 60%),
+      radial-gradient(50% 50% at 80% 80%, rgba(255,107,157,0.14), transparent 60%),
+      #0E0E14;
+    color: #fff;
+    min-height: 640px;
+    padding: 56px 32px;
+    border-radius: var(--radius-lg);
+    perspective: 1400px;
+    display: grid;
+    place-items: center;
+  }
+  .tl-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    max-width: 900px;
+    width: 100%;
+  }
+  .tl-card {
+    position: relative;
+    aspect-ratio: 3/4;
+    border-radius: 20px;
+    padding: 22px;
+    transform-style: preserve-3d;
+    transition: transform 0.18s var(--ease);
+    will-change: transform;
+    overflow: hidden;
+    color: #fff;
+    cursor: pointer;
+  }
+  .tl-card.c1 { background: linear-gradient(135deg, #7C5CFF, #2c1a4a); box-shadow: 0 24px 60px rgba(124,92,255,0.3); }
+  .tl-card.c2 { background: linear-gradient(135deg, #FF6B9D, #6e0080); box-shadow: 0 24px 60px rgba(255,107,157,0.3); }
+  .tl-card.c3 { background: linear-gradient(135deg, #00E5FF, #0a3d4d); box-shadow: 0 24px 60px rgba(0,229,255,0.3); }
+  /* Reflection layer that follows the cursor */
+  .tl-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.45), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.25s var(--ease);
+    pointer-events: none;
+  }
+  .tl-card:hover::before { opacity: 1; }
+  .tl-card .num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    transform: translateZ(40px);
+    margin-bottom: auto;
+    position: relative;
+  }
+  .tl-card .head {
+    display: flex; justify-content: space-between;
+    align-items: flex-start;
+  }
+  .tl-card .icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(10px);
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    transform: translateZ(40px);
+    border: 1px solid rgba(255,255,255,0.18);
+  }
+  .tl-card .meta {
+    position: absolute;
+    bottom: 22px; left: 22px; right: 22px;
+    transform: translateZ(60px);
+  }
+  .tl-card h5 {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin-bottom: 4px;
+  }
+  .tl-card p { font-size: 13px; color: rgba(255,255,255,0.75); line-height: 1.5; }
+
+  @media (max-width: 720px) { .tl-grid { grid-template-columns: 1fr; max-width: 320px; } }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">3D Tilt</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.9 · Animation</span>
+    <h1 class="title">3D Tilt on <em>Hover</em>.</h1>
+    <p class="tagline">Card tilts toward the cursor in 3D space. Inner content lifts on the Z axis. A glossy light reflection sweeps the surface. Apple-product-page energy.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Cards (or any element) rotate on the X and Y axes based on the cursor's position over them, creating an illusion that the card is a physical, slightly tilted object made of glass or metal. Inner elements (titles, icons) lift toward you on the Z axis for parallax depth. A radial-gradient light reflection tracks the cursor so the card looks polished. Used by Apple, Stripe, Linear, and almost every premium product page.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>The card's parent gets <code>perspective: 1400px</code>. The card itself uses <code>transform-style: preserve-3d</code> so child elements can sit on different Z planes. On <code>mousemove</code>, JS calculates the cursor's offset from the card's center (–50% to +50% in each axis) and applies <code>transform: rotateX(...)deg rotateY(...)deg</code>. Inner elements use <code>transform: translateZ(...)</code> to float forward. A <code>::before</code> pseudo-element with a radial-gradient at <code>--mx</code> / <code>--my</code> CSS variables provides the moving light reflection.</p>
+      <div class="term-grid">
+        <div><b>perspective: 1400px</b><span>Applied to the PARENT — controls how deep the 3D space feels</span></div>
+        <div><b>transform-style: preserve-3d</b><span>Lets child elements sit on different Z planes inside the card</span></div>
+        <div><b>rotateX + rotateY</b><span>From mouse offset, ±10° in each direction is usually plenty</span></div>
+        <div><b>translateZ(40px)</b><span>Inner elements float toward the camera — creates parallax depth</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Hover any card. Move the mouse around to feel the 3D tilt and watch the light reflect.</p>
+    <div class="demo-shell">
+      <div class="demo tl-demo">
+        <span class="demo-badge">Live · hover &amp; move</span>
+        <div class="tl-grid">
+          <div class="tl-card c1" data-tilt>
+            <div class="head">
+              <div class="num">01 / Aurora</div>
+              <div class="icon">◆</div>
+            </div>
+            <div class="meta">
+              <h5>Compose anything.</h5>
+              <p>The blank-page tool reimagined for teams.</p>
+            </div>
+          </div>
+          <div class="tl-card c2" data-tilt>
+            <div class="head">
+              <div class="num">02 / Pulse</div>
+              <div class="icon">✦</div>
+            </div>
+            <div class="meta">
+              <h5>Measure what matters.</h5>
+              <p>Operator-grade dashboards, calmly delivered.</p>
+            </div>
+          </div>
+          <div class="tl-card c3" data-tilt>
+            <div class="head">
+              <div class="num">03 / Drift</div>
+              <div class="icon">⌘</div>
+            </div>
+            <div class="meta">
+              <h5>Ship as you write.</h5>
+              <p>From a doc to a deploy in one keystroke.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 2.9 3D Card Tilt</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Build a 3D tilt-on-hover card grid (3 cards). Parent container has perspective:1400px. Each card: aspect-ratio:3/4, transform-style:preserve-3d, will-change:transform, transition:transform 0.18s ease. On mousemove inside a card, JavaScript calculates cursor offset from the card's center as a percentage (-0.5 to +0.5 in each axis) and applies transform:rotateX(offsetY * -10deg) rotateY(offsetX * 10deg). On mouseleave, reset to rotateX(0) rotateY(0). Inner elements (title, icon, meta row) get transform:translateZ(40-60px) so they float toward the camera and parallax. Add a ::before pseudo-element with background:radial-gradient(280px circle at var(--mx) var(--my), rgba(255,255,255,0.45), transparent 60%) — update --mx and --my CSS variables on mousemove so the highlight tracks the cursor. opacity:0 by default, opacity:1 on hover. Cards are gradient-filled (violet, pink, cyan) with matching colored box-shadows.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://apple.com/apple-vision-pro" target="_blank" rel="noopener">Apple Vision Pro page</a><span class="desc">Subtle 3D tilt on the product cards — the gold standard</span></div></li>
+      <li><div><a href="https://micku7zu.github.io/vanilla-tilt.js" target="_blank" rel="noopener">Vanilla Tilt.js</a><span class="desc">Tiny dependency-free library that does this in one line</span></div></li>
+      <li><div><a href="https://stripe.com" target="_blank" rel="noopener">Stripe homepage</a><span class="desc">Tilted card grid with light-tracking highlights on every section</span></div></li>
+      <li><div><a href="https://www.framer.com" target="_blank" rel="noopener">Framer.com</a><span class="desc">Layered Z-axis depth on hero cards</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.8-magnetic-cursor.html" class="prev"><span class="label">← Prev</span><span class="title">2.8 Magnetic Cursor</span></a>
+      <a href="2.10-number-counter.html" class="next"><span class="label">Next →</span><span class="title">2.10 Number Counter</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    document.querySelectorAll('[data-tilt]').forEach(card => {
+      const max = 10; // degrees
+      card.addEventListener('mousemove', (e) => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width;
+        const y = (e.clientY - r.top) / r.height;
+        const rx = (0.5 - y) * (max * 2);
+        const ry = (x - 0.5) * (max * 2);
+        card.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+        card.style.setProperty('--mx', `${x * 100}%`);
+        card.style.setProperty('--my', `${y * 100}%`);
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'rotateX(0) rotateY(0)';
+      });
+    });
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

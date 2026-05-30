@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.15 Hover Image Preview on Link · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .hp-demo {
+    min-height: 720px;
+    background: #0E0E14;
+    color: #fff;
+    padding: 60px 40px;
+    border-radius: var(--radius-lg);
+    position: relative;
+    overflow: hidden;
+  }
+  .hp-stage {
+    max-width: 740px;
+    margin: 0 auto;
+  }
+  .hp-eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 18px; }
+  .hp-list {
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+  .hp-link {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    gap: 24px;
+    align-items: center;
+    padding: 22px 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    cursor: pointer;
+    transition: padding 0.3s var(--ease), color 0.3s;
+    position: relative;
+  }
+  .hp-link .num { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.2em; color: rgba(255,255,255,0.4); }
+  .hp-link h5 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(26px, 4vw, 38px);
+    letter-spacing: -0.02em;
+    color: #fff;
+    transition: color 0.3s, transform 0.3s var(--ease);
+    line-height: 1.05;
+  }
+  .hp-link h5 em { font-style: italic; }
+  .hp-link .yr { font-family: var(--font-mono); font-size: 12px; color: rgba(255,255,255,0.4); }
+  .hp-link:hover { padding-left: 20px; }
+  .hp-link:hover h5 { color: var(--accent); transform: translateX(6px); }
+  .hp-link:hover .num { color: var(--accent); }
+
+  /* Preview image — follows cursor */
+  .hp-preview {
+    position: absolute;
+    top: 0; left: 0;
+    width: 280px;
+    aspect-ratio: 3/4;
+    border-radius: 14px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.85);
+    transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+    z-index: 5;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.18);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+    will-change: transform, opacity;
+  }
+  .hp-preview.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  .hp-preview .art { position: absolute; inset: 0; opacity: 0; transition: opacity 0.2s; }
+  .hp-preview .art.on { opacity: 1; }
+  .hp-preview .art::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.25), transparent 60%); }
+  .hp-preview .a1 { background: linear-gradient(135deg, #FF6B9D, #2c1a4a); }
+  .hp-preview .a2 { background: linear-gradient(135deg, #00D9FF, #0a3d4d); }
+  .hp-preview .a3 { background: linear-gradient(135deg, #FFB800, #7a4a00); }
+  .hp-preview .a4 { background: linear-gradient(135deg, #7C5CFF, #2c1a4a); }
+  .hp-preview .a5 { background: linear-gradient(135deg, #6FB5A8, #1A1814); }
+  .hp-preview .a6 { background: linear-gradient(135deg, #ed6a5e, #4a2b1a); }
+  .hp-preview .lab {
+    position: absolute;
+    bottom: 12px; left: 12px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.9);
+    z-index: 2;
+    background: rgba(0,0,0,0.5);
+    padding: 5px 10px;
+    border-radius: 999px;
+    backdrop-filter: blur(6px);
+  }
+
+  @media (hover: none) {
+    .hp-preview { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Hover Preview</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.15 · Animation</span>
+    <h1 class="title">Hover Image <em>Preview</em>.</h1>
+    <p class="tagline">A list of links. Hover any one — a preview image follows your cursor. The signature interaction on portfolio + agency sites.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>An index of projects, articles, or case studies. Each entry is text-only: number, title, year. When you hover one, a project thumbnail appears and tracks your cursor. The result is a clean, almost editorial table of contents — no images visible until you ask for them. Used by countless agency and portfolio sites because it scales beautifully: 50 projects can sit in one screen, but each gets a rich visual on demand.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>A single floating <code>div</code> sits at the parent's <code>position: relative</code>, absolutely-positioned, hidden by default. Each link in the list gets a <code>data-preview</code> attribute pointing to which image to show. On <code>mouseenter</code> of a link, set the right image as active and add a class to show the preview. On <code>mousemove</code> over the parent, update the preview's <code>transform: translate(x, y)</code> to follow the cursor (use a small lerp for smoothness). On <code>mouseleave</code>, hide.</p>
+      <div class="term-grid">
+        <div><b>Single floating preview</b><span>One absolutely-positioned div, NOT one per link</span></div>
+        <div><b>data-preview attribute</b><span>Each link points to which image variant to show</span></div>
+        <div><b>mousemove follows cursor</b><span>Update transform on mousemove with lerp for smooth tracking</span></div>
+        <div><b>Disable on touch</b><span>@media (hover: none) display:none — no cursor on mobile</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Hover any project — a colored preview pops in and follows your cursor.</p>
+    <div class="demo-shell">
+      <div class="demo hp-demo" id="hpDemo">
+        <span class="demo-badge">Live · hover</span>
+        <div class="hp-stage">
+          <div class="hp-eyebrow">— Selected work · 2018 → 2026</div>
+          <div class="hp-list">
+            <div class="hp-link" data-preview="1"><span class="num">01</span><h5>Aurora — <em>banking app</em></h5><span class="yr">2026</span></div>
+            <div class="hp-link" data-preview="2"><span class="num">02</span><h5>Salt &amp; Bone — music label</h5><span class="yr">2025</span></div>
+            <div class="hp-link" data-preview="3"><span class="num">03</span><h5>Field Co. — <em>outdoors brand</em></h5><span class="yr">2024</span></div>
+            <div class="hp-link" data-preview="4"><span class="num">04</span><h5>Hex — indie game studio</h5><span class="yr">2024</span></div>
+            <div class="hp-link" data-preview="5"><span class="num">05</span><h5>Margo — <em>cookbook</em></h5><span class="yr">2023</span></div>
+            <div class="hp-link" data-preview="6"><span class="num">06</span><h5>Quill — writing app</h5><span class="yr">2023</span></div>
+          </div>
+        </div>
+
+        <div class="hp-preview" id="hpPreview">
+          <span class="lab" id="hpLab">Aurora</span>
+          <div class="art a1 on" data-art="1"></div>
+          <div class="art a2" data-art="2"></div>
+          <div class="art a3" data-art="3"></div>
+          <div class="art a4" data-art="4"></div>
+          <div class="art a5" data-art="5"></div>
+          <div class="art a6" data-art="6"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.15 Hover Image Preview</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a project-index list with hover image previews. Parent container position:relative. List items are large text-only rows: number column, big display-serif title, year — separated by hairline borders. On hover, the title color changes to accent and slides 6px right (transform:translateX). Each row has a data-preview="N" attribute matching one of several preview images. ONE absolutely-positioned preview div sits in the parent: 280px wide, 3/4 aspect, border-radius:14px, overflow:hidden, with all preview images stacked inside (only one with .on opacity:1 at a time). Default opacity:0, transform:translate(-50%,-50%) scale(0.85). On row mouseenter, swap which preview .art has .on and add .show class. On mousemove inside the parent, update the preview's transform to translate(cursorX, cursorY) with a lerp for smooth following. On row mouseleave, remove .show. Hide entirely on touch devices via @media (hover: none).</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.obys.agency" target="_blank" rel="noopener">Obys Agency</a><span class="desc">Project list with cursor-tracking image previews</span></div></li>
+      <li><div><a href="https://immersivegarden.com" target="_blank" rel="noopener">Immersive Garden</a><span class="desc">Award-winning agency, similar pattern</span></div></li>
+      <li><div><a href="https://www.uncommongoods.com" target="_blank" rel="noopener">Various editorial sites</a><span class="desc">Look at any Awwwards portfolio winner — most use this pattern</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.14-marquee.html" class="prev"><span class="label">← Prev</span><span class="title">2.14 Marquee Banner</span></a>
+      <a href="2.16-page-loader.html" class="next"><span class="label">Next →</span><span class="title">2.16 Page Loader</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const demo = document.getElementById('hpDemo');
+    const preview = document.getElementById('hpPreview');
+    const lab = document.getElementById('hpLab');
+    if (!demo || !preview) return;
+    const labels = ['', 'Aurora', 'Salt & Bone', 'Field Co.', 'Hex', 'Margo', 'Quill'];
+    let tx = 0, ty = 0, cx = 0, cy = 0, raf;
+    function loop() {
+      cx += (tx - cx) * 0.18;
+      cy += (ty - cy) * 0.18;
+      preview.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%) scale(${preview.classList.contains('show') ? 1 : 0.85})`;
+      raf = requestAnimationFrame(loop);
+    }
+    loop();
+    demo.addEventListener('mousemove', (e) => {
+      const r = demo.getBoundingClientRect();
+      tx = e.clientX - r.left;
+      ty = e.clientY - r.top;
+    });
+    demo.querySelectorAll('.hp-link').forEach(link => {
+      link.addEventListener('mouseenter', () => {
+        const id = link.getAttribute('data-preview');
+        preview.querySelectorAll('.art').forEach(a => a.classList.toggle('on', a.getAttribute('data-art') === id));
+        preview.classList.add('show');
+        if (lab) lab.textContent = labels[parseInt(id, 10)] || '';
+      });
+      link.addEventListener('mouseleave', () => preview.classList.remove('show'));
+    });
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

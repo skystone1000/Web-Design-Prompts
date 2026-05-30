@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>4.10 Bottom Tab Bar · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .bt-demo {
+    min-height: 720px;
+    background: var(--bg-elev);
+    padding: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: var(--radius-lg);
+  }
+  .bt-phone {
+    width: min(320px, 90%);
+    aspect-ratio: 9/19;
+    background: #0a0a14;
+    border-radius: 40px;
+    padding: 14px 12px 14px;
+    border: 12px solid #1A1A22;
+    position: relative;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.04);
+    color: #fff;
+    overflow: hidden;
+  }
+  .bt-notch {
+    position: absolute;
+    top: 14px; left: 50%;
+    transform: translateX(-50%);
+    width: 100px; height: 24px;
+    background: #0a0a14;
+    border-radius: 999px;
+    z-index: 10;
+  }
+  .bt-status {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 18px 14px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: #fff;
+  }
+  .bt-content {
+    padding: 12px 18px 100px;
+    height: calc(100% - 50px);
+    overflow-y: auto;
+  }
+  .bt-screen { display: none; }
+  .bt-screen.on { display: block; animation: bt-fade 0.3s; }
+  @keyframes bt-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .bt-screen h5 { font-family: var(--font-display); font-weight: 400; font-size: 26px; margin-bottom: 10px; color: #fff; letter-spacing: -0.02em; }
+  .bt-screen h5 em { font-style: italic; color: var(--accent); }
+  .bt-screen p { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.55; margin-bottom: 14px; }
+  .bt-card {
+    padding: 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .bt-card .av { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-2)); display: grid; place-items: center; color: #1A1300; font-weight: 700; font-size: 12px; flex-shrink: 0; }
+  .bt-card .t { font-size: 13px; color: #fff; font-weight: 500; }
+  .bt-card .s { font-size: 12px; color: rgba(255,255,255,0.55); }
+
+  /* The tab bar */
+  .bt-bar {
+    position: absolute;
+    bottom: 12px;
+    left: 12px; right: 12px;
+    z-index: 9;
+    background: rgba(20,20,28,0.85);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 28px;
+    padding: 8px;
+    display: flex;
+    gap: 4px;
+    box-shadow: 0 14px 30px rgba(0,0,0,0.3);
+  }
+  .bt-tab {
+    flex: 1;
+    padding: 10px 0 6px;
+    text-align: center;
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: color 0.2s;
+    border-radius: 20px;
+    position: relative;
+  }
+  .bt-tab svg { width: 22px; height: 22px; margin: 0 auto 2px; display: block; }
+  .bt-tab span { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .bt-tab.active { color: var(--accent); }
+  .bt-tab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 2px; left: 50%;
+    transform: translateX(-50%);
+    width: 14px; height: 3px;
+    background: var(--accent);
+    border-radius: 2px;
+    box-shadow: 0 0 8px var(--accent);
+  }
+  .bt-tab .badge {
+    position: absolute;
+    top: 4px; right: calc(50% - 18px);
+    background: #FF3DA1;
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    padding: 1px 5px;
+    border-radius: 8px;
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Navigation</a>
+      <span class="sep">/</span>
+      <span class="here">Bottom Tab Bar</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">4.10 · Navigation</span>
+    <h1 class="title">Bottom <em>Tab Bar</em>.</h1>
+    <p class="tagline">iOS-style dock at the bottom of mobile apps. 4–5 icons + labels, an active indicator that animates between them, optional notification badges.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A bottom-anchored navigation bar that holds the top-level sections of a mobile app: Home, Search, Activity, Inbox, Profile. It's always visible, always reachable with one thumb, and shows where you are with an active icon + label highlight. The pattern Apple defined with iOS in 2007 and Android adopted later — used by Instagram, Twitter, Spotify, every major mobile app.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>The bar is <code>position: fixed; bottom: 0</code> with full-width flex of 4–5 tab buttons. Each tab has an icon stacked on top of a tiny uppercase label. The active tab gets the brand color, often with a small underline pip below the icon. On tap, JS switches which content panel is visible — usually with a quick fade or slide transition. Add a small red badge for notifications on relevant tabs. Crucially, add <code>padding-bottom: env(safe-area-inset-bottom)</code> on iOS to clear the home-indicator.</p>
+      <div class="term-grid">
+        <div><b>position: fixed bottom</b><span>Always visible regardless of scroll position</span></div>
+        <div><b>Icon + label stack</b><span>Both an SVG icon and a tiny uppercase label per tab</span></div>
+        <div><b>Active pip underline</b><span>Small accent-color rectangle under the active icon</span></div>
+        <div><b>safe-area-inset-bottom</b><span>Padding for iOS home indicator — non-negotiable</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Tap any tab on the phone mockup. Content swaps and the active pip slides under the new icon.</p>
+    <div class="demo-shell">
+      <div class="demo bt-demo">
+        <span class="demo-badge">Live · tap tabs</span>
+        <div class="bt-phone">
+          <div class="bt-notch"></div>
+          <div class="bt-status"><span>9:41</span><span>●●●</span></div>
+          <div class="bt-content">
+            <div class="bt-screen on" data-screen="home">
+              <h5>Today's <em>feed</em></h5>
+              <p>A quiet, chronological view of the people you actually follow.</p>
+              <div class="bt-card"><div class="av">HK</div><div><div class="t">Hannah K. shipped vol. 04</div><div class="s">2h ago</div></div></div>
+              <div class="bt-card"><div class="av">TM</div><div><div class="t">Theo M. posted 3 photos</div><div class="s">5h ago</div></div></div>
+              <div class="bt-card"><div class="av">SN</div><div><div class="t">Soraya is in Tokyo</div><div class="s">1d ago</div></div></div>
+            </div>
+            <div class="bt-screen" data-screen="search">
+              <h5>Search</h5>
+              <p>Find people, posts, places, and projects.</p>
+              <div class="bt-card"><div class="av">★</div><div><div class="t">Trending: small-batch</div><div class="s">421 results</div></div></div>
+              <div class="bt-card"><div class="av">★</div><div><div class="t">Trending: editorial</div><div class="s">189 results</div></div></div>
+            </div>
+            <div class="bt-screen" data-screen="add">
+              <h5>New <em>post</em></h5>
+              <p>Drop a photo, write a note, queue a publication.</p>
+              <div class="bt-card"><div class="av">+</div><div><div class="t">Compose a note</div><div class="s">Quick text</div></div></div>
+              <div class="bt-card"><div class="av">+</div><div><div class="t">Upload photo</div><div class="s">From your roll</div></div></div>
+              <div class="bt-card"><div class="av">+</div><div><div class="t">Schedule</div><div class="s">Pick a future date</div></div></div>
+            </div>
+            <div class="bt-screen" data-screen="bell">
+              <h5>Notifications</h5>
+              <p>Quiet hours from 9pm to 8am, always.</p>
+              <div class="bt-card"><div class="av">★</div><div><div class="t">Maya liked your post</div><div class="s">3m ago</div></div></div>
+              <div class="bt-card"><div class="av">✦</div><div><div class="t">New follower: Dev K.</div><div class="s">1h ago</div></div></div>
+              <div class="bt-card"><div class="av">◇</div><div><div class="t">Subscription confirmed</div><div class="s">Today</div></div></div>
+            </div>
+            <div class="bt-screen" data-screen="me">
+              <h5>You</h5>
+              <p>Profile, drafts, archive, settings.</p>
+              <div class="bt-card"><div class="av">AM</div><div><div class="t">Aditya M.</div><div class="s">@aditya · 128 posts</div></div></div>
+              <div class="bt-card"><div class="av">⚙</div><div><div class="t">Settings</div><div class="s">Privacy &amp; data</div></div></div>
+              <div class="bt-card"><div class="av">↗</div><div><div class="t">Share profile</div><div class="s">Get a public link</div></div></div>
+            </div>
+          </div>
+
+          <nav class="bt-bar" id="btBar">
+            <a class="bt-tab active" data-screen="home">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              <span>Home</span>
+            </a>
+            <a class="bt-tab" data-screen="search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+              <span>Search</span>
+            </a>
+            <a class="bt-tab" data-screen="add">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>Add</span>
+            </a>
+            <a class="bt-tab" data-screen="bell">
+              <span class="badge">3</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+              <span>Inbox</span>
+            </a>
+            <a class="bt-tab" data-screen="me">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>
+              <span>You</span>
+            </a>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 4.10 Bottom Tab Bar</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a mobile bottom tab bar inside a phone mockup. Phone: 320px × ~19/9 aspect, rounded corners, 12px bezel, top notch oval, status bar showing "9:41". Inside: a scrollable content area + a fixed bottom tab bar. Tab bar: position:fixed bottom:12px left/right:12px, frosted-glass background (rgba(20,20,28,0.85) + backdrop-filter:blur(20px)), border-radius:28px, padding:8px, flex with 5 equal tabs. Each tab: SVG icon stacked on a tiny uppercase mono label, default color:rgba(255,255,255,0.5). Active tab: accent color + a small underline pip (3px tall, 14px wide, accent color with glow). The "Inbox" tab has a small red notification badge "3" positioned top-right of the icon. On tap, switch which content screen is visible (display:none others, display:block on active) with a quick fade-up animation. Include 5 screens with different mock content (feed, search, compose, notifications, profile). Add padding-bottom:env(safe-area-inset-bottom) for iOS home indicator clearance.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a><span class="desc">Five-tab bottom bar with notification badges</span></div></li>
+      <li><div><a href="https://twitter.com" target="_blank" rel="noopener">X (Twitter)</a><span class="desc">Bottom tab bar on the mobile web app and native</span></div></li>
+      <li><div><a href="https://developer.apple.com/design/human-interface-guidelines/tab-bars" target="_blank" rel="noopener">Apple HIG — Tab Bars</a><span class="desc">Official Apple guidance on iOS tab-bar design</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="4.9-pagination.html" class="prev"><span class="label">← Prev</span><span class="title">4.9 Pagination</span></a>
+      <a href="4.11-stepper.html" class="next"><span class="label">Next →</span><span class="title">4.11 Stepper / Progress</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const bar = document.getElementById('btBar');
+    if (!bar) return;
+    bar.addEventListener('click', (e) => {
+      const tab = e.target.closest('.bt-tab');
+      if (!tab) return;
+      bar.querySelectorAll('.bt-tab').forEach(t => t.classList.toggle('active', t === tab));
+      const s = tab.getAttribute('data-screen');
+      document.querySelectorAll('.bt-screen').forEach(sc => sc.classList.toggle('on', sc.getAttribute('data-screen') === s));
+    });
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

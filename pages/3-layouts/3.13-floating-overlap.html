@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>3.13 Floating / Overlap Elements · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .fo-demo {
+    min-height: 720px;
+    background: #f8f4ea;
+    color: #1A1814;
+    padding: 60px 40px;
+    border-radius: var(--radius-lg);
+    position: relative;
+    overflow: hidden;
+  }
+  .fo-stage { max-width: 920px; margin: 0 auto; position: relative; }
+
+  .fo-eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #8b1a1a; margin-bottom: 22px; }
+  .fo-h {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(48px, 8vw, 92px);
+    letter-spacing: -0.035em;
+    line-height: 0.95;
+    color: #1A1814;
+    max-width: 12ch;
+  }
+  .fo-h em { font-style: italic; color: #8b1a1a; }
+  .fo-sub {
+    margin-top: 28px;
+    max-width: 36ch;
+    font-family: 'Georgia', serif;
+    font-size: 17px;
+    color: #4a4742;
+    line-height: 1.55;
+  }
+  .fo-cta {
+    margin-top: 30px;
+    display: inline-block;
+    padding: 14px 26px;
+    background: #1A1814;
+    color: #fff;
+    border-radius: 999px;
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  /* Floating overlap elements */
+  .fo-image-a {
+    position: absolute;
+    top: 0; right: -20px;
+    width: 260px;
+    aspect-ratio: 3/4;
+    background: linear-gradient(135deg, #c4a35d, #6b4f1e);
+    border-radius: 8px;
+    z-index: 2;
+    transform: rotate(3deg);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.18);
+  }
+  .fo-image-a::after { content: ""; position: absolute; inset: 0; border-radius: 8px; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.22), transparent 60%); }
+
+  .fo-image-b {
+    position: absolute;
+    bottom: -40px;
+    right: 60px;
+    width: 200px;
+    aspect-ratio: 4/3;
+    background: linear-gradient(135deg, #6FB5A8, #1A1814);
+    border-radius: 8px;
+    z-index: 3;
+    transform: rotate(-5deg);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.2);
+  }
+  .fo-image-b::after { content: ""; position: absolute; inset: 0; border-radius: 8px; background: radial-gradient(circle at 70% 30%, rgba(255,255,255,0.22), transparent 60%); }
+
+  .fo-quote {
+    position: absolute;
+    bottom: 50px;
+    left: 280px;
+    width: 200px;
+    padding: 18px;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 6px;
+    z-index: 4;
+    transform: rotate(-2deg);
+    box-shadow: 0 14px 28px rgba(0,0,0,0.1);
+    font-family: 'Georgia', serif;
+    font-style: italic;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #1A1814;
+  }
+  .fo-quote::before {
+    content: "“";
+    font-family: 'Georgia', serif;
+    font-size: 60px;
+    color: #8b1a1a;
+    line-height: 0.6;
+    position: absolute;
+    top: 10px; left: 14px;
+  }
+  .fo-quote p { padding-left: 30px; padding-top: 14px; }
+  .fo-quote cite { display: block; padding-left: 30px; padding-top: 8px; font-style: normal; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: #888; }
+
+  .fo-badge {
+    position: absolute;
+    top: 220px;
+    right: 180px;
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: #fbd84a;
+    color: #1A1814;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    transform: rotate(-12deg);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1.2;
+    z-index: 5;
+    box-shadow: 6px 6px 0 rgba(0,0,0,0.1);
+  }
+
+  .fo-num {
+    position: absolute;
+    top: 0; right: -10px;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 200;
+    font-size: 200px;
+    line-height: 1;
+    color: #8b1a1a;
+    opacity: 0.12;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  @media (max-width: 800px) {
+    .fo-image-a, .fo-image-b, .fo-quote, .fo-badge, .fo-num { position: relative; right: auto; left: auto; top: auto; bottom: auto; margin: 16px 0; transform: none; }
+    .fo-image-a, .fo-image-b { width: 100%; max-width: 320px; }
+    .fo-quote { width: 100%; max-width: 320px; }
+    .fo-num { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Layouts</a>
+      <span class="sep">/</span>
+      <span class="here">Floating Overlap</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">3.13 · Layout</span>
+    <h1 class="title">Floating / Overlap<br><em>Elements</em>.</h1>
+    <p class="tagline">Photos, quotes, badges, and giant numerals break the grid and overlap each other — composed like a designer's pinboard. Editorial energy.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A composition where the strict grid is broken on purpose: images are tilted, quote cards overlap photos, a giant badge sits above everything, a faint italic number anchors the corner. Each element has its own depth (z-index) and rotation. The result feels arranged by hand, like a designer's pinboard — used on portfolios, editorial pages, and boutique-brand sites that want to feel less corporate.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Start with a base layout (centered text, normal grid). Then add a handful of absolutely-positioned floating elements: each with its own <code>top/left/right/bottom</code>, slight <code>transform: rotate()</code>, distinct <code>z-index</code> so they overlap each other intentionally, and a soft <code>box-shadow</code> to make them feel "above" the page. Keep the count small — 3–5 floating elements is plenty. Too many makes it chaotic. On mobile, collapse them to a normal vertical stack.</p>
+      <div class="term-grid">
+        <div><b>position: absolute</b><span>Each element placed by hand, not constrained to grid</span></div>
+        <div><b>transform: rotate</b><span>-5 to +5 degrees on each — feels arranged by hand</span></div>
+        <div><b>z-index intentional</b><span>Decide which element overlaps which — that's the composition</span></div>
+        <div><b>Mobile collapse</b><span>On small screens, absolute → relative, vertical stack</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <div class="demo-shell">
+      <div class="demo fo-demo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#1A1814; border-color:rgba(0,0,0,0.1);">Live</span>
+        <div class="fo-stage" style="min-height: 540px;">
+          <span class="fo-num">04</span>
+          <div class="fo-eyebrow">— Field Co. · est. 2019</div>
+          <h3 class="fo-h">Made <em>by hand</em>, made to outlast.</h3>
+          <p class="fo-sub">Batch 12 shipping now. 240 numbered jackets, hand-cut waxed cotton, finished in Brooklyn over six weeks.</p>
+          <a class="fo-cta">Browse the batch →</a>
+
+          <div class="fo-image-a"></div>
+          <div class="fo-image-b"></div>
+          <div class="fo-quote">
+            <p>The jacket is softer at month twelve than it was at month one. Real things age forward.</p>
+            <cite>— Hannah K.</cite>
+          </div>
+          <div class="fo-badge">★ Batch<br>240/240</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 3.13 Floating / Overlap Elements</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a brand hero where elements are arranged like a designer's pinboard, breaking the grid on purpose. Base layout: a left-aligned text block with eyebrow, big italic-mix display headline, paragraph, dark pill CTA. Then, overlay 4-5 absolutely-positioned floating elements: (1) a portrait gradient "photo" card rotated +3deg in the top-right; (2) a smaller landscape gradient card rotated -5deg overlapping the bottom of the first; (3) a small white quote card rotated -2deg with a big red ❝ pulled out and an italic body + small uppercase cite; (4) a yellow circular badge rotated -12deg with hard offset shadow, sitting on top of the photo cards; (5) a faint italic-serif "04" or large number behind everything at opacity 0.12 as background ornament. Each element has its own z-index so the overlap order is intentional. Soft box-shadows make them feel like physical paper on a wall. On screens under 800px, collapse all absolutely-positioned elements back to position:relative with normal margin and no rotation.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.read.cv" target="_blank" rel="noopener">Read.cv</a><span class="desc">Pinboard-style profile pages with floating image overlap</span></div></li>
+      <li><div><a href="https://www.are.na" target="_blank" rel="noopener">Are.na</a><span class="desc">The pinboard-as-product — UI built around overlap</span></div></li>
+      <li><div><a href="https://www.semplice.com" target="_blank" rel="noopener">Semplice portfolios</a><span class="desc">Designer portfolios that lean heavily on broken-grid floating elements</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="3.12-magazine-cover.html" class="prev"><span class="label">← Prev</span><span class="title">3.12 Magazine Cover</span></a>
+      <a href="3.14-split-screen.html" class="next"><span class="label">Next →</span><span class="title">3.14 Split-Screen Hero</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>3.7 Magazine Multi-Column Layout · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .mg-demo {
+    background: #FAFAF7;
+    color: #1A1814;
+    min-height: 720px;
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+    padding: 0;
+  }
+  .mg-grid {
+    display: grid;
+    grid-template-columns: 64px 1fr 220px;
+    gap: 28px;
+    padding: 40px 36px;
+    align-items: start;
+  }
+  /* Left rail: vertical metadata */
+  .mg-rail {
+    position: sticky;
+    top: 24px;
+    align-self: start;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #888;
+    display: flex;
+    gap: 22px;
+  }
+  .mg-rail b { color: #1A1814; font-weight: 600; }
+  /* Center: article body in 2 columns */
+  .mg-body { max-width: 720px; }
+  .mg-eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #8b1a1a; margin-bottom: 12px; }
+  .mg-body h3 {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: clamp(34px, 5vw, 52px);
+    letter-spacing: -0.025em;
+    line-height: 1.0;
+    color: #111;
+    margin-bottom: 14px;
+  }
+  .mg-body h3 em { font-style: italic; font-weight: 400; }
+  .mg-deck {
+    font-family: 'Georgia', serif;
+    font-size: 19px;
+    line-height: 1.45;
+    color: #2a2722;
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+  .mg-byline {
+    margin: 14px 0 28px;
+    padding: 10px 0;
+    border-top: 1px solid rgba(0,0,0,0.18);
+    border-bottom: 1px solid rgba(0,0,0,0.18);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #555;
+    display: flex;
+    justify-content: space-between;
+  }
+  .mg-byline b { color: #111; }
+  .mg-cols {
+    columns: 2;
+    column-gap: 28px;
+    column-rule: 1px solid rgba(0,0,0,0.16);
+    font-family: 'Georgia', serif;
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: #2a2722;
+    text-align: justify;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+  .mg-cols p { margin-bottom: 12px; }
+  .mg-cols p.lead::first-letter {
+    font-family: 'Georgia', serif;
+    font-weight: 700;
+    font-size: 72px;
+    line-height: 0.85;
+    float: left;
+    margin: 8px 8px 0 0;
+    color: #8b1a1a;
+  }
+  .mg-cols .pull {
+    break-inside: avoid;
+    margin: 18px 0;
+    padding: 14px 0;
+    border-top: 1px solid rgba(0,0,0,0.2);
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+    font-family: 'Georgia', serif;
+    font-style: italic;
+    font-size: 21px;
+    line-height: 1.3;
+    color: #1A1814;
+    -webkit-hyphens: none;
+    hyphens: none;
+    text-align: left;
+  }
+  /* Right rail: sticky meta + share */
+  .mg-side {
+    position: sticky;
+    top: 24px;
+    align-self: start;
+    padding: 18px;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 10px;
+  }
+  .mg-side .lab { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #888; margin-bottom: 8px; }
+  .mg-side ul { font-size: 13px; }
+  .mg-side ul li { padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.06); cursor: pointer; }
+  .mg-side ul li:last-child { border-bottom: 0; }
+  .mg-side ul li:hover { color: #8b1a1a; }
+  .mg-side .share { display: flex; gap: 8px; margin-top: 14px; }
+  .mg-side .share span {
+    width: 30px; height: 30px;
+    border: 1px solid rgba(0,0,0,0.12);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+    cursor: pointer;
+    color: #555;
+  }
+  .mg-side .share span:hover { background: #8b1a1a; color: #fff; border-color: #8b1a1a; }
+
+  @media (max-width: 900px) {
+    .mg-grid { grid-template-columns: 1fr; gap: 18px; }
+    .mg-rail { display: none; }
+    .mg-side { position: static; }
+    .mg-cols { columns: 1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Layouts</a>
+      <span class="sep">/</span>
+      <span class="here">Magazine columns</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">3.7 · Layout</span>
+    <h1 class="title">Magazine Multi-<br>Column <em>Layout</em>.</h1>
+    <p class="tagline">3-column grid: vertical-text left rail, 2-column article body with drop cap and pull-quotes, sticky meta sidebar on the right. Long-form journalism layout.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Where chapter 1.11 covered the editorial aesthetic, this entry is about the <i>layout</i> mechanics: a 3-track outer grid (narrow left rail · main column · sticky sidebar), with the body text itself split into 2 CSS columns. The left rail uses vertical text for issue and date, the right rail holds a sticky table of contents and share row. Used by Bloomberg Businessweek, Wired long-reads, The Atlantic, and the Apple Newsroom feature pages.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Outer container uses CSS Grid: <code>grid-template-columns: 64px 1fr 220px</code>. The left rail uses <code>writing-mode: vertical-rl; transform: rotate(180deg)</code> so text reads bottom-to-top — pure print homage. The center article uses CSS <code>columns: 2</code> with a hairline <code>column-rule</code>. Drop cap on the lead paragraph via <code>p.lead::first-letter</code>. Pull-quotes use <code>break-inside: avoid</code> so they never split across columns. The right sidebar is <code>position: sticky; top: 24px</code> so the ToC and share row follow the reader down the page.</p>
+      <div class="term-grid">
+        <div><b>writing-mode: vertical-rl</b><span>Rotates text 90° — vertical issue/date on the left rail</span></div>
+        <div><b>columns + column-rule</b><span>CSS multi-column with a hairline divider — print signature</span></div>
+        <div><b>break-inside: avoid</b><span>Pull-quotes stay intact, never split across columns</span></div>
+        <div><b>position: sticky</b><span>Right sidebar follows the reader scroll — ToC stays in reach</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. Vertical-text rail on the left, 2-column body in the middle, sticky ToC on the right.</p>
+    <div class="demo-shell">
+      <div class="demo mg-demo">
+        <span class="demo-badge" style="background:rgba(26,24,20,0.7); color:#FAFAF7; border-color:rgba(26,24,20,0.3);">Live · scroll inside</span>
+        <div class="mg-grid">
+          <div class="mg-rail">
+            <span>Vol. <b>04</b></span>
+            <span>Issue <b>24</b></span>
+            <span>May <b>2026</b></span>
+          </div>
+          <article class="mg-body">
+            <div class="mg-eyebrow">★ Feature — Long Read</div>
+            <h3>The slow web is <em>winning</em>.</h3>
+            <p class="mg-deck">Why the internet's most influential publishers are quietly going back to print habits — and what it teaches the rest of us about attention.</p>
+            <div class="mg-byline"><span>By <b>Hannah Kveld</b></span><span>—— 12 min</span></div>
+            <div class="mg-cols">
+              <p class="lead">Most things you wait for are not worth the wait. A small minority are. The whole project of design is learning to tell which is which, then having the courage to build for the second category even when the first one pays the rent.</p>
+              <p>This is an essay about <i>patience</i>. Not the patience of the customer, who is paid for their wait in product. The patience of the maker, who is paid for their wait in nothing but the chance to put a better thing into the world.</p>
+              <p class="pull">The best interface is the one that never asks to be remembered.</p>
+              <p>The longer I work in this industry, the more I believe the best work I have done has been the work nobody talks about. The friction removed. The dialog deleted. The modal that never had to ship.</p>
+              <p>We celebrate the wrong things, partly because the wrong things are easier to point at. A redesign with a big visual change is easier to celebrate than a redesign that simply made everyone faster. A new feature is easier to ship than a setting deleted.</p>
+              <p>The interesting thing is that this idea is older than software. The same instinct that makes a great butler invisible at a dinner party makes a great tool invisible during a workflow. The cleaner the friction, the harder the work behind it.</p>
+              <p>How do you measure something a user did not notice? Not by impressions. Not by clicks. By time spent in the part of the product that matters — and the speed at which they return to it without being prompted. By retention curves that go flat for the right reasons, not the wrong ones.</p>
+              <p>This is harder to chart than a "new feature shipped" graph. But it is what differentiates products that last from products that win a season.</p>
+              <p>Build the thing. Test the thing. Strip the thing. Test it again. Ship it without telling anyone. If they notice, you've already done too much. If they don't — but they keep coming back — you've done the work.</p>
+            </div>
+          </article>
+          <aside class="mg-side">
+            <div class="lab">In this article</div>
+            <ul>
+              <li>The slow web</li>
+              <li>Architecture of patience</li>
+              <li>Measuring absence</li>
+              <li>Quiet retention</li>
+            </ul>
+            <div class="lab" style="margin-top: 18px;">Share</div>
+            <div class="share">
+              <span>✦</span><span>𝕏</span><span>in</span><span>✉</span>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 3.7 Magazine Multi-Column</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Build a magazine long-form article layout. Outer container: CSS Grid with grid-template-columns: 64px 1fr 220px and 28px gap. Left rail: position:sticky top:24px, writing-mode:vertical-rl, transform:rotate(180deg) so issue / date text runs vertically bottom-to-top. Middle column (max-width 720px): an all-caps deep-red eyebrow (★ Feature), serif headline (Georgia or Fraunces, 700 weight, italic axis mix), an italic deck/standfirst paragraph, a byline row with hairline top+bottom borders, then the body in CSS columns:2 with column-gap:28px and column-rule:1px solid rgba(0,0,0,0.16). First paragraph gets a drop cap via p.lead::first-letter (72px, float:left, deep-red). Add a pull-quote with break-inside:avoid, hairline top/bottom rules, italic serif at 21px. Justify body text with hyphens:auto. Right rail: position:sticky top:24px, white card with a table-of-contents list and a 4-icon share row. On mobile collapse to single column and hide the vertical rail.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.bloomberg.com/businessweek" target="_blank" rel="noopener">Bloomberg Businessweek</a><span class="desc">The reference for tri-column magazine layouts with vertical rails</span></div></li>
+      <li><div><a href="https://www.wired.com" target="_blank" rel="noopener">Wired — long reads</a><span class="desc">Magazine layout with sticky ToC and full-bleed media</span></div></li>
+      <li><div><a href="https://www.theatlantic.com" target="_blank" rel="noopener">The Atlantic — features</a><span class="desc">Drop caps, pull-quotes, sidebar metadata done well</span></div></li>
+      <li><div><a href="https://www.apple.com/newsroom" target="_blank" rel="noopener">Apple Newsroom</a><span class="desc">Brand newsroom that borrows the magazine grid for product stories</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="3.6-sidebar-content.html" class="prev"><span class="label">← Prev</span><span class="title">3.6 Sidebar + Content</span></a>
+      <a href="3.8-diagonal-sections.html" class="next"><span class="label">Next →</span><span class="title">3.8 Diagonal Sections</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

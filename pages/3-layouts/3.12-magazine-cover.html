@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>3.12 Magazine Cover Layout · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .mc-demo {
+    min-height: 720px;
+    padding: 32px;
+    background: linear-gradient(180deg, #1a1814 0%, #322d24 100%);
+    color: #f0ead6;
+    border-radius: var(--radius-lg);
+  }
+  .mc-cover {
+    position: relative;
+    aspect-ratio: 3/4;
+    max-width: 580px;
+    margin: 0 auto;
+    background: linear-gradient(180deg, #c4a35d 0%, #6b4f1e 60%, #2a1d0a 100%);
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    font-family: 'Georgia', serif;
+    color: #fff;
+  }
+  /* Photographic "subject" silhouette */
+  .mc-cover::before {
+    content: "";
+    position: absolute;
+    bottom: 0; left: 50%;
+    width: 70%;
+    height: 70%;
+    background:
+      radial-gradient(ellipse at 50% 30%, #ffe2a8 0%, transparent 35%),
+      radial-gradient(ellipse at 50% 60%, #6b4f1e 0%, transparent 40%);
+    transform: translateX(-50%);
+    filter: blur(2px);
+  }
+  .mc-cover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 70%, transparent 30%, rgba(0,0,0,0.55) 80%);
+  }
+  /* Cover content overlays */
+  .mc-masthead {
+    position: absolute;
+    top: 22px; left: 28px; right: 28px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    z-index: 3;
+  }
+  .mc-title {
+    font-family: 'Georgia', serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(40px, 7vw, 70px);
+    color: #fff;
+    letter-spacing: -0.04em;
+    line-height: 0.9;
+    text-shadow: 0 4px 14px rgba(0,0,0,0.4);
+  }
+  .mc-issue {
+    font-family: 'Georgia', serif;
+    font-size: 11px;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-align: right;
+  }
+  .mc-issue span { display: block; }
+
+  /* Cover line — left side stacked */
+  .mc-left {
+    position: absolute;
+    top: 100px;
+    left: 28px;
+    z-index: 3;
+    max-width: 45%;
+  }
+  .mc-left .badge {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #e63946;
+    color: #fff;
+    font-family: 'Georgia', serif;
+    font-style: italic;
+    font-size: 12px;
+    margin-bottom: 12px;
+    transform: rotate(-3deg);
+  }
+  .mc-left .feature {
+    font-family: 'Georgia', serif;
+    font-size: 18px;
+    line-height: 1.2;
+    color: #fff;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    margin-bottom: 16px;
+  }
+  .mc-left .feature em { font-style: italic; color: #ffe2a8; }
+
+  /* Cover lines right */
+  .mc-right {
+    position: absolute;
+    top: 100px;
+    right: 28px;
+    z-index: 3;
+    max-width: 45%;
+    text-align: right;
+  }
+  .mc-right .feature {
+    font-family: 'Georgia', serif;
+    font-size: 16px;
+    line-height: 1.2;
+    color: #fff;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    margin-bottom: 12px;
+  }
+  .mc-right .feature em { font-style: italic; color: #ffe2a8; }
+  .mc-right .feature small { display: block; font-size: 11px; color: rgba(255,255,255,0.7); letter-spacing: 0.14em; text-transform: uppercase; margin-top: 4px; }
+
+  /* HUGE display word that crosses the image */
+  .mc-display {
+    position: absolute;
+    bottom: 80px;
+    left: 0; right: 0;
+    text-align: center;
+    z-index: 4;
+    font-family: 'Georgia', serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: clamp(60px, 14vw, 140px);
+    line-height: 0.85;
+    letter-spacing: -0.05em;
+    color: #fff;
+    text-shadow: 0 6px 30px rgba(0,0,0,0.5);
+  }
+  .mc-display .red { color: #e63946; }
+
+  .mc-bottom {
+    position: absolute;
+    bottom: 24px;
+    left: 28px; right: 28px;
+    z-index: 5;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Georgia', serif;
+    font-size: 11px;
+    color: rgba(255,255,255,0.8);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Layouts</a>
+      <span class="sep">/</span>
+      <span class="here">Magazine Cover</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">3.12 · Layout</span>
+    <h1 class="title">Magazine <em>Cover</em>.</h1>
+    <p class="tagline">Type and image layered like a printed magazine cover — masthead, asymmetric cover lines, oversized display word crossing the image. A landing-page format that signals craft and authority.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Long-form sites, podcast launches, conference microsites, and brand storytelling pages all increasingly use a single hero that's composed like a magazine cover. A masthead title across the top, a photographic subject as the background, "cover lines" listing what's inside, and one massive italic display word crossing the image — that's the entire pattern.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>A single <code>aspect-ratio: 3/4</code> container holds everything. The background is the photographic subject (with a top-to-bottom gradient + radial vignette darkening the lower half). Cover content sits absolutely-positioned over it: masthead title top-left, issue number top-right, cover lines stacked on left and right, oversized italic word ("VOL. 04") near the bottom, footer bar at the very bottom. The trick is making sure the type sits above the subject without colliding — usually achieved by carefully composing the subject's framing so the face/center area is clear for the big display word.</p>
+      <div class="term-grid">
+        <div><b>aspect-ratio: 3/4</b><span>Portrait cover proportions — distinctive vs typical 16:9 hero</span></div>
+        <div><b>Italic serif masthead</b><span>Georgia or Fraunces italic at the top sets editorial tone</span></div>
+        <div><b>Cover lines</b><span>Short feature blurbs scattered left/right with red callout tags</span></div>
+        <div><b>Oversized display word</b><span>Italic serif at 100px+ crossing the image — the signature move</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <div class="demo-shell">
+      <div class="demo mc-demo">
+        <span class="demo-badge" style="background:#1A1814; color:#ffe2a8; border-color:#1A1814;">Live</span>
+        <div class="mc-cover">
+          <div class="mc-masthead">
+            <div class="mc-title">The Field</div>
+            <div class="mc-issue"><span>Vol. 04</span><span>Issue 24</span><span>May 2026</span></div>
+          </div>
+          <div class="mc-left">
+            <span class="badge">★ Cover Story</span>
+            <div class="feature">The slow web is <em>winning</em>.<br>Hannah Kveld on patience as strategy.</div>
+            <div class="feature" style="font-size: 14px;">Inside the studio of <em>Field Co.</em></div>
+          </div>
+          <div class="mc-right">
+            <div class="feature">A field guide to <em>handwriting</em><small>10 essays · p. 38</small></div>
+            <div class="feature">Notes from <em>Reykjavík</em><small>Travel · p. 62</small></div>
+            <div class="feature">100 typefaces <em>ranked</em><small>Survey · p. 80</small></div>
+          </div>
+          <div class="mc-display">Vol. <span class="red">04</span></div>
+          <div class="mc-bottom"><span>$12.50 / £10</span><span>thefield.fm</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 3.12 Magazine Cover Layout</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a magazine-cover hero. Single container with aspect-ratio:3/4, max-width:580px, overflow:hidden, big box-shadow. Background: a vertical gradient simulating a sepia photograph (gold #c4a35d → brown #6b4f1e → near-black), with a radial vignette at the bottom darkening the edges. Layer over it (all absolutely-positioned, z-indexed): (1) MASTHEAD top-left — italic serif "The Field" at clamp(40,7vw,70px) with -0.04em letter-spacing; (2) ISSUE INFO top-right — small uppercase "Vol. 04 / Issue 24 / May 2026" stacked vertically; (3) LEFT COVER LINES at top-left below masthead — a slightly-rotated red badge "★ Cover Story" and 2-3 italic-serif feature blurbs; (4) RIGHT COVER LINES top-right — 3 right-aligned blurbs with small page-number captions ("Travel · p. 62"); (5) HUGE DISPLAY WORD near the bottom center — italic serif at clamp(60,14vw,140px) like "Vol. 04" with the number in deep red; (6) BOTTOM BAR — price + URL in uppercase serif. The composition should look like a magazine you'd see at a high-end bookstore.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.wallpaper.com" target="_blank" rel="noopener">Wallpaper* magazine</a><span class="desc">Online masthead that borrows directly from the print cover format</span></div></li>
+      <li><div><a href="https://www.vogue.com" target="_blank" rel="noopener">Vogue.com</a><span class="desc">Magazine cover layouts adapted for the web</span></div></li>
+      <li><div><a href="https://www.itsnicethat.com" target="_blank" rel="noopener">It's Nice That</a><span class="desc">Editorial design publication that constantly experiments with cover formats</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="3.11-card-stack.html" class="prev"><span class="label">← Prev</span><span class="title">3.11 Card Stack</span></a>
+      <a href="3.13-floating-overlap.html" class="next"><span class="label">Next →</span><span class="title">3.13 Floating Overlap</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>
