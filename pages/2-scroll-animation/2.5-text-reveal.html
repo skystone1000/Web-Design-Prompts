@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.5 Text Reveal on Scroll · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  /* ===== Live demo: text reveal ===== */
+  .tr-demo {
+    min-height: 640px;
+    background: radial-gradient(80% 60% at 50% 30%, rgba(232,179,57,0.10), transparent 60%), #0E0E14;
+    color: #fff;
+    padding: 80px 28px;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    text-align: center;
+  }
+  .tr-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .tr-headline {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(40px, 7vw, 84px);
+    letter-spacing: -0.035em;
+    line-height: 0.98;
+    max-width: 16ch;
+  }
+  .tr-headline em { font-style: italic; color: var(--accent); font-weight: 300; }
+  .tr-word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1), transform 0.7s cubic-bezier(0.4,0,0.2,1);
+  }
+  .tr-word.is-in { opacity: 1; transform: translateY(0); }
+
+  .tr-sub {
+    margin-top: 36px;
+    font-size: 17px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.7);
+    max-width: 52ch;
+  }
+
+  .tr-replay {
+    margin-top: 36px;
+    padding: 10px 18px;
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 999px;
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.04);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+  .tr-replay:hover { background: rgba(232,179,57,0.12); border-color: var(--accent); color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Text reveal</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.5 · Animation</span>
+    <h1 class="title">Text reveal<br>on <em>scroll</em>.</h1>
+    <p class="tagline">Words appear one by one. Split into spans, stagger their fade-up — agency-website energy from a few lines of code.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Instead of the whole heading appearing at once, individual words or characters animate in one by one as the user scrolls. This is very popular on agency websites, portfolio sites, and anywhere that wants to create a dramatic, editorial feel. The text seems to "write itself" or "emerge" as the user scrolls through.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>A JavaScript library called <code>SplitType.js</code> takes a heading like "Hello World" and splits it into individual spans — one per word or even per character. Then GSAP or CSS animations target those spans with a stagger — each one delayed slightly more than the previous. The reveal effect itself can be: fade from <code>opacity 0</code>, slide up from below a clipping mask, or a blurry-to-sharp focus transition.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Press <b>Replay</b> to watch the words tumble in again.</p>
+    <div class="demo-shell">
+      <div class="demo tr-demo">
+        <span class="demo-badge">Live</span>
+        <div class="tr-eyebrow">— Manifesto, vol. 04</div>
+        <h3 class="tr-headline" data-split>We build the calm internet — <em>one tiny page at a time.</em></h3>
+        <p class="tr-sub" data-split>No popups. No autoplay. No dark patterns. Software that respects your attention because attention is the only thing you can never get back.</p>
+        <button class="tr-replay" id="trReplay">↻ Replay reveal</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 2.5 Text reveal</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Create a hero section with a word-by-word text reveal animation. The main headline should be split into individual word spans using a JavaScript loop. On page load (or scroll trigger), each word starts at opacity:0 and transform:translateY(20px), then transitions to opacity:1 and translateY(0). Apply a 0.08 second stagger between each word (word 1 at 0s, word 2 at 0.08s, word 3 at 0.16s, etc.). Use transition-timing-function: cubic-bezier(0.4,0,0.2,1) for a smooth, professional feel. Total animation duration per word: 0.5 seconds.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://resn.co.nz" target="_blank" rel="noopener">Resn.co.nz</a><span class="desc">New Zealand agency — stunning text reveal animations throughout</span></div></li>
+      <li><div><a href="https://split-type.vercel.app" target="_blank" rel="noopener">SplitType.js Demo</a><span class="desc">Library documentation with live demos of text splitting and animation</span></div></li>
+      <li><div><a href="https://awwwards.com/websites/typography" target="_blank" rel="noopener">Awwwards — Typography category</a><span class="desc">Sites winning awards for typography and text animation</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.4-sticky-pinning.html" class="prev"><span class="label">← Prev</span><span class="title">2.4 Sticky pinning</span></a>
+      <a href="2.6-scroll-progress.html" class="next"><span class="label">Next →</span><span class="title">2.6 Scroll progress</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    // Split each [data-split] element into word spans (preserving HTML for <em>)
+    function splitWords(el) {
+      // Walk text nodes, preserving inline elements like <em>
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+      const textNodes = [];
+      let n; while (n = walker.nextNode()) textNodes.push(n);
+      let counter = 0;
+      textNodes.forEach(node => {
+        const parts = node.nodeValue.split(/(\s+)/); // keep whitespace
+        const frag = document.createDocumentFragment();
+        parts.forEach(p => {
+          if (/^\s+$/.test(p)) {
+            frag.appendChild(document.createTextNode(p));
+          } else if (p.length) {
+            const span = document.createElement('span');
+            span.className = 'tr-word';
+            span.style.transitionDelay = (counter * 0.07) + 's';
+            span.textContent = p;
+            counter++;
+            frag.appendChild(span);
+          }
+        });
+        node.parentNode.replaceChild(frag, node);
+      });
+    }
+    document.querySelectorAll('[data-split]').forEach(splitWords);
+
+    const wordEls = document.querySelectorAll('.tr-word');
+    function play() {
+      wordEls.forEach(w => w.classList.remove('is-in'));
+      // Force reflow so transitions retrigger
+      void document.body.offsetHeight;
+      setTimeout(() => wordEls.forEach(w => w.classList.add('is-in')), 30);
+    }
+    // Initial play
+    setTimeout(play, 200);
+    // Replay button
+    const btn = document.getElementById('trReplay');
+    if (btn) btn.addEventListener('click', play);
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>4.4 Dot Navigation · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .dn-demo {
+    height: 720px;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    border-radius: var(--radius-lg);
+    background: #0E0E14;
+    position: relative;
+  }
+  .dn-sec {
+    height: 720px;
+    scroll-snap-align: start;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    color: #fff;
+    padding: 40px 28px;
+    position: relative;
+  }
+  .dn-sec .ix {
+    position: absolute;
+    top: 18px; left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+  }
+  .dn-sec h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(36px, 6vw, 60px);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    max-width: 18ch;
+    margin: 0 auto;
+  }
+  .dn-sec h3 em { font-style: italic; color: var(--accent); }
+  .dn-sec p { margin-top: 16px; color: rgba(255,255,255,0.7); max-width: 46ch; margin-left: auto; margin-right: auto; font-size: 15.5px; line-height: 1.55; }
+  .dn-1 { background: linear-gradient(135deg, #1a0e3a, #4a2b6a); }
+  .dn-2 { background: linear-gradient(135deg, #2c1a4a, #0E0E14); }
+  .dn-3 { background: linear-gradient(135deg, #0E0E14, #2a4d4a); }
+  .dn-4 { background: linear-gradient(135deg, #2a4d4a, #6b4f1e); }
+  .dn-5 { background: linear-gradient(135deg, #6b4f1e, #4a2b1a); }
+  .dn-6 { background: linear-gradient(135deg, #4a2b1a, #1a0e3a); }
+
+  .dn-dots {
+    position: absolute;
+    right: 24px; top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .dn-dots button {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.6);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s var(--ease);
+    padding: 0;
+  }
+  .dn-dots button.active {
+    width: 12px; height: 12px;
+    background: #fff;
+    border-color: #fff;
+    box-shadow: 0 0 10px rgba(255,255,255,0.5);
+  }
+  .dn-dots button .tip {
+    position: absolute;
+    right: calc(100% + 14px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.75);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .dn-dots button:hover .tip { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Navigation</a>
+      <span class="sep">/</span>
+      <span class="here">Dot Navigation</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">4.4 · Navigation</span>
+    <h1 class="title">Dot <em>Navigation</em>.</h1>
+    <p class="tagline">Vertical dots on the right of the viewport. The current dot fills; hover shows the section name; click to jump.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A small set of dots positioned on the right or bottom side of the screen. Each dot represents one section or slide of the website. The dot corresponding to the currently-visible section is filled or larger than the others. Clicking a dot instantly jumps the page to that section. Almost exclusively used on fullpage scroll websites and slideshow-style presentations.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Dots are small circular elements (8–12px) positioned with <code>position:fixed</code> on the right edge. They're styled with a semi-transparent border by default and filled solid when active. As the user scrolls, JS detects which section is currently in view (using IntersectionObserver) and updates the active class. Clicking a dot triggers a smooth scroll using <code>scrollIntoView()</code>.</p>
+      <div class="term-grid">
+        <div><b>position:fixed right</b><span>Dots are fixed so they stay visible as sections change</span></div>
+        <div><b>Active state</b><span>Larger, fully filled. Others: outlined or semi-transparent.</span></div>
+        <div><b>IntersectionObserver</b><span>Detects which section is currently most visible</span></div>
+        <div><b>Tooltip on hover</b><span>Hovering a dot shows the section name</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll the demo (or click the dots on the right). Active dot grows and glows.</p>
+    <div class="demo-shell">
+      <div class="demo dn-demo" id="dnDemo">
+        <span class="demo-badge">Live · scroll or click dots</span>
+
+        <div class="dn-dots" id="dnDots">
+          <button data-i="0" class="active"><span class="tip">Hero</span></button>
+          <button data-i="1"><span class="tip">Story</span></button>
+          <button data-i="2"><span class="tip">Materials</span></button>
+          <button data-i="3"><span class="tip">Process</span></button>
+          <button data-i="4"><span class="tip">People</span></button>
+          <button data-i="5"><span class="tip">Stockists</span></button>
+        </div>
+
+        <section class="dn-sec dn-1" data-i="0">
+          <div class="ix">01 · Hero</div>
+          <div><h3>A jacket that <em>outlasts the trend.</em></h3><p>Batch 12. Lancashire waxed cotton. Numbered, signed, slow.</p></div>
+        </section>
+        <section class="dn-sec dn-2" data-i="1">
+          <div class="ix">02 · Story</div>
+          <div><h3>Why <em>slow</em> still matters.</h3><p>An essay on patience, and on the people who hold to the schedule even when nobody is watching.</p></div>
+        </section>
+        <section class="dn-sec dn-3" data-i="2">
+          <div class="ix">03 · Materials</div>
+          <div><h3>Three things, <em>woven well.</em></h3><p>Waxed cotton from one mill. Brass hardware from one foundry. Cotton thread, undyed.</p></div>
+        </section>
+        <section class="dn-sec dn-4" data-i="3">
+          <div class="ix">04 · Process</div>
+          <div><h3>Cut, <em>baked,</em> finished.</h3><p>Forty hours per jacket from the moment the cloth meets the table.</p></div>
+        </section>
+        <section class="dn-sec dn-5" data-i="4">
+          <div class="ix">05 · People</div>
+          <div><h3>Five hands, <em>one number on the inside seam.</em></h3><p>Each jacket is signed inside by the person who made it.</p></div>
+        </section>
+        <section class="dn-sec dn-6" data-i="5">
+          <div class="ix">06 · Stockists</div>
+          <div><h3>Find one <em>near you.</em></h3><p>Fourteen stockists, three continents. Try it on before you buy.</p></div>
+        </section>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 4.4 Dot Navigation</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Add dot navigation to a 6-section fullpage scroll website. Create 6 dots using position:fixed, right:24px, top:50%, transform:translateY(-50%), displayed as a vertical column with 16px gap between dots. Default dot style: 8px width and height, border-radius:50%, border:2px solid rgba(255,255,255,0.6), background:transparent, cursor:pointer, transition all 0.3s. Active dot style: 12px width and height, background:white, border-color:white, box-shadow:0 0 8px rgba(255,255,255,0.5). On hover of any dot, show a tooltip to the left with the section name (absolute positioned, background:rgba(0,0,0,0.7), white text, padding:4px 10px, border-radius:4px). Use IntersectionObserver (threshold:0.5) to update active dot as sections scroll into view.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://alvarotrigo.com/fullPage/examples" target="_blank" rel="noopener">FullPage.js Examples</a><span class="desc">Every fullPage.js demo uses dot navigation</span></div></li>
+      <li><div><a href="https://apple.com/apple-events" target="_blank" rel="noopener">Apple — Special event pages</a><span class="desc">Apple's product keynote microsites use dot nav for fullpage sections</span></div></li>
+      <li><div><a href="https://dribbble.com/tags/dot-navigation" target="_blank" rel="noopener">Dribbble — Dot Navigation UI</a><span class="desc">Visual examples of different dot styles</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="4.3-mega-menu.html" class="prev"><span class="label">← Prev</span><span class="title">4.3 Mega Menu</span></a>
+      <a href="4.5-breadcrumbs.html" class="next"><span class="label">Next →</span><span class="title">4.5 Breadcrumbs</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    const root = document.getElementById('dnDemo');
+    const dotsWrap = document.getElementById('dnDots');
+    if (!root || !dotsWrap) return;
+    const dots = dotsWrap.querySelectorAll('button');
+    const sections = root.querySelectorAll('.dn-sec');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting && e.intersectionRatio > 0.5) {
+          const i = parseInt(e.target.getAttribute('data-i'), 10);
+          dots.forEach((d, di) => d.classList.toggle('active', di === i));
+        }
+      });
+    }, { root, threshold: [0.5, 0.7] });
+    sections.forEach(s => io.observe(s));
+    dotsWrap.addEventListener('click', (e) => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      const i = parseInt(b.getAttribute('data-i'), 10);
+      sections[i].scrollIntoView({ behavior: 'smooth' });
+    });
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

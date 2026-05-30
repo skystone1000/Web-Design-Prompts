@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.7 Smooth Scroll / Lenis · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<style>
+  /* The entire page IS the demo for smooth scroll */
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+  .lenis.lenis-stopped { overflow: hidden; }
+  .lenis.lenis-smooth iframe { pointer-events: none; }
+
+  .sm-status {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 999;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(232, 179, 57, 0.16);
+    color: var(--accent);
+    border: 1px solid rgba(232, 179, 57, 0.35);
+    backdrop-filter: blur(10px);
+  }
+  .sm-status::before {
+    content: "";
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-right: 8px;
+    box-shadow: 0 0 10px var(--accent);
+    vertical-align: middle;
+    animation: sm-blink 1.6s ease-in-out infinite;
+  }
+  @keyframes sm-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  .sm-toggle {
+    margin-top: 32px;
+    padding: 12px 22px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--bg-elev);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .sm-toggle:hover { border-color: var(--accent); color: var(--accent); }
+  .sm-toggle.off { background: rgba(217,111,90,0.12); color: var(--accent-2); border-color: rgba(217,111,90,0.4); }
+
+  /* Long content to feel the smoothness */
+  .sm-tall {
+    padding: 80px 0;
+    text-align: center;
+  }
+  .sm-tall h3 {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 8vw, 88px);
+    font-weight: 300;
+    letter-spacing: -0.03em;
+    line-height: 0.98;
+    color: var(--text);
+    max-width: 18ch;
+    margin: 0 auto;
+  }
+  .sm-tall h3 em { font-style: italic; color: var(--accent); }
+  .sm-tall p { margin-top: 22px; color: var(--text-soft); font-size: 18px; max-width: 50ch; margin-left: auto; margin-right: auto; line-height: 1.55; }
+
+  .sm-block {
+    padding: 120px 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sm-block:nth-child(odd) { background: var(--bg-elev); }
+  .sm-block .container-narrow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .sm-block .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  .sm-block h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(28px, 4vw, 44px);
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin-bottom: 16px;
+  }
+  .sm-block h4 em { font-style: italic; color: var(--accent); }
+  .sm-block p { color: var(--text-soft); font-size: 16px; line-height: 1.65; }
+  .sm-shape {
+    aspect-ratio: 4/5;
+    border-radius: 24px;
+    overflow: hidden;
+    position: relative;
+  }
+  .sm-shape.a { background: linear-gradient(135deg, #E8B339, #D96F5A); }
+  .sm-shape.b { background: linear-gradient(135deg, #6FB5A8, #0E0E14); }
+  .sm-shape.c { background: linear-gradient(135deg, #8B5CF6, #2c1a4a); }
+  .sm-shape::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.25), transparent 60%); }
+
+  @media (max-width: 720px) {
+    .sm-block .container-narrow { grid-template-columns: 1fr; }
+  }
+
+  .sm-jump {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 28px;
+  }
+  .sm-jump a {
+    padding: 10px 16px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    background: var(--bg-elev);
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .sm-jump a:hover { border-color: var(--accent); color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Smooth scroll (Lenis)</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.7 · Animation</span>
+    <h1 class="title">Smooth scroll<br>(<em>Lenis</em>).</h1>
+    <p class="tagline">Physics-based momentum scrolling. The whole page is the demo — try scrolling with a mouse wheel and feel the difference.</p>
+    <button class="sm-toggle" id="smToggle">Lenis: ON · click to compare native</button>
+    <p class="sm-jump-label muted" style="margin-top:22px; font-size:13.5px;">Jump (uses Lenis's smooth animated scroll-to):</p>
+    <div class="sm-jump">
+      <a href="#sm-1">↓ Section A</a>
+      <a href="#sm-2">↓ Section B</a>
+      <a href="#sm-3">↓ Section C</a>
+      <a href="#sm-end">↓ End</a>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>By default, browsers scroll in a very mechanical, instant way — you flick the wheel and the page jumps. Smooth scroll replaces this with a physics-based momentum system: when you scroll, the page decelerates smoothly instead of stopping abruptly, like a heavy object slowly coming to rest. Lenis is the most popular modern JavaScript library for this. When you visit a website and think "this scroll feels incredible, so buttery" — that's almost always Lenis.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Lenis overrides the browser's native scroll. It intercepts scroll input (mouse wheel, touch, trackpad), applies its own easing and momentum, and then moves the page via CSS transform instead of actual scrolling. This is smoother because CSS transforms are GPU-accelerated. Lenis is initialized with a few lines of JS and runs on every animation frame using <code>requestAnimationFrame</code>.</p>
+      <div class="term-grid">
+        <div><b>Lenis</b><span>The most popular smooth scroll JS library — free and widely used</span></div>
+        <div><b>requestAnimationFrame</b><span>Browser API that fires a callback 60 times per second</span></div>
+        <div><b>Easing</b><span>The math curve controlling deceleration — cubic-bezier controls the 'feel'</span></div>
+        <div><b>lerp</b><span>Linear interpolation — how Lenis blends current toward target position</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="tip"><b>Tip.</b> Smooth scroll is a FEEL upgrade, not a visual one. Users might not notice it consciously, but the site feels premium and polished. Never apply smooth scroll to pages with fixed-height modals or <code>overflow:hidden</code> sections — it can cause visual glitches.</div>
+  </div>
+</section>
+
+<!-- Tall demo content -->
+<section class="sm-tall" id="sm-1">
+  <h3>Scroll <em>without effort.</em></h3>
+  <p>Roll your wheel, swipe your trackpad, or press the jump links above. Notice the deceleration curve.</p>
+</section>
+
+<section class="sm-block" id="sm-2">
+  <div class="container-narrow">
+    <div>
+      <div class="eyebrow">A · weight</div>
+      <h4>Pages with <em>mass.</em></h4>
+      <p>Smooth scroll lends a sense of inertia. Content seems to weigh something — when you stop pushing it, it eases to rest. It's a tiny lie of physics, and it makes a site feel premium.</p>
+    </div>
+    <div class="sm-shape a"></div>
+  </div>
+</section>
+
+<section class="sm-block">
+  <div class="container-narrow">
+    <div class="sm-shape b"></div>
+    <div>
+      <div class="eyebrow">B · friction</div>
+      <h4>Less <em>jarring,</em><br>more <em>composed.</em></h4>
+      <p>Hard stops on traditional scroll feel jittery on long pages. Lenis's lerp interpolation rounds those edges off, especially when paired with scroll-snap or sticky sections.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sm-block" id="sm-3">
+  <div class="container-narrow">
+    <div>
+      <div class="eyebrow">C · compatibility</div>
+      <h4>Plays well with <em>GSAP.</em></h4>
+      <p>Lenis exposes its scroll position so any GSAP ScrollTrigger animation continues to work as expected. Hand off the value and ScrollTrigger updates frame-perfectly with the smoothed scroll.</p>
+    </div>
+    <div class="sm-shape c"></div>
+  </div>
+</section>
+
+<section class="sm-tall" id="sm-end">
+  <h3>That's it — the<br><em>end of the page.</em></h3>
+  <p>Try toggling Lenis off in the hero. Then scroll again. The change is small. The feeling is not.</p>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 2.7 Smooth scroll (Lenis)</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Add Lenis smooth scrolling to this website. Import Lenis from CDN: &lt;script src='https://unpkg.com/lenis@1.1.13/dist/lenis.min.js'&gt;&lt;/script&gt;. Initialize with: const lenis = new Lenis({ duration: 1.2, easing: (t) =&gt; Math.min(1, 1.001 - Math.pow(2, -10 * t)), smooth: true }). Run in animation loop: function raf(time) { lenis.raf(time); requestAnimationFrame(raf); } requestAnimationFrame(raf). If GSAP ScrollTrigger is used on this page, also add: lenis.on('scroll', ScrollTrigger.update) and gsap.ticker.add((time) =&gt; { lenis.raf(time * 1000) }).</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://lenis.darkroom.engineering" target="_blank" rel="noopener">Lenis by Studio Freight</a><span class="desc">The official Lenis demo — feel the difference between native and smooth scroll</span></div></li>
+      <li><div><a href="https://awwwards.com" target="_blank" rel="noopener">Awwwards — Sites using Lenis</a><span class="desc">Filter Awwwards by 'smooth scroll' for the best implementations</span></div></li>
+      <li><div><a href="https://locomotivemtl.github.io/locomotive-scroll" target="_blank" rel="noopener">Locomotive Scroll</a><span class="desc">Alternative smooth scroll library with its own parallax system</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.6-scroll-progress.html" class="prev"><span class="label">← Prev</span><span class="title">2.6 Scroll progress</span></a>
+      <a href="../3-layouts/index.html" class="next"><span class="label">Next chapter →</span><span class="title">Layouts</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<div class="sm-status" id="smStatus">Lenis active</div>
+
+<script>
+  (function () {
+    let lenis = null;
+    function startLenis() {
+      if (lenis || typeof Lenis === 'undefined') return;
+      lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+      });
+      function raf(t) { lenis.raf(t); if (lenis) requestAnimationFrame(raf); }
+      requestAnimationFrame(raf);
+
+      // Intercept hash links
+      document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', (e) => {
+          const id = a.getAttribute('href');
+          if (id.length > 1 && document.querySelector(id) && lenis) {
+            e.preventDefault();
+            lenis.scrollTo(id, { offset: -40 });
+          }
+        });
+      });
+    }
+    function stopLenis() {
+      if (!lenis) return;
+      lenis.destroy();
+      lenis = null;
+    }
+
+    startLenis();
+
+    const btn = document.getElementById('smToggle');
+    const status = document.getElementById('smStatus');
+    if (btn) {
+      btn.addEventListener('click', () => {
+        if (lenis) {
+          stopLenis();
+          btn.classList.add('off');
+          btn.textContent = 'Lenis: OFF · click to re-enable';
+          if (status) { status.textContent = 'Native scroll'; status.style.color = 'var(--accent-2)'; status.style.background = 'rgba(217,111,90,0.16)'; status.style.borderColor = 'rgba(217,111,90,0.4)';}
+        } else {
+          startLenis();
+          btn.classList.remove('off');
+          btn.textContent = 'Lenis: ON · click to compare native';
+          if (status) { status.textContent = 'Lenis active'; status.style.color = 'var(--accent)'; status.style.background = 'rgba(232,179,57,0.16)'; status.style.borderColor = 'rgba(232,179,57,0.35)';}
+        }
+      });
+    }
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

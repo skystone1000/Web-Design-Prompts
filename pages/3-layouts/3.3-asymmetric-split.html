@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>3.3 Asymmetric / Split Layout · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .as-demo {
+    background: #FAFAF7;
+    color: #1A1814;
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+    padding: 0;
+  }
+  .as-section {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    min-height: 480px;
+    align-items: stretch;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .as-section.reverse { grid-template-columns: 2fr 3fr; }
+  .as-visual {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #E8B339, #D96F5A);
+    display: grid;
+    place-items: center;
+  }
+  .as-visual.alt { background: linear-gradient(135deg, #1A1814, #4a2b6a); }
+  .as-visual::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.25), transparent 60%);
+  }
+  .as-mock {
+    width: 78%;
+    aspect-ratio: 4/3;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.18);
+    overflow: hidden;
+    transform: rotate(-2deg);
+    position: relative;
+    z-index: 2;
+  }
+  .as-mock .topbar {
+    height: 28px;
+    background: #f4f1ea;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 5px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .as-mock .topbar span { width: 8px; height: 8px; border-radius: 50%; background: #d4cdbd; }
+  .as-mock .topbar span:nth-child(1) { background: #ed6a5e; }
+  .as-mock .topbar span:nth-child(2) { background: #f5bf4f; }
+  .as-mock .topbar span:nth-child(3) { background: #61c554; }
+  .as-mock .body { padding: 16px; }
+  .as-mock .body h6 { font-family: var(--font-display); font-size: 16px; font-weight: 500; color: #111; margin-bottom: 8px; }
+  .as-mock .body .row { height: 6px; background: #ece6d4; border-radius: 3px; margin-bottom: 8px; width: 80%; }
+  .as-mock .body .row:nth-child(2) { width: 60%; }
+  .as-mock .body .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 12px; }
+  .as-mock .body .grid2 > div { aspect-ratio: 4/3; background: linear-gradient(135deg, #E8B339, #D96F5A); border-radius: 4px; }
+  .as-mock .body .grid2 > div:nth-child(2) { background: linear-gradient(135deg, #6FB5A8, #1A1814); }
+
+  .as-text {
+    padding: 56px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 14px;
+  }
+  .as-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #c4a35d;
+  }
+  .as-text h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(28px, 4vw, 40px);
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    color: #111;
+  }
+  .as-text h4 em { font-style: italic; color: #c4a35d; }
+  .as-text p { font-size: 16px; color: #4a4742; line-height: 1.6; max-width: 38ch; }
+  .as-text ul { margin-top: 6px; }
+  .as-text ul li { padding: 6px 0; display: flex; align-items: center; gap: 10px; font-size: 14.5px; color: #2a2722; }
+  .as-text ul li::before { content: "✓"; color: #c4a35d; font-weight: 700; }
+  .as-cta {
+    margin-top: 14px;
+    display: inline-flex;
+    width: fit-content;
+    padding: 12px 22px;
+    background: #1A1814;
+    color: #fff;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  @media (max-width: 720px) {
+    .as-section, .as-section.reverse { grid-template-columns: 1fr; }
+    .as-text { padding: 36px 28px; }
+    .as-visual { min-height: 280px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Layouts</a>
+      <span class="sep">/</span>
+      <span class="here">Asymmetric Split</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">3.3 · Layout</span>
+    <h1 class="title">Asymmetric /<br>Split <em>Layout</em>.</h1>
+    <p class="tagline">60/40 instead of 50/50. Visual tension instead of corporate symmetry. Second section flips the side.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Instead of dividing the page into equal 50/50 halves, asymmetric layouts use unequal proportions — like 60/40, 65/35, or 70/30. One side gets the dominant visual (large image, video, illustration), while the other side gets supporting content. The imbalance creates visual tension that makes the layout feel dynamic and intentional rather than sterile.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>CSS Grid with non-equal column definitions: <code>grid-template-columns: 3fr 2fr</code> (60/40) or <code>2fr 1fr</code> (67/33). The larger column holds the hero image. The smaller column holds the headline, description, and CTA. On mobile, both columns stack to 100% width. The key visual principle is contrast — a large, bold visual on one side creates focus.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Two sections, opposite sides. Scroll inside.</p>
+    <div class="demo-shell">
+      <div class="demo as-demo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#111; border-color:rgba(0,0,0,0.1);">Live</span>
+        <div class="as-section">
+          <div class="as-visual">
+            <div class="as-mock">
+              <div class="topbar"><span></span><span></span><span></span></div>
+              <div class="body">
+                <h6>Q2 dashboard</h6>
+                <div class="row"></div><div class="row"></div>
+                <div class="grid2"><div></div><div></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="as-text">
+            <div class="as-eyebrow">— New feature</div>
+            <h4>One view for <em>every team.</em></h4>
+            <p>Consolidate dashboards from across your tools into a single read-only surface. Read-only is the point.</p>
+            <ul>
+              <li>32 connectors out of the box</li>
+              <li>Realtime data refresh</li>
+              <li>Per-block share permissions</li>
+            </ul>
+            <span class="as-cta">Try it free →</span>
+          </div>
+        </div>
+        <div class="as-section reverse">
+          <div class="as-text">
+            <div class="as-eyebrow">— Integration</div>
+            <h4>Talks to <em>everything.</em></h4>
+            <p>From Postgres to PDFs. From Notion to your finance system's CSV exports. Plug it in, watch it work.</p>
+            <ul>
+              <li>SQL, REST, GraphQL, CSV, RSS</li>
+              <li>Native Notion / Linear / Figma</li>
+              <li>Schedule any source on a cron</li>
+            </ul>
+            <span class="as-cta">See integrations →</span>
+          </div>
+          <div class="as-visual alt">
+            <div class="as-mock" style="transform: rotate(2deg);">
+              <div class="topbar"><span></span><span></span><span></span></div>
+              <div class="body">
+                <h6>Connectors</h6>
+                <div class="row"></div><div class="row"></div>
+                <div class="grid2"><div></div><div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 3.3 Asymmetric Split</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Create a product landing page using a 60/40 asymmetric split layout. Left side (60%): full-height product screenshot or mockup with subtle shadow, slightly overlapping the right column. Right side (40%): vertically centered content with a small overline label (like 'NEW FEATURE'), H2 heading, 2-paragraph description, feature checklist with checkmarks, and a CTA button. Use CSS Grid: grid-template-columns: 3fr 2fr. Add a second split section below with the layout reversed (image on right, text on left) for visual variety.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://notion.so" target="_blank" rel="noopener">Notion.so Marketing pages</a><span class="desc">Excellent use of asymmetric split layouts across their feature pages</span></div></li>
+      <li><div><a href="https://dribbble.com" target="_blank" rel="noopener">Dribbble — Split Layout</a><span class="desc">Search 'split layout web design' for visual references</span></div></li>
+      <li><div><a href="https://lapa.ninja" target="_blank" rel="noopener">Lapa.ninja</a><span class="desc">Curated landing page designs — many use asymmetric splits beautifully</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="3.2-hero-feature-grid.html" class="prev"><span class="label">← Prev</span><span class="title">3.2 Hero + Feature Grid</span></a>
+      <a href="3.4-masonry.html" class="next"><span class="label">Next →</span><span class="title">3.4 Masonry</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

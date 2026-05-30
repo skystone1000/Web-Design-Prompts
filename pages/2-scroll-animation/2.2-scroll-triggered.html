@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.2 Scroll-triggered Animations · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  /* ===== Live demo: scroll-triggered ===== */
+  .st-demo {
+    height: 720px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background: var(--bg-elev);
+    border-radius: var(--radius-lg);
+  }
+  .st-stage { padding: 56px 32px 120px; }
+  .st-hint {
+    position: sticky;
+    top: 16px;
+    z-index: 5;
+    width: fit-content;
+    margin: 0 auto;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 8px 14px;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(8px);
+    border-radius: 999px;
+    border: 1px solid var(--border);
+  }
+  .st-block { margin-top: 60px; }
+  .st-block h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 32px;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+  .st-block h4 em { font-style: italic; color: var(--accent); }
+  .st-block .row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .st-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+  }
+  .st-card .icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: rgba(232,179,57,0.12);
+    color: var(--accent);
+    display: grid;
+    place-items: center;
+    margin-bottom: 14px;
+    font-family: var(--font-mono);
+  }
+  .st-card h5 { font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .st-card p { font-size: 13.5px; color: var(--text-muted); line-height: 1.55; }
+
+  /* The reveal animation */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1), transform 0.6s cubic-bezier(0.4,0,0.2,1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 700px) { .st-block .row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Scroll-triggered</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.2 · Animation</span>
+    <h1 class="title">Scroll-triggered<br><em>animations</em>.</h1>
+    <p class="tagline">Elements fade up as they enter the viewport. The most common modern web animation — done with IntersectionObserver and CSS transitions.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Elements are hidden (invisible and/or off-position) when the page loads. As the user scrolls down and a section enters the visible area of the screen, that element animates into place. The classic version is "fade up" — element starts invisible and slightly below its final position, then fades in and slides up.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>The IntersectionObserver JavaScript API watches when elements enter or leave the viewport. When an element enters, a CSS class is added to it (like <code>.visible</code>). That class triggers a CSS transition. The element starts with <code>opacity:0</code> and <code>transform:translateY(40px)</code>, then transitions to <code>opacity:1</code> and <code>translateY(0)</code>.</p>
+      <div class="term-grid">
+        <div><b>IntersectionObserver</b><span>A JS API that fires a callback when an element enters/leaves the viewport</span></div>
+        <div><b>opacity 0 → 1</b><span>Element goes from invisible to fully visible — foundation of fade animations</span></div>
+        <div><b>translateY(40px) → 0</b><span>Element moves upward as it reveals — the 'rise' in fade-up</span></div>
+        <div><b>Stagger</b><span>Delaying each element slightly more than the previous — cascading effect</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside the box. Each row staggers in as it crosses the threshold.</p>
+    <div class="demo-shell">
+      <div class="demo st-demo" id="stDemo">
+        <span class="demo-badge">Live · scroll inside</span>
+        <div class="st-stage">
+          <div class="st-hint">↓ scroll to trigger reveals</div>
+
+          <div class="st-block">
+            <h4 class="reveal">Built for <em>flow.</em></h4>
+            <div class="row">
+              <div class="st-card reveal" style="transition-delay:0s;"><div class="icon">◆</div><h5>Focus mode</h5><p>Hide everything but the cursor and the prose.</p></div>
+              <div class="st-card reveal" style="transition-delay:0.1s;"><div class="icon">✦</div><h5>Block library</h5><p>Drop-in widgets — tables, embeds, snippets.</p></div>
+              <div class="st-card reveal" style="transition-delay:0.2s;"><div class="icon">⌘</div><h5>Cmd palette</h5><p>Every action one keystroke away. Always.</p></div>
+            </div>
+          </div>
+
+          <div class="st-block">
+            <h4 class="reveal">For teams that <em>care.</em></h4>
+            <div class="row">
+              <div class="st-card reveal" style="transition-delay:0s;"><div class="icon">◈</div><h5>Realtime</h5><p>Multiplayer cursors with sub-60ms sync.</p></div>
+              <div class="st-card reveal" style="transition-delay:0.1s;"><div class="icon">♢</div><h5>Comments</h5><p>Threaded discussions that scroll with the doc.</p></div>
+              <div class="st-card reveal" style="transition-delay:0.2s;"><div class="icon">⌥</div><h5>Permissions</h5><p>Per-block access — sensitive data stays hidden.</p></div>
+            </div>
+          </div>
+
+          <div class="st-block">
+            <h4 class="reveal">Quiet by <em>default.</em></h4>
+            <div class="row">
+              <div class="st-card reveal" style="transition-delay:0s;"><div class="icon">○</div><h5>No telemetry</h5><p>Anonymous metrics. Opt in, not out.</p></div>
+              <div class="st-card reveal" style="transition-delay:0.1s;"><div class="icon">◐</div><h5>Local-first</h5><p>Works offline. Syncs when you're back.</p></div>
+              <div class="st-card reveal" style="transition-delay:0.2s;"><div class="icon">◇</div><h5>Open format</h5><p>Markdown export, every page, every time.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 2.2 Scroll-triggered</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Build a features page where every card and section animates into view on scroll. Use IntersectionObserver to detect when each element is 20% visible. Apply these default start states: opacity:0 and transform:translateY(30px). On intersection, add class .visible which transitions to opacity:1, transform:translateY(0) with transition duration 0.6s and ease: cubic-bezier(0.4, 0, 0.2, 1). For 3-column feature grids, stagger each card by 0.1s extra delay (first card 0s, second 0.1s, third 0.2s).</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://stripe.com" target="_blank" rel="noopener">Stripe.com</a><span class="desc">Best-in-class scroll animations on every section — subtle and purposeful</span></div></li>
+      <li><div><a href="https://michalsnik.github.io/aos" target="_blank" rel="noopener">AOS (Animate On Scroll) Demo</a><span class="desc">Interactive demo of every scroll animation type the library supports</span></div></li>
+      <li><div><a href="https://gsap.com/scroll" target="_blank" rel="noopener">GSAP ScrollTrigger Demos</a><span class="desc">The most powerful scroll animation library — see what's possible</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.1-parallax.html" class="prev"><span class="label">← Prev</span><span class="title">2.1 Parallax</span></a>
+      <a href="2.3-horizontal-scroll.html" class="next"><span class="label">Next →</span><span class="title">2.3 Horizontal Scroll</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script>
+  // Scoped IntersectionObserver on the demo's scroll container
+  (function () {
+    const root = document.getElementById('stDemo');
+    if (!root) return;
+    const els = root.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { root, threshold: 0.2 });
+    els.forEach(el => io.observe(el));
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

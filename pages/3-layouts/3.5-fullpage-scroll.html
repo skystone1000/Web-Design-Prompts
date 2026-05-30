@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>3.5 Full-Page Scroll · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .fs-demo {
+    height: 720px;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    border-radius: var(--radius-lg);
+    position: relative;
+    background: #0E0E14;
+  }
+  .fs-section {
+    height: 720px;
+    scroll-snap-align: start;
+    display: grid;
+    place-items: center;
+    padding: 40px 32px;
+    text-align: center;
+    color: #fff;
+    position: relative;
+  }
+  .fs-section .ix {
+    position: absolute;
+    top: 18px; left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+  .fs-section h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(36px, 6vw, 64px);
+    letter-spacing: -0.03em;
+    line-height: 0.98;
+    max-width: 16ch;
+    margin: 0 auto;
+  }
+  .fs-section h3 em { font-style: italic; color: var(--accent); }
+  .fs-section p { margin-top: 18px; color: rgba(255,255,255,0.7); max-width: 46ch; font-size: 16px; line-height: 1.5; margin-left: auto; margin-right: auto; }
+  .fs-section .cta {
+    display: inline-block;
+    margin-top: 22px;
+    padding: 12px 22px;
+    background: var(--accent);
+    color: #1A1300;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .fs-1 { background: linear-gradient(135deg, #1a0e3a, #4a2b6a); }
+  .fs-2 { background: linear-gradient(135deg, #0E0E14, #2c1a4a); display: grid; grid-template-columns: 1fr 1fr; gap: 32px; text-align: left; align-items: center; }
+  .fs-2 .visual { aspect-ratio: 4/5; max-height: 420px; border-radius: 24px; background: linear-gradient(135deg, #E8B339, #D96F5A); margin: 0 auto; width: 100%; position: relative; overflow: hidden; }
+  .fs-2 .visual::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.25), transparent 60%); }
+  .fs-2 .col-text { padding-right: 16px; }
+  .fs-2 h3 { font-size: clamp(28px, 4vw, 44px); margin: 0; }
+  .fs-3 { background: linear-gradient(135deg, #2c1a4a, #0E0E14); }
+  .fs-3 .stats { margin-top: 32px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; }
+  .fs-3 .stat { font-family: var(--font-display); font-size: clamp(48px, 8vw, 96px); font-weight: 300; color: var(--accent); line-height: 1; letter-spacing: -0.04em; }
+  .fs-3 .stat-l { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-top: 8px; }
+  .fs-4 { background: linear-gradient(180deg, #0E0E14, #2a4d4a); }
+  .fs-4 q { font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: clamp(24px, 3.5vw, 36px); line-height: 1.3; max-width: 24ch; display: block; margin: 0 auto; }
+  .fs-4 .who { margin-top: 22px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+  .fs-5 { background: linear-gradient(135deg, #4a2b6a, #1a0e3a); }
+  .fs-5 .form { margin-top: 28px; display: flex; gap: 8px; max-width: 380px; margin-left: auto; margin-right: auto; }
+  .fs-5 .form input { flex: 1; padding: 12px 16px; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.06); border-radius: 10px; color: #fff; font-size: 14px; }
+  .fs-5 .form input::placeholder { color: rgba(255,255,255,0.4); }
+  .fs-5 .form button { padding: 0 20px; background: var(--accent); color: #1A1300; border-radius: 10px; font-weight: 600; font-size: 14px; border: none; cursor: pointer; }
+
+  /* Dot navigation */
+  .fs-dots {
+    position: absolute;
+    right: 22px; top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .fs-dots button {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.6);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+  }
+  .fs-dots button.active {
+    width: 12px; height: 12px;
+    background: #fff;
+    border-color: #fff;
+    box-shadow: 0 0 10px rgba(255,255,255,0.5);
+  }
+  .fs-dots button .tip {
+    position: absolute;
+    right: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.75);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .fs-dots button:hover .tip { opacity: 1; }
+
+  @media (max-width: 720px) {
+    .fs-2 { grid-template-columns: 1fr; text-align: center; }
+    .fs-2 .visual { max-height: 200px; aspect-ratio: 5/3; }
+    .fs-3 .stats { grid-template-columns: 1fr; gap: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Layouts</a>
+      <span class="sep">/</span>
+      <span class="here">Full-Page Scroll</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">3.5 · Layout</span>
+    <h1 class="title">Full-Page <em>Scroll</em>.</h1>
+    <p class="tagline">Each section fills 100vh and snaps. Cinematic, presentation-style storytelling. Dots on the right jump between slides.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Each section of the website fills the entire screen (100% of the viewport height). When the user scrolls, the page snaps to the next full-screen section — like flipping between slides in a presentation. You're always viewing exactly one section at a time. This creates a very controlled, cinematic storytelling experience.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>The container gets <code>scroll-snap-type: y mandatory</code> and <code>overflow-y: scroll</code>. Each child section gets <code>height: 100vh</code> and <code>scroll-snap-align: start</code>. The browser handles the snapping automatically. For more features (navigation dots, callbacks), the fullPage.js library handles everything.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside or click the dots on the right to snap between sections.</p>
+    <div class="demo-shell">
+      <div class="demo fs-demo" id="fsDemo">
+        <span class="demo-badge">Live · scroll inside</span>
+
+        <div class="fs-dots" id="fsDots">
+          <button data-i="0" class="active"><span class="tip">Hero</span></button>
+          <button data-i="1"><span class="tip">Feature</span></button>
+          <button data-i="2"><span class="tip">Stats</span></button>
+          <button data-i="3"><span class="tip">Quote</span></button>
+          <button data-i="4"><span class="tip">Signup</span></button>
+        </div>
+
+        <section class="fs-section fs-1" data-i="0">
+          <div class="ix">01 · Hero</div>
+          <div>
+            <h3>The quietest <em>publishing platform</em> on the internet.</h3>
+            <p>No notifications. No engagement metrics. Just words you wrote, for people you trust.</p>
+            <span class="cta">Get an invite →</span>
+          </div>
+        </section>
+
+        <section class="fs-section fs-2" data-i="1">
+          <div class="ix">02 · Feature</div>
+          <div class="col-text">
+            <h3>Write here, <em>read elsewhere.</em></h3>
+            <p>Push to any feed — RSS, email, Substack, Mastodon. We don't keep your readers; you do.</p>
+          </div>
+          <div class="visual"></div>
+        </section>
+
+        <section class="fs-section fs-3" data-i="2">
+          <div class="ix">03 · Stats</div>
+          <div>
+            <h3>A network of <em>9,800 writers.</em></h3>
+            <div class="stats">
+              <div><div class="stat">9,800</div><div class="stat-l">Writers</div></div>
+              <div><div class="stat">142k</div><div class="stat-l">Posts shipped</div></div>
+              <div><div class="stat">0</div><div class="stat-l">Ads served</div></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="fs-section fs-4" data-i="3">
+          <div class="ix">04 · Testimonial</div>
+          <div>
+            <q>It's the only place on the internet where I check the URL bar to remember where I am — because the surface gets out of the way.</q>
+            <div class="who">— Soraya N., novelist</div>
+          </div>
+        </section>
+
+        <section class="fs-section fs-5" data-i="4">
+          <div class="ix">05 · Signup</div>
+          <div>
+            <h3>Get the <em>monthly</em> dispatch.</h3>
+            <p>One quiet email, first weekend of every month. Unsubscribe in one click.</p>
+            <form class="form" onsubmit="event.preventDefault();">
+              <input type="email" placeholder="you@quiet.email" />
+              <button type="submit">Join</button>
+            </form>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 3.5 Full-Page Scroll</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Build a 5-section fullpage scroll website using CSS scroll-snap. Container: height:100vh, overflow-y:scroll, scroll-snap-type:y mandatory. Each section: height:100vh, scroll-snap-align:start. Section 1: Dark hero with headline and CTA. Section 2: Feature explanation with image left, text right. Section 3: Statistics with 3 large numbers. Section 4: Testimonial quote centered with author. Section 5: Final CTA with newsletter signup. Add navigation dots on the right side: fixed position, 5 small dots, active dot is filled white, clicking a dot smoothly scrolls to that section using scrollIntoView.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://alvarotrigo.com/fullPage/examples" target="_blank" rel="noopener">FullPage.js Examples</a><span class="desc">The most popular fullpage scroll library — dozens of examples</span></div></li>
+      <li><div><a href="https://webflow.com/templates" target="_blank" rel="noopener">Webflow — Full Page Templates</a><span class="desc">No-code full-page scroll website templates</span></div></li>
+      <li><div><a href="https://sony.com" target="_blank" rel="noopener">Sony BE MOVED campaign</a><span class="desc">Classic example of fullpage scroll storytelling for a product</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="3.4-masonry.html" class="prev"><span class="label">← Prev</span><span class="title">3.4 Masonry</span></a>
+      <a href="3.6-sidebar-content.html" class="next"><span class="label">Next →</span><span class="title">3.6 Sidebar + Content</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    const root = document.getElementById('fsDemo');
+    const dotsWrap = document.getElementById('fsDots');
+    if (!root || !dotsWrap) return;
+    const dots = dotsWrap.querySelectorAll('button');
+    const sections = root.querySelectorAll('.fs-section');
+
+    // IntersectionObserver to highlight active dot
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting && e.intersectionRatio > 0.55) {
+          const i = parseInt(e.target.getAttribute('data-i'), 10);
+          dots.forEach((d, di) => d.classList.toggle('active', di === i));
+        }
+      });
+    }, { root, threshold: [0.55, 0.7] });
+    sections.forEach(s => io.observe(s));
+
+    // Click dot to scroll
+    dotsWrap.addEventListener('click', (e) => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      const i = parseInt(b.getAttribute('data-i'), 10);
+      sections[i].scrollIntoView({ behavior: 'smooth' });
+    });
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>1.6 Dark Luxury · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  /* ===== Live demo: Dark Luxury ===== */
+  .dl-demo {
+    background: #0D0D1A;
+    color: #F1F1EE;
+    min-height: 720px;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .dl-demo::before {
+    content: "";
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 720px;
+    height: 540px;
+    background: radial-gradient(closest-side, rgba(139, 92, 246, 0.22), transparent 70%);
+    pointer-events: none;
+  }
+  .dl-nav {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 36px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .dl-nav .brand { font-family: var(--font-display); font-weight: 500; font-size: 18px; letter-spacing: -0.01em; color: #fff; display:flex; align-items:center; gap:8px; }
+  .dl-nav .brand::before { content:""; width:8px; height:8px; border-radius:50%; background:#0066FF; box-shadow:0 0 12px #0066FF; }
+  .dl-nav .links { display: flex; gap: 28px; font-size: 13.5px; color: rgba(255,255,255,0.72); }
+  .dl-nav .links span:hover { color: #fff; cursor: pointer; }
+  .dl-nav .cta {
+    padding: 10px 18px;
+    background: #0066FF;
+    color: #fff;
+    border-radius: 999px;
+    font-size: 13.5px;
+    font-weight: 500;
+    box-shadow: 0 0 30px rgba(0, 102, 255, 0.4);
+  }
+  .dl-hero {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 100px 24px 60px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .dl-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.10);
+    font-size: 12px;
+    color: rgba(255,255,255,0.72);
+    margin-bottom: 28px;
+  }
+  .dl-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: #0066FF; box-shadow: 0 0 10px #0066FF; }
+  .dl-hero h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(40px, 6.5vw, 64px);
+    letter-spacing: -0.03em;
+    line-height: 1.02;
+    color: #F1F1EE;
+  }
+  .dl-hero h3 .grad {
+    background: linear-gradient(90deg, #0066FF, #8B5CF6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+  .dl-hero p {
+    margin-top: 22px;
+    font-size: 17px;
+    line-height: 1.55;
+    color: rgba(255,255,255,0.65);
+    max-width: 48ch;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .dl-buttons { margin-top: 36px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .dl-buttons .a {
+    padding: 13px 22px;
+    background: #0066FF;
+    color: #fff;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 0 30px rgba(0, 102, 255, 0.4);
+  }
+  .dl-buttons .b {
+    padding: 13px 22px;
+    color: #fff;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.02);
+  }
+
+  .dl-cards {
+    position: relative;
+    z-index: 2;
+    margin-top: 40px;
+    padding: 0 36px 60px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    max-width: 1040px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .dl-card {
+    background: #111827;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 22px;
+  }
+  .dl-card .ic {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: rgba(0,102,255,0.16);
+    color: #0066FF;
+    display: grid;
+    place-items: center;
+    margin-bottom: 14px;
+    font-family: var(--font-mono);
+  }
+  .dl-card h4 { font-size: 16px; color: #fff; margin-bottom: 6px; font-family: var(--font-body); font-weight: 600; }
+  .dl-card p { font-size: 13.5px; line-height: 1.55; color: rgba(255,255,255,0.62); }
+  @media (max-width: 720px) { .dl-cards { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Aesthetics</a>
+      <span class="sep">/</span>
+      <span class="here">Dark Luxury</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">1.6 · Aesthetic</span>
+    <h1 class="title">Dark <em>Luxury</em>.</h1>
+    <p class="tagline">Near-black backgrounds, a single electric accent, a soft glow behind the headline. The Vercel/Raycast/Stripe feel.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Dark luxury uses deep charcoal or near-black backgrounds to create a premium, sophisticated atmosphere. Think of a high-end watch brand website or a premium SaaS product. It's not just dark mode — it's a deliberate aesthetic choice that uses darkness to make accent colors and product screenshots pop dramatically.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Background is near-black (<code>#0A0A0A</code> or <code>#0D0D1A</code>), NOT pure black (<code>#000000</code>) which can feel harsh. Cards and sections use slightly lighter darks (<code>#111111</code>, <code>#1A1A2E</code>) to create subtle depth. A single accent color — often electric blue (<code>#0066FF</code>), amber (<code>#F59E0B</code>), or soft purple (<code>#8B5CF6</code>) — is used sparingly for CTAs, icons, and highlights. Typography is pure white or near-white. Thin borders at low opacity (<code>rgba(255,255,255,0.08)</code>) separate sections softly.</p>
+      <div class="term-grid">
+        <div><b>Near-black</b><span>#0A0A0A or #0D0D1A — not pure black, which can feel harsh on screens</span></div>
+        <div><b>Accent color</b><span>One bright color used ONLY for important elements</span></div>
+        <div><b>Border opacity</b><span>Very low opacity borders like rgba(255,255,255,0.08) for subtle separation</span></div>
+        <div><b>Subtle gradient</b><span>A very faint radial gradient in the background gives depth</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <div class="demo-shell">
+      <div class="demo dl-demo">
+        <span class="demo-badge">Live</span>
+        <nav class="dl-nav">
+          <div class="brand">Argent</div>
+          <div class="links"><span>Product</span><span>Pricing</span><span>Docs</span><span>Changelog</span></div>
+          <div class="cta">Get started</div>
+        </nav>
+        <div class="dl-hero">
+          <div class="dl-badge"><span class="dot"></span> v3.0 — new editor is here</div>
+          <h3>Infrastructure for the<br><span class="grad">serious operator.</span></h3>
+          <p>One platform. Every workflow. Zero ceremony. Argent gives engineering teams a real surface to ship from.</p>
+          <div class="dl-buttons">
+            <span class="a">Start free trial</span>
+            <span class="b">Talk to sales →</span>
+          </div>
+        </div>
+        <div class="dl-cards">
+          <div class="dl-card">
+            <div class="ic">◆</div>
+            <h4>Edge-deployed</h4>
+            <p>Render anywhere in under 40ms. We've measured it.</p>
+          </div>
+          <div class="dl-card">
+            <div class="ic">✦</div>
+            <h4>Observability</h4>
+            <p>Logs, traces, and replays bundled, no extra invoice.</p>
+          </div>
+          <div class="dl-card">
+            <div class="ic">⌘</div>
+            <h4>Quiet by design</h4>
+            <p>No marketing nudges in the product UI. Ever.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 1.6 Dark Luxury</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Build a dark luxury SaaS landing page. Background: #0D0D1A (deep dark blue-black). Primary text: #F1F1EE. Accent color: electric blue #0066FF for buttons and highlighted text. Cards use #111827 background with a 1px border at rgba(255,255,255,0.08). Add a very subtle radial gradient in the hero: a soft purple glow at 20% opacity centered behind the hero text. Clean sans-serif typography (Inter or Satoshi). CTA button: #0066FF with white text and a subtle glow effect (box-shadow: 0 0 30px rgba(0,102,255,0.4)).</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://vercel.com" target="_blank" rel="noopener">Vercel.com</a><span class="desc">Near-perfect dark luxury SaaS design — study every detail of their homepage</span></div></li>
+      <li><div><a href="https://raycast.com" target="_blank" rel="noopener">Raycast.com</a><span class="desc">Mac productivity app with stunning dark luxury aesthetic</span></div></li>
+      <li><div><a href="https://stripe.com" target="_blank" rel="noopener">Stripe.com</a><span class="desc">Premium dark sections mixed with light sections — a masterclass</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="1.5-bento-grid.html" class="prev"><span class="label">← Prev</span><span class="title">1.5 Bento Grid</span></a>
+      <a href="1.7-retro-y2k.html" class="next"><span class="label">Next →</span><span class="title">1.7 Retro / Y2K</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>3.1 F-Pattern Layout · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .fp-demo {
+    background: #FAFAF7;
+    color: #1A1814;
+    min-height: 720px;
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+  }
+  .fp-head {
+    padding: 36px 36px 18px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+  .fp-head .meta { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #888; }
+  .fp-head h3 {
+    margin-top: 12px;
+    font-family: 'Georgia', serif;
+    font-weight: 600;
+    font-size: clamp(28px, 4vw, 42px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: #111;
+  }
+  .fp-grid {
+    display: grid;
+    grid-template-columns: 68% 28%;
+    gap: 4%;
+    padding: 32px 36px 80px;
+    position: relative;
+  }
+  .fp-body {
+    font-family: 'Georgia', serif;
+    color: #222;
+    position: relative;
+  }
+  .fp-body p { font-size: 17px; line-height: 1.65; margin-bottom: 14px; max-width: 65ch; }
+  .fp-body p b { color: #111; }
+  .fp-body h4 {
+    font-family: 'Georgia', serif;
+    font-weight: 600;
+    font-size: 22px;
+    margin: 28px 0 10px;
+    color: #111;
+  }
+  .fp-pull {
+    margin: 22px 0;
+    padding: 14px 0 14px 20px;
+    border-left: 3px solid #c4a35d;
+    font-style: italic;
+    font-size: 19px;
+    line-height: 1.4;
+    color: #111;
+  }
+  .fp-toc {
+    position: sticky;
+    top: 24px;
+    align-self: start;
+    padding: 22px 20px;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 12px;
+    font-family: var(--font-body);
+  }
+  .fp-toc .label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 14px;
+  }
+  .fp-toc ul li {
+    font-size: 13px;
+    color: #444;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    cursor: pointer;
+  }
+  .fp-toc ul li.active { color: #c4a35d; font-weight: 600; }
+
+  /* Heatmap overlay */
+  .fp-heat {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, rgba(232,179,57,0.32) 0, rgba(232,179,57,0.32) 16%, transparent 18%),
+      linear-gradient(180deg, transparent 0, transparent 28%, rgba(232,179,57,0.18) 30%, rgba(232,179,57,0.18) 42%, transparent 44%),
+      linear-gradient(90deg, rgba(232,179,57,0.12) 0, rgba(232,179,57,0.12) 6%, transparent 9%);
+    mix-blend-mode: multiply;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .fp-demo.show-heat .fp-heat { opacity: 1; }
+  .fp-heat::after {
+    content: "F-pattern heatmap";
+    position: absolute;
+    top: 14px; right: 14px;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    border-radius: 999px;
+  }
+  .fp-heat-toggle {
+    position: absolute;
+    top: 16px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(0,0,0,0.18);
+    background: #fff;
+    color: #111;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  }
+  @media (max-width: 720px) {
+    .fp-grid { grid-template-columns: 1fr; }
+    .fp-toc { position: static; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Layouts</a>
+      <span class="sep">/</span>
+      <span class="here">F-Pattern</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">3.1 · Layout</span>
+    <h1 class="title">F-Pattern <em>Layout</em>.</h1>
+    <p class="tagline">Eyes scan text in an F-shape. Put what matters in the top band and along the left edge. Toggle the heatmap in the demo to see why.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Eye-tracking research has shown that when people read web pages, their eyes don't scan every word equally. Instead, they trace an F-shape: first they scan across the very top of the page, then a shorter horizontal band a little lower, then their eyes drift down the left edge of the page reading only the first few words of each line. Understanding this pattern helps you place your most important content where eyes naturally fall.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Put your most important content in the top horizontal band (headline, navigation, hero message). Your left margin and left edge of content are seen far more than the right. Content on the far right of the page is often never seen by users who are scanning. Left-aligned text, left-placed CTAs, and left-column navigation are all strategically placed where eyes actually go.</p>
+      <div class="term-grid">
+        <div><b>Above the fold</b><span>Visible without scrolling — highest attention zone</span></div>
+        <div><b>Left edge priority</b><span>Left column and left-aligned text get far more attention than right</span></div>
+        <div><b>Visual anchors</b><span>Bold text, images, and icons create stopping points that pull the eye</span></div>
+        <div><b>Scanning vs reading</b><span>Most users scan first, read only if interested — design for scanners first</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="tip"><b>Tip.</b> The F-pattern is strongest on text-heavy pages like articles and search results. On landing pages with lots of imagery, a Z-pattern (top-left → top-right → bottom-left → bottom-right diagonal) is more common.</div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Toggle the heatmap overlay to visualize the F-shaped scan pattern over the article.</p>
+    <div class="demo-shell">
+      <div class="demo fp-demo" id="fpDemo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#111; border-color:rgba(0,0,0,0.1);">Live</span>
+        <button class="fp-heat-toggle" id="fpHeatBtn">Show F-heatmap</button>
+        <div class="fp-head">
+          <div class="meta">Long read · 8 min · May 30, 2026</div>
+          <h3>Why your eyes never quite reach the right margin.</h3>
+        </div>
+        <div class="fp-grid">
+          <div class="fp-heat"></div>
+          <article class="fp-body">
+            <p><b>Most readers don't read.</b> They scan, sweep, and skip. Eye-tracking studies done since the early 2000s have repeatedly shown a particular pattern in how people consume web pages: an F-shape, almost like a column with one or two horizontal beams across it.</p>
+            <p><b>The top beam is the strongest signal.</b> Readers see your headline, your navigation, and the first sentence of your hero. If those don't earn their attention, the rest of the page is at risk.</p>
+            <h4>Where the eye drifts next</h4>
+            <p><b>After the top sweep,</b> the eye drops down a few lines and makes a shorter horizontal pass. This is where second-level headlines, lead sentences, and pull quotes live. Put a strong sub-headline here and your scanner becomes a reader.</p>
+            <p>From there, attention slides down the left margin, sipping the first few words of each line. The right side of the screen, sadly, is often invisible.</p>
+            <div class="fp-pull">"The left edge is the second most important part of any text-heavy page — after the top beam itself."</div>
+            <h4>What to do about it</h4>
+            <p>Left-align almost everything. Place your call-to-action at the start of a line, not the end. Make sure the first 3-5 words of each paragraph carry meaning. Bold the lead sentence of long blocks. And don't waste the right rail — make it a table of contents, a sticky CTA, or a related link.</p>
+            <p>Design for scanners first; the readers will take care of themselves.</p>
+          </article>
+          <aside class="fp-toc">
+            <div class="label">In this article</div>
+            <ul>
+              <li class="active">Most readers don't read</li>
+              <li>Where the eye drifts next</li>
+              <li>What to do about it</li>
+              <li>Further reading</li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 3.1 F-Pattern</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Design a long-form blog article layout following the F-pattern reading behavior. Full-width header with article title (left-aligned, not centered). Below: a two-column layout — left column 68% width for article body (left-aligned text, comfortable line length of 65-70 characters max, 18px body text). Right column 28% width for a sticky table of contents sidebar that stays visible as you read. In the article body, use bold lead sentences at the start of each paragraph, subheadings every 200-300 words, and inline pull-quotes to create visual stopping points. Place key CTAs (email signup, related articles) in the left-aligned body column, not in the right sidebar.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://medium.com" target="_blank" rel="noopener">Medium.com — Article layout</a><span class="desc">Clean left-aligned article layout designed around natural reading behavior</span></div></li>
+      <li><div><a href="https://smashingmagazine.com" target="_blank" rel="noopener">Smashing Magazine</a><span class="desc">Expert-level article layout with strategic left-aligned hierarchy</span></div></li>
+      <li><div><a href="https://nngroup.com/articles/f-shaped-pattern-reading-web-content" target="_blank" rel="noopener">Nielsen Norman Group — F-Pattern research</a><span class="desc">The original eye-tracking research paper with heatmap images</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="index.html" class="prev"><span class="label">← Chapter</span><span class="title">Layouts</span></a>
+      <a href="3.2-hero-feature-grid.html" class="next"><span class="label">Next →</span><span class="title">3.2 Hero + Feature Grid</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    const root = document.getElementById('fpDemo');
+    const btn = document.getElementById('fpHeatBtn');
+    if (!root || !btn) return;
+    btn.addEventListener('click', () => {
+      root.classList.toggle('show-heat');
+      btn.textContent = root.classList.contains('show-heat') ? 'Hide F-heatmap' : 'Show F-heatmap';
+    });
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

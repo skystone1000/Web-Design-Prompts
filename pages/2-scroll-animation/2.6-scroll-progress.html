@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.6 Scroll Progress Indicator · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  /* ===== Live demo: scroll progress ===== */
+  .pr-demo {
+    height: 720px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background: #FAFAF7;
+    color: #1A1814;
+    border-radius: var(--radius-lg);
+    position: relative;
+  }
+  .pr-bar-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    height: 4px;
+    background: rgba(0,0,0,0.06);
+    width: 100%;
+  }
+  .pr-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea, #f64f59);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.1s linear;
+    width: 100%;
+  }
+  .pr-article {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 40px 28px 60px;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    color: #1A1814;
+  }
+  .pr-meta {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 18px;
+  }
+  .pr-meta span { color: #c4a35d; }
+  .pr-article h3 {
+    font-family: 'Georgia', serif;
+    font-weight: 500;
+    font-size: clamp(30px, 4.5vw, 44px);
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+    color: #111;
+    margin-bottom: 14px;
+  }
+  .pr-article h3 em { font-style: italic; }
+  .pr-article .lede {
+    font-size: 19px;
+    line-height: 1.55;
+    color: #444;
+    margin-bottom: 24px;
+    font-family: 'Georgia', serif;
+  }
+  .pr-article p { font-size: 17px; line-height: 1.65; color: #2a2722; margin-bottom: 16px; }
+  .pr-article h4 {
+    font-family: 'Georgia', serif;
+    font-weight: 600;
+    font-size: 22px;
+    margin: 32px 0 12px;
+    color: #111;
+  }
+  .pr-pull {
+    margin: 28px 0;
+    padding: 18px 0 18px 22px;
+    border-left: 3px solid #c4a35d;
+    font-family: 'Georgia', serif;
+    font-style: italic;
+    font-size: 22px;
+    line-height: 1.4;
+    color: #111;
+  }
+  .pr-percent {
+    position: sticky;
+    top: 18px;
+    z-index: 9;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: 18px;
+    background: #111;
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    padding: 6px 12px;
+    border-radius: 999px;
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Scroll progress</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.6 · Animation</span>
+    <h1 class="title">Scroll progress<br><em>indicator</em>.</h1>
+    <p class="tagline">A thin bar at the top of the page fills as you read. Calms long-form anxiety; signals "you're almost there."</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A thin bar, usually at the very top of the page, that fills from left to right as the user reads down the page. When the user is at the top, the bar is empty. When they reach the bottom, the bar is full. It gives readers a sense of how far through the content they are, particularly useful on long blog posts and articles.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>A fixed-position element sits at the top of the viewport (<code>position:fixed; top:0; height:3-4px</code>). Its width is calculated as a percentage: <code>(scrollY / (document.body.scrollHeight - window.innerHeight)) * 100</code>. A JavaScript scroll listener updates the width in real-time. Using CSS <code>transform: scaleX()</code> instead of changing width is smoother on most devices.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside the article. The gradient bar at the top fills from left to right.</p>
+    <div class="demo-shell">
+      <div class="demo pr-demo" id="prDemo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#111; border-color:rgba(0,0,0,0.1);">Live · scroll inside</span>
+        <div class="pr-bar-wrap"><div class="pr-bar" id="prBar"></div></div>
+        <div class="pr-percent" id="prPercent">0%</div>
+        <article class="pr-article">
+          <div class="pr-meta"><span>Long read</span><span>· 7 min</span><span style="color:#888;">May 30, 2026</span></div>
+          <h3>On the quiet art of <em>building software no one notices.</em></h3>
+          <p class="lede">When a tool does its job perfectly, it disappears. We've forgotten how to design for invisibility — and it's costing every product team more than they realize.</p>
+          <p>There is a particular kind of software that, when it works, you stop thinking about. The compass on your phone. The autosave in your editor. The spam filter you haven't checked in years. None of these have homepages with hero animations. None of them ask for testimonials. They just do the job, and the job is to be quiet.</p>
+          <p>The longer I work in this industry, the more I believe that the best work I have done has been the work nobody talks about — the friction I removed, the dialog I deleted, the modal that never had to ship. We celebrate the wrong things.</p>
+          <h4>The cost of being noticed</h4>
+          <p>Every time a piece of software interrupts a user, it pays a tax in trust. Some interruptions are necessary: confirmation before a destructive action, a critical error, a security warning. Most are not. The notifications we send to drive engagement, the modals we add to upsell, the badges we sprinkle on icons — these are all tiny withdrawals from an account that does not get refilled.</p>
+          <div class="pr-pull">"The best interface is the one that never asks to be remembered."</div>
+          <p>The interesting thing is that this idea is older than software. The same instinct that makes a great butler invisible at a dinner party makes a great tool invisible during a workflow. The cleaner the friction, the harder the work behind it.</p>
+          <h4>Designing for absence</h4>
+          <p>How do you measure something a user did not notice? Not by impressions. Not by clicks. By time spent in the part of the product that matters — and the speed at which they return to it without being prompted. By retention curves that go flat for the right reasons, not the wrong ones.</p>
+          <p>This is harder to chart than a "new feature shipped" graph. But it is what differentiates products that last from products that win a season.</p>
+          <h4>A quieter practice</h4>
+          <p>Build the thing. Test the thing. Strip the thing. Test it again. Ship it without telling anyone. If they notice, you've already done too much. If they don't — but they keep coming back — you've done the work.</p>
+          <p>End of article. Did the progress bar reach 100%?</p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 2.6 Scroll progress</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Add a reading progress bar to a blog post page. Create a fixed element: position:fixed, top:0, left:0, height:3px, width:100%, z-index:9999. Inside it, a div that starts at transform:scaleX(0) and transform-origin:left. On scroll event, calculate progress: scrolled / (totalHeight - viewportHeight). Update the inner div's scaleX to the progress value (0 to 1). Use a gradient fill from purple #667eea to pink #f64f59. Add a smooth transition of 0.1s on the scale for a slight lag that feels natural.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://medium.com" target="_blank" rel="noopener">Medium.com articles</a><span class="desc">Medium uses a reading progress bar — the standard reference</span></div></li>
+      <li><div><a href="https://css-tricks.com" target="_blank" rel="noopener">CSS Tricks — progress bars</a><span class="desc">Technical breakdown with code examples</span></div></li>
+      <li><div><a href="https://smashingmagazine.com" target="_blank" rel="noopener">Smashing Magazine</a><span class="desc">Scroll any long article — many now have this built in</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.5-text-reveal.html" class="prev"><span class="label">← Prev</span><span class="title">2.5 Text reveal</span></a>
+      <a href="2.7-smooth-scroll-lenis.html" class="next"><span class="label">Next →</span><span class="title">2.7 Smooth scroll</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    const scroller = document.getElementById('prDemo');
+    const bar = document.getElementById('prBar');
+    const pct = document.getElementById('prPercent');
+    if (!scroller || !bar) return;
+    function update() {
+      const max = scroller.scrollHeight - scroller.clientHeight;
+      const p = max <= 0 ? 0 : Math.min(1, scroller.scrollTop / max);
+      bar.style.transform = `scaleX(${p})`;
+      if (pct) pct.textContent = Math.round(p * 100) + '%';
+    }
+    scroller.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

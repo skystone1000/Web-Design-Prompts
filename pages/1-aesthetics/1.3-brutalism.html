@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>1.3 Brutalism · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  /* ===== Live demo: Brutalism ===== */
+  .brut-demo {
+    background: #FFFFFF;
+    color: #000;
+    min-height: 700px;
+    padding: 40px 32px;
+    font-family: 'Courier New', monospace;
+    position: relative;
+  }
+  .brut-demo *::selection { background: #FFE600; color: #000; }
+  .brut-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    border: 3px solid #000;
+    background: #fff;
+  }
+  .brut-nav .logo {
+    font-family: 'Courier New', monospace;
+    font-weight: 900;
+    font-size: 20px;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+  }
+  .brut-nav .links { display: flex; gap: 18px; font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 0.06em; }
+  .brut-nav .links span { cursor: pointer; }
+  .brut-nav .links span:hover { background: #FFE600; }
+  .brut-nav .cta {
+    padding: 8px 14px;
+    background: #000;
+    color: #FFE600;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 12px;
+    border: 3px solid #000;
+  }
+  .brut-hero {
+    padding: 60px 0 40px;
+    border-bottom: 3px solid #000;
+    margin-top: 20px;
+  }
+  .brut-hero h3 {
+    font-family: 'Courier New', monospace;
+    font-weight: 900;
+    font-size: clamp(48px, 8vw, 88px);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: #000;
+    text-transform: uppercase;
+  }
+  .brut-hero h3 .y { background: #FFE600; padding: 0 6px; }
+  .brut-hero p {
+    margin-top: 22px;
+    max-width: 540px;
+    font-weight: 700;
+    color: #000;
+    font-size: 15px;
+    line-height: 1.4;
+  }
+  .brut-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    padding: 36px 0 20px;
+  }
+  .brut-card {
+    border: 3px solid #000;
+    padding: 18px;
+    background: #fff;
+    box-shadow: 8px 8px 0 #000;
+    transition: transform 0.18s, box-shadow 0.18s;
+  }
+  .brut-card:nth-child(1) { transform: rotate(-2deg); background: #FFE600; }
+  .brut-card:nth-child(2) { transform: rotate(1deg); }
+  .brut-card:nth-child(3) { transform: rotate(-1deg); }
+  .brut-card:hover { transform: rotate(0) translate(-4px,-4px); box-shadow: 12px 12px 0 #000; }
+  .brut-card .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    background: #000;
+    color: #FFE600;
+    font-weight: 900;
+    font-size: 11px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .brut-card h4 {
+    font-family: 'Courier New', monospace;
+    font-weight: 900;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  .brut-card p { font-size: 13px; font-weight: 600; line-height: 1.4; color: #000; }
+  @media (max-width: 720px) {
+    .brut-row { grid-template-columns: 1fr; }
+  }
+  /* Marquee */
+  .brut-marquee {
+    margin-top: 24px;
+    padding: 12px 0;
+    background: #FFE600;
+    border: 3px solid #000;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .brut-marquee span {
+    display: inline-block;
+    padding-right: 32px;
+    font-family: 'Courier New', monospace;
+    font-weight: 900;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    animation: brut-scroll 12s linear infinite;
+  }
+  @keyframes brut-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Aesthetics</a>
+      <span class="sep">/</span>
+      <span class="here">Brutalism</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">1.3 · Aesthetic</span>
+    <h1 class="title">Brutalism.</h1>
+    <p class="tagline">Raw, ugly-on-purpose, anti-corporate. Thick borders, primary colors, monospace, tilted cards.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Brutalist web design is intentionally raw, ugly-on-purpose, and anti-establishment. It rejects the polished corporate design of most tech companies and embraces thick black borders, stark primary colors (red, yellow, black), system fonts like monospace, and asymmetric or tilted layouts. It's the punk rock of web design.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>No rounded corners. No gradients. No subtle shadows. Instead: solid 2–4px black borders on everything, backgrounds of pure yellow (<code>#FFE600</code>) or pure white, text in bold black, elements that are slightly rotated with <code>transform: rotate</code>, and a general sense that someone typed the HTML in Notepad in 1998. Paradoxically, it takes skill to do brutalism WELL.</p>
+      <div class="term-grid">
+        <div><b>transform: rotate()</b><span>Tilts elements by a few degrees — a hallmark brutalism detail</span></div>
+        <div><b>Monospace font</b><span>Fixed-width font like Courier that looks like a typewriter</span></div>
+        <div><b>No border-radius</b><span>Sharp corners only — no rounded shapes anywhere</span></div>
+        <div><b>Primary colors</b><span>Pure red, yellow, blue, black, white — no pastels or muted tones</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <div class="demo-shell">
+      <div class="demo brut-demo">
+        <span class="demo-badge" style="background:#000; color:#FFE600; border-color:#000;">Live</span>
+        <nav class="brut-nav">
+          <div class="logo">RAW.WORK</div>
+          <div class="links"><span>WORK</span><span>ABOUT</span><span>NOTES</span></div>
+          <div class="cta">HIRE ME</div>
+        </nav>
+        <div class="brut-hero">
+          <h3>I MAKE THE INTERNET <br><span class="y">UGLY</span> ON PURPOSE.</h3>
+          <p>Portfolio of a designer who hates rounded corners, gradients, and the word "elevate."</p>
+        </div>
+        <div class="brut-row">
+          <div class="brut-card">
+            <span class="tag">01 / CASE</span>
+            <h4>BANK FOR ANARCHISTS</h4>
+            <p>Brutalist banking dashboard. 12% conversion lift over polished version.</p>
+          </div>
+          <div class="brut-card">
+            <span class="tag">02 / CASE</span>
+            <h4>ZINE BUILDER</h4>
+            <p>A web app for making print zines. Looks like the print zines.</p>
+          </div>
+          <div class="brut-card">
+            <span class="tag">03 / CASE</span>
+            <h4>RESTAURANT MENU</h4>
+            <p>A QR menu so loud the kitchen filed a complaint.</p>
+          </div>
+        </div>
+        <div class="brut-marquee">
+          <span>NO GRADIENTS · NO SHADOWS · NO MERCY · NO GRADIENTS · NO SHADOWS · NO MERCY · NO GRADIENTS · NO SHADOWS · NO MERCY · NO GRADIENTS · NO SHADOWS · NO MERCY · </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 1.3 Brutalism</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Build a brutalist portfolio website with a pure white #FFFFFF background. Use bold black borders (3px solid #000) on every card and section. Typography should be black and oversized (hero headline at 80px, font-weight 900). Accent color is yellow (#FFE600) used for hover states and highlighted sections. Add slight rotation (transform: rotate(-1deg) to -2deg) on some image cards. Use a monospace font for body text. No gradients, no drop shadows, no border-radius anywhere.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://gumroad.com" target="_blank" rel="noopener">Gumroad.com</a><span class="desc">The most famous modern brutalist website</span></div></li>
+      <li><div><a href="https://figma.com/community" target="_blank" rel="noopener">Figma Community Brutalism UI</a><span class="desc">Search 'brutalism' in Figma Community for ready-made templates</span></div></li>
+      <li><div><a href="https://hype4.academy" target="_blank" rel="noopener">Hype4.academy</a><span class="desc">Web design learning platform with a slightly brutalist aesthetic</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="1.2-neumorphism.html" class="prev"><span class="label">← Prev</span><span class="title">1.2 Neumorphism</span></a>
+      <a href="1.4-minimalism.html" class="next"><span class="label">Next →</span><span class="title">1.4 Minimalism</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

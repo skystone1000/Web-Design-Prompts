@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>1.8 Claymorphism · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800&display=swap" rel="stylesheet" />
+<style>
+  /* ===== Live demo: Claymorphism ===== */
+  .clay-demo {
+    background: #F0F4FF;
+    color: #1A1633;
+    min-height: 720px;
+    padding: 48px 28px;
+    font-family: 'Nunito', system-ui, sans-serif;
+  }
+  .clay-shell {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .clay-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+  }
+  .clay-head .who {
+    display: flex; gap: 12px; align-items: center;
+  }
+  .clay-avatar {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6C63FF, #4B44CC);
+    box-shadow: 0 6px 0 #4B44CC, 0 12px 18px rgba(76,68,204,0.35);
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-weight: 800;
+  }
+  .clay-head h4 {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    color: #1A1633;
+  }
+  .clay-head p { font-size: 13px; color: #6e6a8a; }
+  .clay-add {
+    padding: 12px 18px;
+    background: #6C63FF;
+    color: #fff;
+    border-radius: 18px;
+    font-weight: 700;
+    font-size: 13px;
+    box-shadow: 0 6px 0 #4B44CC, 0 12px 22px rgba(108,99,255,0.4);
+    border: none;
+    cursor: pointer;
+    transition: transform 0.08s, box-shadow 0.08s;
+  }
+  .clay-add:active {
+    transform: translateY(5px);
+    box-shadow: 0 1px 0 #4B44CC, 0 4px 10px rgba(108,99,255,0.3);
+  }
+
+  .clay-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .clay-stat {
+    padding: 18px;
+    border-radius: 22px;
+    background: #fff;
+    box-shadow: 0 6px 0 #d9dffa, 0 14px 20px rgba(180,190,240,0.4);
+  }
+  .clay-stat .label { font-size: 12px; color: #6e6a8a; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+  .clay-stat .num { font-size: 28px; font-weight: 800; color: #1A1633; line-height: 1.1; margin-top: 6px; }
+  .clay-stat:nth-child(2) { background: #FF6B6B; }
+  .clay-stat:nth-child(2) .label { color: rgba(255,255,255,0.85); }
+  .clay-stat:nth-child(2) .num { color: #fff; }
+  .clay-stat:nth-child(2) { box-shadow: 0 6px 0 #C84545, 0 14px 20px rgba(255,107,107,0.4); }
+  .clay-stat:nth-child(3) { background: #4ECDC4; }
+  .clay-stat:nth-child(3) .label { color: rgba(255,255,255,0.85); }
+  .clay-stat:nth-child(3) .num { color: #fff; }
+  .clay-stat:nth-child(3) { box-shadow: 0 6px 0 #2EA59C, 0 14px 20px rgba(78,205,196,0.4); }
+
+  .clay-tasks {
+    background: #fff;
+    border-radius: 28px;
+    padding: 8px;
+    box-shadow: 0 8px 0 #d9dffa, 0 16px 24px rgba(180,190,240,0.4);
+  }
+  .clay-task {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border-radius: 18px;
+    transition: background 0.15s;
+  }
+  .clay-task:hover { background: #F0F4FF; }
+  .clay-task + .clay-task { border-top: 1px solid #EAEDFA; }
+  .clay-check {
+    width: 28px; height: 28px;
+    border-radius: 10px;
+    background: #F0F4FF;
+    box-shadow: inset 3px 3px 6px #d9dffa, inset -3px -3px 6px #fff;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .clay-task.done .clay-check {
+    background: #6C63FF;
+    box-shadow: 0 4px 0 #4B44CC, 0 8px 14px rgba(108,99,255,0.4);
+    color: #fff;
+  }
+  .clay-check svg { width: 14px; height: 14px; opacity: 0; }
+  .clay-task.done .clay-check svg { opacity: 1; }
+  .clay-task .text { flex: 1; font-weight: 700; color: #1A1633; font-size: 14.5px; }
+  .clay-task.done .text { color: #9d9ab8; text-decoration: line-through; }
+  .clay-task .pill {
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #fff;
+  }
+  .clay-task .pill.purple { background: #6C63FF; }
+  .clay-task .pill.coral { background: #FF6B6B; }
+  .clay-task .pill.mint { background: #4ECDC4; }
+
+  @media (max-width: 600px) {
+    .clay-stats { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Aesthetics</a>
+      <span class="sep">/</span>
+      <span class="here">Claymorphism</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">1.8 · Aesthetic</span>
+    <h1 class="title">Claymorphism.</h1>
+    <p class="tagline">Inflated, puffy, 3D UI. Multi-layer shadows for depth, candy colors, generous border-radius. Press the buttons.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Claymorphism makes UI elements look inflated, puffy, and three-dimensional — like they're made of clay or rubber. Buttons and cards appear to have physical volume and weight. This style creates a playful, friendly, and approachable feel, making it popular for apps targeting general consumers, productivity tools, and any product that wants to feel fun rather than corporate.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>The 3D effect is created with multiple <code>box-shadow</code>s: a bottom shadow in a darker version of the element's color (simulating the underside), and a larger soft glow shadow around the whole element. Candy colors (soft pastels or vivid saturated colors) are typical. High border-radius (24px+) on everything. When the button is clicked, the bottom shadow shrinks, making it feel like it's being physically pressed down.</p>
+      <div class="term-grid">
+        <div><b>Multi-layer shadow</b><span>Two or three box-shadows at once: a hard bottom one for depth, soft ambient glow</span></div>
+        <div><b>Candy colors</b><span>Bright but slightly soft colors — purple, coral, mint, sky blue</span></div>
+        <div><b>Press state</b><span>On click, bottom shadow disappears, element moves down by the shadow height</span></div>
+        <div><b>High border-radius</b><span>24–32px corners — very rounded, almost pill-shaped</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <div class="demo-shell">
+      <div class="demo clay-demo">
+        <span class="demo-badge" style="background:rgba(108,99,255,0.18); color:#4B44CC; border-color:rgba(108,99,255,0.3);">Live · tap things</span>
+        <div class="clay-shell">
+          <div class="clay-head">
+            <div class="who">
+              <div class="clay-avatar">AM</div>
+              <div>
+                <h4>Today, May 30</h4>
+                <p>4 tasks · 2 in progress</p>
+              </div>
+            </div>
+            <button class="clay-add">+ New task</button>
+          </div>
+          <div class="clay-stats">
+            <div class="clay-stat"><div class="label">Done</div><div class="num">12</div></div>
+            <div class="clay-stat"><div class="label">Overdue</div><div class="num">2</div></div>
+            <div class="clay-stat"><div class="label">Streak</div><div class="num">7d</div></div>
+          </div>
+          <div class="clay-tasks">
+            <div class="clay-task done">
+              <div class="clay-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="text">Send pitch deck to investors</div>
+              <div class="pill purple">Work</div>
+            </div>
+            <div class="clay-task">
+              <div class="clay-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="text">Walk the dog before lunch</div>
+              <div class="pill coral">Home</div>
+            </div>
+            <div class="clay-task">
+              <div class="clay-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="text">Reply to Maya's email</div>
+              <div class="pill purple">Work</div>
+            </div>
+            <div class="clay-task">
+              <div class="clay-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="text">Buy oat milk + lemons</div>
+              <div class="pill mint">Errand</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 1.8 Claymorphism</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Design a claymorphism task management app UI on a soft #F0F4FF background. Create 3D-looking cards and buttons using multi-layer box-shadows: box-shadow: 0 8px 0 #4B44CC, 0 14px 20px rgba(108,99,255,0.35) for a raised purple button. Use candy colors: soft purple #6C63FF, coral #FF6B6B, mint #4ECDC4. All elements have border-radius: 20px minimum. Add pressed animation on buttons: transform: translateY(4px) with reduced shadow to simulate physical pressing. Background is a soft light blue-gray.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://cuberto.com" target="_blank" rel="noopener">Cuberto Agency — 3D UI Kits</a><span class="desc">Premium 3D and claymorphism UI kits with real app screen examples</span></div></li>
+      <li><div><a href="https://dribbble.com/tags/claymorphism" target="_blank" rel="noopener">Dribbble — Claymorphism</a><span class="desc">Search 'clay UI' or 'claymorphism' for reference designs</span></div></li>
+      <li><div><a href="https://notion.so" target="_blank" rel="noopener">Notion.so</a><span class="desc">Subtle 3D elements in their marketing — good example of refined claymorphism</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="1.7-retro-y2k.html" class="prev"><span class="label">← Prev</span><span class="title">1.7 Retro / Y2K</span></a>
+      <a href="../2-scroll-animation/index.html" class="next"><span class="label">Next chapter →</span><span class="title">Scroll &amp; Animation</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script>
+  // Toggle tasks
+  document.querySelectorAll('.clay-task').forEach(t => {
+    t.addEventListener('click', (e) => {
+      if (e.target.closest('.pill')) return;
+      t.classList.toggle('done');
+    });
+  });
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

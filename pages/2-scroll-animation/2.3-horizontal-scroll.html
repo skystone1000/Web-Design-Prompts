@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.3 Horizontal Scroll Sections · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  /* ===== Live demo: horizontal scroll ===== */
+  .hs-demo {
+    background: #0E0E14;
+    min-height: 640px;
+    padding: 36px 0;
+    overflow: hidden;
+  }
+  .hs-head {
+    padding: 0 32px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .hs-head h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 38px;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+  .hs-head h4 em { font-style: italic; color: var(--accent); }
+  .hs-head .label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .hs-track {
+    display: flex;
+    gap: 16px;
+    padding: 4px 32px 32px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+  }
+  .hs-card {
+    flex: 0 0 360px;
+    height: 440px;
+    scroll-snap-align: center;
+    border-radius: 18px;
+    overflow: hidden;
+    position: relative;
+    background: #1A1A22;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: transform 0.3s var(--ease);
+  }
+  .hs-card:hover { transform: translateY(-4px); }
+  .hs-card .art {
+    height: 60%;
+    position: relative;
+    overflow: hidden;
+  }
+  .hs-card.c1 .art { background: linear-gradient(135deg, #E8B339, #D96F5A); }
+  .hs-card.c2 .art { background: linear-gradient(135deg, #6FB5A8, #0E0E14); }
+  .hs-card.c3 .art { background: linear-gradient(135deg, #8B5CF6, #1A1A22); }
+  .hs-card.c4 .art { background: linear-gradient(135deg, #FF6B6B, #6C63FF); }
+  .hs-card.c5 .art { background: linear-gradient(180deg, #4ECDC4, #0E0E14); }
+  .hs-card .art::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2), transparent 60%);
+  }
+  .hs-card .art .ix {
+    position: absolute;
+    top: 14px; left: 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.7);
+    text-transform: uppercase;
+  }
+  .hs-card .meta {
+    padding: 18px 20px;
+    color: #fff;
+  }
+  .hs-card .meta h5 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  .hs-card .meta p { font-size: 13.5px; color: rgba(255,255,255,0.7); line-height: 1.55; margin-bottom: 12px; }
+  .hs-card .meta a {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border-bottom: 1px solid rgba(232,179,57,0.4);
+    padding-bottom: 2px;
+  }
+
+  .hs-progress {
+    margin: 0 32px;
+    height: 2px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+  .hs-progress .bar {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 0.1s linear;
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Horizontal scroll</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.3 · Animation</span>
+    <h1 class="title">Horizontal scroll<br>sections.</h1>
+    <p class="tagline">A section "hijacks" vertical scroll input and moves content sideways instead — flipping through cards or a timeline as you scroll.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>While the page scrolls vertically (up-down), a specific section "hijacks" the scroll and moves the content sideways instead. So as you scroll DOWN with your mouse or finger, the content inside that section slides from RIGHT to LEFT. It feels like flipping through cards or reading a horizontal timeline. Used a lot on portfolio sites, case study pages, and product showcases.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>The section is "pinned" in place on the screen while the user scrolls. As the user scrolls the required distance, the inner content (a row of cards or panels) moves horizontally. The total scrolling distance controls how far the horizontal movement goes — if you have 5 cards each 100vw wide, the section stays pinned for 500vh of scrolling. Typically implemented with GSAP ScrollTrigger's pin and horizontal scrub features.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Use the horizontal scrollbar, swipe sideways on a trackpad, or hold Shift + scroll.</p>
+    <div class="demo-shell">
+      <div class="demo hs-demo">
+        <span class="demo-badge">Live · scroll sideways</span>
+        <div class="hs-head">
+          <h4>Selected work, <em>2024.</em></h4>
+          <div class="label">5 projects · scroll →</div>
+        </div>
+        <div class="hs-track" id="hsTrack">
+          <div class="hs-card c1">
+            <div class="art"><span class="ix">01 / 05</span></div>
+            <div class="meta">
+              <h5>Aurora — Banking app</h5>
+              <p>Identity, dashboard, and 12 screens for a Nordic fintech.</p>
+              <a>View project →</a>
+            </div>
+          </div>
+          <div class="hs-card c2">
+            <div class="art"><span class="ix">02 / 05</span></div>
+            <div class="meta">
+              <h5>Field — Outdoors brand</h5>
+              <p>Brand book, packaging, and e-commerce for a small batch maker.</p>
+              <a>View project →</a>
+            </div>
+          </div>
+          <div class="hs-card c3">
+            <div class="art"><span class="ix">03 / 05</span></div>
+            <div class="meta">
+              <h5>Salt — Music label</h5>
+              <p>Vinyl covers, type system, and a Webflow site for a Lisbon label.</p>
+              <a>View project →</a>
+            </div>
+          </div>
+          <div class="hs-card c4">
+            <div class="art"><span class="ix">04 / 05</span></div>
+            <div class="meta">
+              <h5>Hex — Game studio</h5>
+              <p>Logo, type, and launch site for an indie tabletop game studio.</p>
+              <a>View project →</a>
+            </div>
+          </div>
+          <div class="hs-card c5">
+            <div class="art"><span class="ix">05 / 05</span></div>
+            <div class="meta">
+              <h5>Margo — Cookbook</h5>
+              <p>Editorial design + photography direction for a debut author.</p>
+              <a>View project →</a>
+            </div>
+          </div>
+        </div>
+        <div class="hs-progress"><div class="bar" id="hsBar"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 2.3 Horizontal scroll</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Create a horizontal scroll portfolio section that pins to the screen while the user scrolls vertically. The section should contain 5 project cards, each 80vw wide. As the user scrolls down through 500px of page height, the cards slide horizontally from right to left revealing each project. Use GSAP ScrollTrigger with pin:true and scrub:1 for a smooth tied-to-scroll feel. Each card has a project screenshot (top 60%), project title, brief description, and 'View Project' link. Add a horizontal progress bar at the bottom of the section.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://activetheory.net" target="_blank" rel="noopener">Active Theory Agency</a><span class="desc">Award-winning agency with complex horizontal scroll portfolio</span></div></li>
+      <li><div><a href="https://locomotivemtl.github.io/locomotive-scroll" target="_blank" rel="noopener">Locomotive Scroll Examples</a><span class="desc">Smooth scroll library with horizontal scroll demos</span></div></li>
+      <li><div><a href="https://webflow.com/templates" target="_blank" rel="noopener">Webflow — Horizontal Scroll Template</a><span class="desc">No-code horizontal scroll examples you can study and clone</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.2-scroll-triggered.html" class="prev"><span class="label">← Prev</span><span class="title">2.2 Scroll-triggered</span></a>
+      <a href="2.4-sticky-pinning.html" class="next"><span class="label">Next →</span><span class="title">2.4 Sticky pinning</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script>
+  // Progress bar tied to horizontal track scroll
+  (function () {
+    const track = document.getElementById('hsTrack');
+    const bar = document.getElementById('hsBar');
+    if (!track || !bar) return;
+    function update() {
+      const max = track.scrollWidth - track.clientWidth;
+      const p = max <= 0 ? 0 : track.scrollLeft / max;
+      bar.style.transform = `scaleX(${p})`;
+    }
+    track.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

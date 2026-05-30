@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>5.5 Display / Hero Typography · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .dt-demo {
+    background: #0A0A0A;
+    color: #F1F1EE;
+    min-height: 720px;
+    padding: 120px 48px;
+    border-radius: var(--radius-lg);
+    position: relative;
+    overflow: hidden;
+  }
+  .dt-demo::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(60% 60% at 30% 40%, rgba(118,114,234,0.10), transparent 70%);
+    pointer-events: none;
+  }
+  .dt-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 36px;
+    position: relative;
+  }
+  .dt-headline {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(56px, 9vw, 112px);
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+    color: #F1F1EE;
+    max-width: 18ch;
+    position: relative;
+  }
+  .dt-headline .grad {
+    font-style: italic;
+    font-weight: 300;
+    background: linear-gradient(135deg, #667eea, #f64f59);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .dt-rule {
+    height: 1px;
+    background: rgba(255,255,255,0.2);
+    margin: 56px 0 32px;
+    position: relative;
+  }
+
+  .dt-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: end;
+    position: relative;
+  }
+  .dt-bottom .sub {
+    font-size: 18px;
+    color: rgba(255,255,255,0.6);
+    max-width: 40ch;
+    line-height: 1.55;
+  }
+  .dt-bottom .ctas { display: flex; flex-direction: column; gap: 10px; justify-self: end; }
+  .dt-bottom .ctas a {
+    padding: 13px 22px;
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  .dt-bottom .ctas a.p { background: #F1F1EE; color: #0A0A0A; font-weight: 600; }
+  .dt-bottom .ctas a.s { border: 1px solid rgba(255,255,255,0.2); color: #F1F1EE; }
+
+  @media (max-width: 720px) {
+    .dt-demo { padding: 60px 28px; }
+    .dt-bottom { grid-template-columns: 1fr; gap: 24px; }
+    .dt-bottom .ctas { justify-self: start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Typography &amp; Color</a>
+      <span class="sep">/</span>
+      <span class="here">Display Typography</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">5.5 · Type</span>
+    <h1 class="title">Display /<br>Hero <em>Typography</em>.</h1>
+    <p class="tagline">Text itself IS the design. Big, tight letter-spacing, sub-1 line-height. No hero image needed.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Display typography means using text itself as the primary visual element of a design — the headline is so large, so bold, and so beautifully set that no hero image is needed. At 80px, 100px, or even larger, a single headline becomes a visual experience. Popular on portfolio sites, creative agencies, editorial brands, and tech products that want to lead with confidence and personality rather than a generic stock photo.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>The key CSS property is <code>font-size</code> set very large — typically using <code>clamp(60px, 9vw, 120px)</code> so it scales smoothly. Font-weight is usually 700 or 900 for maximum visual weight. Letter-spacing is tightened with a negative value (-0.03em to -0.05em). Line-height is reduced (0.9 to 1.1) — display text wraps to fewer lines and tight line-height creates a compact, powerful block.</p>
+      <div class="term-grid">
+        <div><b>clamp(min, fluid, max)</b><span>clamp(60px, 9vw, 120px) — scales the font fluidly</span></div>
+        <div><b>Negative letter-spacing</b><span>-0.03em to -0.05em on large headings — feels tight and contemporary</span></div>
+        <div><b>Line-height &lt; 1</b><span>0.9 to 1.05 for display text — tighter than body text</span></div>
+        <div><b>Font-weight 900</b><span>Black or Extra Bold weight — maximum visual impact at large sizes</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="tip"><b>Tip.</b> One of the most powerful display typography techniques: set one key word in a different color, gradient, or italic/outlined style. This creates a visual anchor and rhythm in the headline.</div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <div class="demo-shell">
+      <div class="demo dt-demo">
+        <span class="demo-badge">Live</span>
+        <div class="dt-eyebrow">— Studio Obys / vol. 14</div>
+        <h3 class="dt-headline">We craft <span class="grad">digital experiences</span> that matter.</h3>
+        <div class="dt-rule"></div>
+        <div class="dt-bottom">
+          <p class="sub">A small studio that builds long, weird, brave websites for brands willing to look like themselves and no one else.</p>
+          <div class="ctas">
+            <a class="p">Start a project →</a>
+            <a class="s">See our work →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 5.5 Display Typography</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Create a typographic hero section where the headline IS the design — no hero image needed. Background: #0A0A0A (near-black). Main headline: font-size clamp(64px, 9vw, 112px), font-weight:800, letter-spacing:-0.04em, line-height:0.95, color:#F1F1EE. The headline reads: 'We craft digital experiences that matter.' Make 'digital experiences' render in italic style AND a gradient text (from #667eea to #f64f59). Below the headline: a 1px white horizontal rule at 20% opacity, then a two-column layout — left: subtext paragraph (18px, muted #888, max-width:400px), right: two CTA buttons stacked vertically. No image anywhere on this hero. Let the typography breathe with 120px top and bottom padding.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://awwwards.com/websites/typography" target="_blank" rel="noopener">Awwwards — Typography category</a><span class="desc">Award-winning sites where display typography is the main design element</span></div></li>
+      <li><div><a href="https://obys.agency" target="_blank" rel="noopener">Obys Agency</a><span class="desc">Ukrainian agency — incredible display typography as primary visual system</span></div></li>
+      <li><div><a href="https://semplice.com/inspiration" target="_blank" rel="noopener">Semplice portfolio builder</a><span class="desc">Portfolio sites built on Semplice frequently use display typography as hero</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="5.4-gradient-text.html" class="prev"><span class="label">← Prev</span><span class="title">5.4 Gradient Text</span></a>
+      <a href="5.6-dark-light-toggle.html" class="next"><span class="label">Next →</span><span class="title">5.6 Dark/Light Toggle</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>5.2 Font Pairing · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@500,700&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet" />
+<style>
+  .fp-demo {
+    background: #F5F1EA;
+    color: #1A1814;
+    min-height: 720px;
+    padding: 56px 48px;
+    border-radius: var(--radius-lg);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+  .fp-h, .fp-b { font-family: 'Satoshi', system-ui, sans-serif; }
+  .fp-h h3 {
+    font-family: 'Clash Display', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: clamp(40px, 5vw, 64px);
+    letter-spacing: -0.03em;
+    line-height: 1.0;
+    color: #111;
+    margin-bottom: 20px;
+  }
+  .fp-h .meta {
+    font-family: 'Satoshi', sans-serif;
+    font-size: 13px;
+    color: #6e6857;
+    letter-spacing: 0;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+  .fp-h .by {
+    font-family: 'Satoshi', sans-serif;
+    font-size: 14px;
+    color: #5a5546;
+    font-weight: 400;
+  }
+  .fp-h .by b { font-weight: 700; color: #111; }
+
+  .fp-b h4 {
+    font-family: 'Clash Display', sans-serif;
+    font-weight: 500;
+    font-size: 24px;
+    letter-spacing: -0.02em;
+    color: #111;
+    margin-bottom: 12px;
+  }
+  .fp-b p { font-family: 'Satoshi', sans-serif; font-size: 16px; line-height: 1.65; color: #2a2722; margin-bottom: 14px; font-weight: 400; }
+  .fp-b p b { font-weight: 700; color: #111; }
+
+  .fp-labels {
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+  }
+  .fp-label {
+    padding: 14px 16px;
+    background: #fff;
+    border-radius: 10px;
+  }
+  .fp-label .k { font-family: 'Satoshi', sans-serif; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #6e6857; font-weight: 500; }
+  .fp-label .v { margin-top: 4px; font-size: 16px; color: #111; }
+  .fp-label .v.clash { font-family: 'Clash Display', sans-serif; font-weight: 700; letter-spacing: -0.02em; }
+  .fp-label .v.satoshi { font-family: 'Satoshi', sans-serif; font-weight: 500; }
+
+  @media (max-width: 760px) { .fp-demo { grid-template-columns: 1fr; gap: 32px; padding: 36px 24px; } }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Typography &amp; Color</a>
+      <span class="sep">/</span>
+      <span class="here">Font Pairing</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">5.2 · Type</span>
+    <h1 class="title">Font <em>Pairing</em>.</h1>
+    <p class="tagline">Two fonts that contrast without clashing. Live demo uses Clash Display (display) + Satoshi (body) from Fontshare.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Using two complementary fonts together — one for headings and display text, one for body text and UI. The heading font should have strong personality and visual impact. The body font should be highly readable at small sizes and in paragraphs. The two should contrast but not clash. Using more than two fonts on a website almost always looks amateur.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Recommended pairings</h2>
+    <div class="body">
+      <div class="term-grid">
+        <div><b>Editorial / Luxury</b><span>Playfair Display (headings) + DM Sans (body) — classic and refined</span></div>
+        <div><b>Modern Startup</b><span>Clash Display (headings) + Satoshi (body) — bold and contemporary</span></div>
+        <div><b>Tech / SaaS</b><span>Syne (headings) + Inter (body) — clean and functional</span></div>
+        <div><b>Experimental</b><span>Monument Extended (headings) + Neue Haas Grotesk (body) — striking</span></div>
+        <div><b>Friendly / Consumer</b><span>Nunito or Poppins (headings) + Source Sans Pro (body) — approachable</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Clash Display is loaded from Fontshare for the headline. Satoshi for the body. Notice the contrast and harmony.</p>
+    <div class="demo-shell">
+      <div class="demo fp-demo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#111; border-color:rgba(0,0,0,0.1);">Live</span>
+        <div class="fp-h">
+          <div class="meta">May 30, 2026 · Issue №24 · 8 min</div>
+          <h3>The architecture of patience.</h3>
+          <p class="by">By <b>Hannah Kveld</b> &nbsp;·&nbsp; Photography by <b>Theo Mårsson</b></p>
+          <div class="fp-labels">
+            <div class="fp-label"><div class="k">Display font</div><div class="v clash">Clash Display 700</div></div>
+            <div class="fp-label"><div class="k">Body font</div><div class="v satoshi">Satoshi 400 / 500</div></div>
+          </div>
+        </div>
+        <div class="fp-b">
+          <h4>An essay, batch 12.</h4>
+          <p><b>Most things you wait for are not worth the wait.</b> A small minority are. The whole project of design is learning to tell which is which, then having the courage to build for the second category even when the first one pays your rent.</p>
+          <p>This issue is about <b>patience</b>. Not the patience of the customer, who is paid for their wait in product. The patience of the maker, who is paid for their wait in nothing but the chance to put a better thing into the world.</p>
+          <p>Pairing a strong display font (Clash) with a clean, modern body face (Satoshi) lets you set editorial-feeling articles without losing the readability that long-form prose needs.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 5.2 Font Pairing</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Use these font pairings for this website: import Clash Display from Fontshare CDN (https://api.fontshare.com/v2/css?f[]=clash-display@700&display=swap) for all headings at font-weight:700. Import Satoshi from Fontshare (https://api.fontshare.com/v2/css?f[]=satoshi@400,500&display=swap) for body text at font-weight:400 for paragraphs and 500 for UI labels. Apply Clash Display to all h1, h2, h3 elements with letter-spacing:-0.03em. Apply Satoshi to body, p, button, input with line-height:1.6.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://fontshare.com" target="_blank" rel="noopener">Fontshare.com</a><span class="desc">Free high-quality fonts curated for web design — much better than Google Fonts</span></div></li>
+      <li><div><a href="https://fonts.google.com" target="_blank" rel="noopener">Google Fonts — Pairings</a><span class="desc">Each font page suggests popular pairings. Free and reliable.</span></div></li>
+      <li><div><a href="https://fontsinuse.com" target="_blank" rel="noopener">Fonts In Use</a><span class="desc">Real-world examples of font usage across websites, posters, and branding</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="5.1-type-scale.html" class="prev"><span class="label">← Prev</span><span class="title">5.1 Type Scale</span></a>
+      <a href="5.3-60-30-10-rule.html" class="next"><span class="label">Next →</span><span class="title">5.3 60-30-10 Rule</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

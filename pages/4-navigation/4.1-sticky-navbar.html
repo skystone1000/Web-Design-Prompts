@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>4.1 Sticky Navbar · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .sn-demo {
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+    background: #FAFAF7;
+    color: #1A1814;
+    position: relative;
+  }
+  .sn-nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: 16px 28px;
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    transition: background 0.3s var(--ease), backdrop-filter 0.3s var(--ease), box-shadow 0.3s var(--ease), border-color 0.3s var(--ease);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .sn-nav.solid {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    box-shadow: 0 1px 20px rgba(0,0,0,0.06);
+    border-bottom-color: rgba(0,0,0,0.06);
+  }
+  .sn-nav .b { font-family: var(--font-display); font-size: 20px; font-weight: 500; color: #111; letter-spacing: -0.01em; }
+  .sn-nav .l { display: flex; gap: 28px; font-size: 13.5px; color: #444; }
+  .sn-nav .l span { cursor: pointer; transition: color 0.2s; }
+  .sn-nav .l span:hover { color: #111; }
+  .sn-nav .cta { padding: 9px 16px; background: #1A1814; color: #fff; border-radius: 999px; font-size: 13px; font-weight: 500; }
+
+  /* Hero with image-like background so transparency contrast is obvious */
+  .sn-hero {
+    height: 360px;
+    background: linear-gradient(135deg, #c4a35d, #6b4f1e);
+    background-image:
+      radial-gradient(circle at 70% 40%, rgba(255,255,255,0.25), transparent 60%),
+      linear-gradient(135deg, #c4a35d, #6b4f1e);
+    display: grid;
+    place-items: center;
+    color: #fff;
+    text-align: center;
+    margin-top: -68px; /* so nav overlays hero */
+    padding-top: 68px;
+  }
+  .sn-hero h3 { font-family: var(--font-display); font-size: clamp(36px, 6vw, 60px); font-weight: 400; letter-spacing: -0.03em; line-height: 1; }
+  .sn-hero h3 em { font-style: italic; }
+  .sn-hero p { margin-top: 14px; font-size: 16px; opacity: 0.9; }
+
+  .sn-content { padding: 60px 32px 80px; max-width: 720px; margin: 0 auto; font-family: 'Georgia', serif; }
+  .sn-content h4 { font-family: 'Georgia', serif; font-weight: 600; font-size: 28px; color: #111; margin-bottom: 12px; }
+  .sn-content p { font-size: 17px; line-height: 1.65; color: #2a2722; margin-bottom: 16px; }
+
+  .sn-state {
+    position: absolute;
+    bottom: 18px;
+    right: 18px;
+    z-index: 11;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 999px;
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Navigation</a>
+      <span class="sep">/</span>
+      <span class="here">Sticky Navbar</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">4.1 · Navigation</span>
+    <h1 class="title">Sticky <em>Navbar</em>.</h1>
+    <p class="tagline">Transparent over the hero, frosted glass after a few pixels of scroll. The most copied navbar pattern on the web.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A navigation bar that stays fixed to the top of the viewport as the user scrolls. Unlike a static nav that scrolls away with the page, a sticky nav is always accessible no matter how far down the user has scrolled. This is the most common and expected navigation pattern for marketing websites and landing pages.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p><code>position:sticky top:0</code> keeps the navbar at the top of the viewport when within its parent. A popular enhancement: the navbar starts transparent (showing the hero content behind it), and as the user scrolls even a few pixels, it transitions to a solid or frosted-glass background. Detected by a scroll listener checking if <code>window.scrollY &gt; threshold</code>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside the demo. Watch the navbar transition from transparent → frosted glass after ~60px.</p>
+    <div class="demo-shell">
+      <div class="demo sn-demo" id="snDemo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#fff; border-color:rgba(255,255,255,0.2);">Live · scroll inside</span>
+        <nav class="sn-nav" id="snNav">
+          <div class="b">Field Co.</div>
+          <div class="l"><span>Shop</span><span>Journal</span><span>Stockists</span><span>About</span></div>
+          <div class="cta">Become a member</div>
+        </nav>
+        <section class="sn-hero">
+          <div>
+            <h3>Made by hand,<br><em>made to outlast.</em></h3>
+            <p>Field jackets, batch 12. Now shipping.</p>
+          </div>
+        </section>
+        <article class="sn-content">
+          <h4>The story of batch 12</h4>
+          <p>It rained the entire week we cut the cloth. We are not particularly superstitious about weather but the dyers held the bath one day longer than the schedule said, just to be sure. The result, you can hold in your hands.</p>
+          <p>Every piece in batch 12 is sewn from a single bolt of waxed cotton that we sourced from a mill in Lancashire that has been making this cloth for 109 years. The mill is older than the company that buys it. We do not know if this is good or bad. We know it makes the jacket softer over time.</p>
+          <p>If you scroll past the headline at the top of this page, you will notice the navigation grew a glass background. That is not why we made the page. But it is a nice thing it does. The eye rests, the navigation stays where it belongs, and you can keep reading.</p>
+          <p>This is the entire technique: position sticky, a scroll listener, and one CSS class. The rest is restraint.</p>
+        </article>
+        <div class="sn-state" id="snState">Transparent</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 4.1 Sticky Navbar</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Create a sticky navbar that is transparent at the very top of the page (background:transparent) and transitions to a white frosted-glass background when the user scrolls past 60px (background:rgba(255,255,255,0.85), backdrop-filter:blur(12px), box-shadow: 0 1px 20px rgba(0,0,0,0.08)). Navigation has: logo on the left, 5 nav links in the center, and a CTA button on the right. Add a 0.3s transition on background-color and backdrop-filter. On mobile (under 768px), hide the center links and show a hamburger menu icon instead.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://apple.com" target="_blank" rel="noopener">Apple.com</a><span class="desc">The sticky frosted-glass navbar — the most copied navbar design in the world</span></div></li>
+      <li><div><a href="https://github.com" target="_blank" rel="noopener">GitHub.com</a><span class="desc">Clean sticky navbar with excellent mobile behavior</span></div></li>
+      <li><div><a href="https://framer.com" target="_blank" rel="noopener">Framer.com</a><span class="desc">Beautiful sticky nav with a smooth scroll-based transparency effect</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="index.html" class="prev"><span class="label">← Chapter</span><span class="title">Navigation</span></a>
+      <a href="4.2-hamburger-mobile.html" class="next"><span class="label">Next →</span><span class="title">4.2 Hamburger</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    const scroller = document.getElementById('snDemo');
+    const nav = document.getElementById('snNav');
+    const state = document.getElementById('snState');
+    if (!scroller || !nav) return;
+    scroller.addEventListener('scroll', () => {
+      const solid = scroller.scrollTop > 60;
+      nav.classList.toggle('solid', solid);
+      if (state) state.textContent = solid ? 'Frosted glass' : 'Transparent';
+    }, { passive: true });
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

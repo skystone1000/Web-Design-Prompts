@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>6.2 Pricing Table · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .pt-demo {
+    background: #FAFAF7;
+    color: #1A1814;
+    min-height: 720px;
+    padding: 56px 32px;
+    border-radius: var(--radius-lg);
+    text-align: center;
+  }
+  .pt-eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #2563EB; margin-bottom: 14px; }
+  .pt-demo h3 { font-family: var(--font-display); font-weight: 400; font-size: clamp(32px, 4.5vw, 48px); color: #111; letter-spacing: -0.02em; margin-bottom: 22px; }
+  .pt-demo h3 em { font-style: italic; color: #2563EB; }
+  .pt-toggle {
+    display: inline-flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 999px;
+    padding: 4px;
+    margin-bottom: 36px;
+    position: relative;
+  }
+  .pt-toggle button {
+    background: transparent;
+    border: none;
+    padding: 8px 18px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    color: #555;
+    cursor: pointer;
+    border-radius: 999px;
+    transition: color 0.2s;
+    position: relative;
+    z-index: 1;
+  }
+  .pt-toggle button.active { color: #fff; }
+  .pt-toggle .slider {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    height: calc(100% - 8px);
+    background: #1A1814;
+    border-radius: 999px;
+    transition: transform 0.28s var(--ease), width 0.28s var(--ease);
+    z-index: 0;
+  }
+  .pt-toggle .save {
+    margin-left: 10px;
+    background: #DBEAFE;
+    color: #2563EB;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    padding: 3px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+  }
+
+  .pt-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 18px;
+    max-width: 1020px;
+    margin: 0 auto;
+    align-items: stretch;
+  }
+  .pt-card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 18px;
+    padding: 32px 24px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .pt-card.pro {
+    border: 2px solid #2563EB;
+    transform: scale(1.04);
+    box-shadow: 0 16px 40px rgba(37,99,235,0.18);
+    z-index: 1;
+  }
+  .pt-card .pop {
+    position: absolute;
+    top: -12px; left: 50%;
+    transform: translateX(-50%);
+    background: #2563EB;
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-weight: 500;
+  }
+  .pt-name { font-family: var(--font-display); font-size: 18px; font-weight: 500; color: #111; margin-bottom: 4px; }
+  .pt-tag { font-size: 13px; color: #6B7280; margin-bottom: 20px; }
+  .pt-price { display: flex; align-items: baseline; gap: 4px; margin-bottom: 22px; }
+  .pt-price .amt { font-family: var(--font-display); font-size: 48px; font-weight: 500; color: #111; letter-spacing: -0.025em; line-height: 1; }
+  .pt-price .per { font-size: 14px; color: #6B7280; }
+  .pt-cta {
+    display: block;
+    width: 100%;
+    padding: 12px 20px;
+    text-align: center;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 22px;
+    cursor: pointer;
+  }
+  .pt-card.free .pt-cta, .pt-card.ent .pt-cta { background: #fff; color: #111; border: 1px solid #E5E7EB; }
+  .pt-card.pro .pt-cta { background: #2563EB; color: #fff; border: 1px solid #2563EB; }
+  .pt-features { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+  .pt-features li { display: flex; gap: 10px; font-size: 14px; color: #2a2722; align-items: flex-start; }
+  .pt-features li.x { color: #b8b3a8; text-decoration: line-through; }
+  .pt-features li::before { content: "✓"; color: #16a34a; font-weight: 700; flex-shrink: 0; }
+  .pt-features li.x::before { content: "✕"; color: #d4cdbd; }
+
+  @media (max-width: 900px) {
+    .pt-grid { grid-template-columns: 1fr; }
+    .pt-card.pro { transform: scale(1); }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">UI Patterns</a>
+      <span class="sep">/</span>
+      <span class="here">Pricing Table</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">6.2 · UI Pattern</span>
+    <h1 class="title">Pricing <em>Table</em>.</h1>
+    <p class="tagline">Three tiers, one highlighted. Toggle between monthly and annual — prices animate and a "Save" badge appears.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A structured comparison of your product's different pricing tiers. Almost always 3 columns: a free/starter plan, a paid pro plan (the one you want most people to buy), and an enterprise plan. The pro plan is visually highlighted — larger, with a colored border, an elevated position, and a "Most Popular" badge — to guide users toward it.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Three-column layout. Each column is a card with: plan name, large price, billing period, 1-line description, a checklist of features, and a CTA button. The pro card gets special visual treatment: a colored border (2px), a badge at the top, and sometimes a slight scale-up (<code>transform: scale(1.05)</code>) to make it literally bigger than the others.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Click the toggle to swap monthly/annual. The "Save 25%" pill appears when annual is selected.</p>
+    <div class="demo-shell">
+      <div class="demo pt-demo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#111; border-color:rgba(0,0,0,0.1);">Live · toggle</span>
+        <div class="pt-eyebrow">Pricing</div>
+        <h3>Simple plans, <em>no surprises</em>.</h3>
+        <div class="pt-toggle" id="ptToggle">
+          <button class="active" data-mode="annual">Annual<span class="save" id="ptSave">Save 25%</span></button>
+          <button data-mode="monthly">Monthly</button>
+          <span class="slider" id="ptSlider"></span>
+        </div>
+        <div class="pt-grid">
+          <div class="pt-card free">
+            <div class="pt-name">Solo</div>
+            <div class="pt-tag">For trying it out, solo projects.</div>
+            <div class="pt-price"><span class="amt">$0</span><span class="per">/month</span></div>
+            <span class="pt-cta">Start free</span>
+            <ul class="pt-features">
+              <li>1 workspace</li>
+              <li>3 projects</li>
+              <li>Community support</li>
+              <li class="x">Custom domain</li>
+              <li class="x">API access</li>
+            </ul>
+          </div>
+          <div class="pt-card pro">
+            <span class="pop">Most popular</span>
+            <div class="pt-name">Pro</div>
+            <div class="pt-tag">For working teams that ship.</div>
+            <div class="pt-price"><span class="amt" id="ptProAmt">$29</span><span class="per" id="ptProPer">/mo · billed annually</span></div>
+            <span class="pt-cta">Start 14-day trial</span>
+            <ul class="pt-features">
+              <li>Everything in Solo</li>
+              <li>Unlimited projects</li>
+              <li>10 team seats</li>
+              <li>Custom domain</li>
+              <li>API access</li>
+              <li>Priority support</li>
+              <li>Audit log</li>
+              <li>Realtime sync</li>
+              <li>Read-only viewers</li>
+              <li>Embed anywhere</li>
+              <li>Webhooks</li>
+              <li>Connectors (32)</li>
+            </ul>
+          </div>
+          <div class="pt-card ent">
+            <div class="pt-name">Enterprise</div>
+            <div class="pt-tag">For teams that need SSO, audit, SOC 2.</div>
+            <div class="pt-price"><span class="amt">Custom</span></div>
+            <span class="pt-cta">Talk to sales</span>
+            <ul class="pt-features">
+              <li>Everything in Pro</li>
+              <li>SSO / SAML</li>
+              <li>SOC 2 / HIPAA</li>
+              <li>Dedicated support</li>
+              <li>Custom onboarding</li>
+              <li>99.99% SLA</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 6.2 Pricing Table</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Build a 3-tier pricing table with monthly/annual toggle. Free tier: white card, $0/month, 5 features, outlined button. Pro tier (highlighted): colored border (#2563EB, 2px), transform:scale(1.04), 'Most Popular' badge in blue at top, $29/month (annual) / $39/month (monthly), 12 features, filled CTA button. Enterprise: white card, 'Custom pricing', 6 features, outlined button. All cards have: plan name (bold), price (48px), feature checklist with checkmark icons (green checks, gray crosses for excluded). The monthly/annual toggle animates the prices changing and shows 'Save 25%' badge next to the annual option.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://tailwindui.com/components/marketing/sections/pricing" target="_blank" rel="noopener">Tailwind UI — Pricing Sections</a><span class="desc">Multiple pre-built pricing table layouts showing different structures</span></div></li>
+      <li><div><a href="https://pricingpages.xyz" target="_blank" rel="noopener">Pricingpages.xyz</a><span class="desc">Gallery of real SaaS pricing page screenshots and designs</span></div></li>
+      <li><div><a href="https://linear.app/pricing" target="_blank" rel="noopener">Linear.app/pricing</a><span class="desc">One of the cleanest pricing pages — study the layout and copy</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="6.1-hero-section.html" class="prev"><span class="label">← Prev</span><span class="title">6.1 Hero Section</span></a>
+      <a href="6.3-testimonials.html" class="next"><span class="label">Next →</span><span class="title">6.3 Testimonials</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    const toggle = document.getElementById('ptToggle');
+    const slider = document.getElementById('ptSlider');
+    const amt = document.getElementById('ptProAmt');
+    const per = document.getElementById('ptProPer');
+    const save = document.getElementById('ptSave');
+    if (!toggle) return;
+    const btns = toggle.querySelectorAll('button');
+    function setMode(mode) {
+      btns.forEach(b => b.classList.toggle('active', b.getAttribute('data-mode') === mode));
+      const target = toggle.querySelector(`button[data-mode="${mode}"]`);
+      slider.style.width = target.offsetWidth + 'px';
+      slider.style.transform = `translateX(${target.offsetLeft - 4}px)`;
+      if (mode === 'annual') {
+        amt.textContent = '$29';
+        per.textContent = '/mo · billed annually';
+        if (save) save.style.display = 'inline-block';
+      } else {
+        amt.textContent = '$39';
+        per.textContent = '/month';
+        if (save) save.style.display = 'none';
+      }
+    }
+    toggle.addEventListener('click', (e) => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      setMode(b.getAttribute('data-mode'));
+    });
+    requestAnimationFrame(() => setMode('annual'));
+    window.addEventListener('resize', () => setMode(toggle.querySelector('button.active').getAttribute('data-mode')));
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>4.2 Hamburger / Mobile Menu · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .hm-demo {
+    height: 720px;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    background: #FAFAF7;
+    color: #1A1814;
+    position: relative;
+  }
+  .hm-nav {
+    padding: 20px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    background: #fff;
+  }
+  .hm-nav .b { font-family: var(--font-display); font-size: 20px; font-weight: 500; color: #111; letter-spacing: -0.01em; }
+  .hm-burger {
+    position: relative;
+    width: 32px; height: 26px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+  .hm-burger span {
+    position: absolute;
+    left: 0; right: 0;
+    height: 2px;
+    background: #111;
+    border-radius: 1px;
+    transition: transform 0.35s var(--ease), opacity 0.2s var(--ease), top 0.35s var(--ease);
+  }
+  .hm-burger span:nth-child(1) { top: 4px; }
+  .hm-burger span:nth-child(2) { top: 12px; }
+  .hm-burger span:nth-child(3) { top: 20px; }
+  .hm-burger.open span:nth-child(1) { top: 12px; transform: rotate(45deg); background: #fff; }
+  .hm-burger.open span:nth-child(2) { opacity: 0; }
+  .hm-burger.open span:nth-child(3) { top: 12px; transform: rotate(-45deg); background: #fff; }
+
+  .hm-overlay {
+    position: absolute;
+    inset: 0;
+    background: #0A0A0A;
+    z-index: 8;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s var(--ease);
+    display: grid;
+    place-items: center;
+    padding: 80px 32px 40px;
+  }
+  .hm-overlay.open { opacity: 1; pointer-events: auto; }
+  .hm-overlay .links {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .hm-overlay .links a {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 6vw, 56px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: #fff;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s var(--ease), transform 0.5s var(--ease), color 0.2s;
+  }
+  .hm-overlay.open .links a { opacity: 1; transform: translateY(0); }
+  .hm-overlay .links a:nth-child(1) { transition-delay: 0.10s; }
+  .hm-overlay .links a:nth-child(2) { transition-delay: 0.16s; }
+  .hm-overlay .links a:nth-child(3) { transition-delay: 0.22s; }
+  .hm-overlay .links a:nth-child(4) { transition-delay: 0.28s; }
+  .hm-overlay .links a:nth-child(5) { transition-delay: 0.34s; }
+  .hm-overlay .links a:hover { color: var(--accent); }
+  .hm-overlay .meta {
+    margin-top: 32px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    opacity: 0;
+    transition: opacity 0.5s var(--ease) 0.4s;
+  }
+  .hm-overlay.open .meta { opacity: 1; }
+
+  .hm-content {
+    padding: 60px 32px;
+    max-width: 640px;
+    margin: 0 auto;
+    font-family: 'Georgia', serif;
+  }
+  .hm-content h3 { font-family: 'Georgia', serif; font-weight: 600; font-size: 32px; color: #111; margin-bottom: 12px; }
+  .hm-content p { font-size: 17px; line-height: 1.65; color: #2a2722; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Navigation</a>
+      <span class="sep">/</span>
+      <span class="here">Hamburger menu</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">4.2 · Navigation</span>
+    <h1 class="title">Hamburger /<br>Mobile <em>Menu</em>.</h1>
+    <p class="tagline">Three lines that morph into an X. Fullscreen overlay with staggered link reveals. Tap the icon in the demo.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>On mobile screens, there isn't room for all navigation links. The hamburger menu hides all navigation behind a single icon. Tapping it reveals the full navigation — either as a fullscreen overlay, a side drawer, or a dropdown panel.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Three horizontal div elements (or a custom SVG) form the icon. When clicked, JS toggles a class on a fullscreen overlay. The three lines animate into an X using CSS transforms: the top line rotates 45°, the middle line fades to <code>opacity:0</code>, the bottom line rotates -45°. The overlay menu appears with a fade or slide-in transition.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Click the burger icon in the top-right of the demo. Links stagger in.</p>
+    <div class="demo-shell">
+      <div class="demo hm-demo" id="hmDemo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#111; border-color:rgba(0,0,0,0.1);">Live · tap burger</span>
+        <nav class="hm-nav">
+          <div class="b">Field Co.</div>
+          <button class="hm-burger" id="hmBurger" aria-label="Open menu">
+            <span></span><span></span><span></span>
+          </button>
+        </nav>
+        <article class="hm-content">
+          <h3>Try the menu.</h3>
+          <p>The hamburger in the top right is a real component. Click it. The three lines fold into an X, a black overlay fills the screen, and five links cascade in from below — each one slightly delayed from the previous.</p>
+          <p>Click again to close. Press Escape if you prefer.</p>
+        </article>
+        <div class="hm-overlay" id="hmOverlay">
+          <div>
+            <div class="links">
+              <a>Shop</a>
+              <a>Journal</a>
+              <a>Stockists</a>
+              <a>About</a>
+              <a>Contact</a>
+            </div>
+            <div class="meta">© Field Co. · Brooklyn, NY · est. 2019</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 4.2 Hamburger</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Build a fullscreen hamburger menu for mobile. Three-line hamburger icon: each line is 24px wide, 2px tall, dark color, with 5px gap between them. When clicked, animate to X: top line rotates 45deg and translates down, middle line fades to opacity:0, bottom line rotates -45deg and translates up. The fullscreen menu overlay uses position:fixed, inset:0, background:#0A0A0A, z-index:9999. Navigation links appear centered, large (40px), white, with a stagger fade-in (each link 0.05s later). Include close button (X) in top right. Body scroll should be locked when menu is open (overflow:hidden on body).</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://awwwards.com/websites/portfolio" target="_blank" rel="noopener">Awwwards Portfolio Sites</a><span class="desc">Most creative agency sites use fullscreen hamburger menus</span></div></li>
+      <li><div><a href="https://tympanus.net/codrops" target="_blank" rel="noopener">Codrops — Menu Animations</a><span class="desc">Collection of creative hamburger menu animation techniques with code</span></div></li>
+      <li><div><a href="https://cuberto.com" target="_blank" rel="noopener">Cuberto.com</a><span class="desc">Agency with beautiful fullscreen hamburger menu animations</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="4.1-sticky-navbar.html" class="prev"><span class="label">← Prev</span><span class="title">4.1 Sticky Navbar</span></a>
+      <a href="4.3-mega-menu.html" class="next"><span class="label">Next →</span><span class="title">4.3 Mega Menu</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    const burger = document.getElementById('hmBurger');
+    const overlay = document.getElementById('hmOverlay');
+    const demo = document.getElementById('hmDemo');
+    if (!burger || !overlay) return;
+    function toggle(open) {
+      burger.classList.toggle('open', open);
+      overlay.classList.toggle('open', open);
+      burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    }
+    burger.addEventListener('click', () => toggle(!burger.classList.contains('open')));
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) toggle(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && burger.classList.contains('open')) toggle(false);
+    });
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

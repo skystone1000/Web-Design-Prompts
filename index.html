@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Vibe Design Reference — 39 live demos, 39 copy-paste prompts</title>
+<meta name="description" content="A living reference catalog of web-design techniques. Every entry is explained, demoed live, and ships with the exact prompt that produced it." />
+<link rel="stylesheet" href="assets/css/global.css" />
+<link rel="stylesheet" href="assets/css/components.css" />
+<style>
+  /* Root-specific styles */
+  .hero {
+    padding: 140px 0 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(60% 80% at 50% 0%, rgba(232,179,57,0.16), transparent 60%),
+                radial-gradient(40% 50% at 80% 30%, rgba(217,111,90,0.10), transparent 60%);
+    pointer-events: none;
+  }
+  .hero-inner { position: relative; z-index: 1; }
+  .hero .meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+  .hero .meta .pill {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding: 7px 14px;
+    border: 1px solid rgba(232,179,57,0.4);
+    border-radius: 999px;
+    background: rgba(232,179,57,0.06);
+  }
+  .hero .meta .meta-text {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(56px, 10vw, 132px);
+    font-weight: 300;
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    color: var(--text);
+    margin: 0;
+  }
+  .hero h1 em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--accent);
+  }
+  .hero h1 .amp {
+    font-style: italic;
+    font-weight: 200;
+    color: var(--accent-2);
+  }
+  .hero .lede {
+    margin-top: 36px;
+    font-size: 21px;
+    line-height: 1.55;
+    color: var(--text-soft);
+    max-width: 58ch;
+  }
+  .hero .lede b { color: var(--text); font-weight: 500; font-style: italic; font-family: var(--font-display); }
+  .hero-cta {
+    display: flex;
+    gap: 14px;
+    margin-top: 48px;
+    flex-wrap: wrap;
+  }
+
+  /* Hero side-stats */
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 80px;
+    padding-top: 36px;
+    border-top: 1px solid var(--border);
+  }
+  .hero-stats > div {
+    padding-right: 24px;
+    border-right: 1px solid var(--border);
+    padding-left: 24px;
+  }
+  .hero-stats > div:first-child { padding-left: 0; }
+  .hero-stats > div:last-child { border-right: 0; padding-right: 0; }
+  .hero-stats .n {
+    font-family: var(--font-display);
+    font-size: 56px;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--text);
+  }
+  .hero-stats .l {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 10px;
+  }
+  @media (max-width: 720px) {
+    .hero-stats { grid-template-columns: repeat(2, 1fr); }
+    .hero-stats > div { padding: 16px 0; border-right: 0; border-bottom: 1px solid var(--border); padding-left: 0; }
+  }
+
+  /* Catalog */
+  .catalog { padding: 96px 0; }
+  .catalog .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 32px;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+  }
+  .catalog .head h2 {
+    font-family: var(--font-display);
+    font-size: clamp(38px, 5vw, 60px);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    line-height: 1;
+  }
+  .catalog .head h2 em { font-style: italic; color: var(--accent); font-weight: 300; }
+  .catalog .head .num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding-bottom: 8px;
+  }
+
+  /* Bento-style category grid */
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-rows: 180px;
+    gap: 14px;
+  }
+  .bento .tile {
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: border-color 0.25s, transform 0.25s, background 0.25s;
+    overflow: hidden;
+  }
+  .bento .tile:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-3px);
+  }
+  .bento .tile .ch {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .bento .tile h3 {
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    color: var(--text);
+  }
+  .bento .tile h3 em { font-style: italic; color: var(--accent); font-weight: 300; }
+  .bento .tile .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .bento .tile .meta .arrow {
+    transition: transform 0.2s;
+  }
+  .bento .tile:hover .meta .arrow { transform: translateX(4px); color: var(--accent); }
+
+  .tile-a { grid-column: span 3; grid-row: span 2; }
+  .tile-b { grid-column: span 3; grid-row: span 1; background: linear-gradient(135deg, rgba(232,179,57,0.10), rgba(232,179,57,0.02) 60%); }
+  .tile-c { grid-column: span 3; grid-row: span 1; }
+  .tile-d { grid-column: span 2; grid-row: span 1; }
+  .tile-e { grid-column: span 2; grid-row: span 1; background: linear-gradient(135deg, rgba(111,181,168,0.10), rgba(111,181,168,0.02) 60%); }
+  .tile-f { grid-column: span 2; grid-row: span 1; background: linear-gradient(135deg, rgba(217,111,90,0.10), rgba(217,111,90,0.02) 60%); }
+
+  .tile-a h3 { font-size: 56px; line-height: 0.95; }
+  @media (max-width: 900px) {
+    .bento { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 200px; }
+    .tile-a, .tile-b, .tile-c, .tile-d, .tile-e, .tile-f { grid-column: span 1; grid-row: span 1; }
+    .tile-a { grid-column: span 2; }
+    .tile-a h3 { font-size: 38px; }
+  }
+
+  /* Vocabulary section */
+  .vocab { padding: 96px 0; background: var(--bg-elev); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .vocab .head h2 em { font-style: italic; color: var(--accent); font-weight: 300; }
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 28px;
+  }
+  .vocab-grid > div {
+    padding: 22px 26px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .vocab-grid b {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  .vocab-grid span {
+    font-size: 15px;
+    color: var(--text-soft);
+    line-height: 1.5;
+  }
+  @media (max-width: 720px) { .vocab-grid { grid-template-columns: 1fr; } }
+
+  /* Final tip */
+  .final-tip { padding: 80px 0 40px; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="dot"></span>
+      Vibe Design Reference
+      <small>v1</small>
+    </a>
+    <div class="nav-trail">
+      <span class="here">Home</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="meta">
+      <span class="pill">The Vibe Coder's Reference</span>
+      <span class="meta-text">39 entries · live demos · copy-paste prompts</span>
+    </div>
+    <h1>
+      A field guide<br>
+      to web design,<br>
+      <em>made for prompting.</em>
+    </h1>
+    <p class="lede">
+      Every aesthetic, layout, scroll trick, navigation pattern, and component you'd want to describe to an AI — <b>defined, demoed, and ready to copy.</b> Bring vocabulary to your prompts.
+    </p>
+    <div class="hero-cta">
+      <a href="pages/1-aesthetics/index.html" class="btn btn-primary">Start with Aesthetics →</a>
+      <a href="#vocab" class="btn btn-ghost">Quick reference vocabulary</a>
+    </div>
+
+    <div class="hero-stats">
+      <div><div class="n">39</div><div class="l">Techniques</div></div>
+      <div><div class="n">6</div><div class="l">Chapters</div></div>
+      <div><div class="n">39</div><div class="l">Live demos</div></div>
+      <div><div class="n">39</div><div class="l">Prompts to copy</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="catalog">
+  <div class="container">
+    <div class="head">
+      <h2>The <em>catalog</em>.</h2>
+      <div class="num">6 chapters · 39 entries</div>
+    </div>
+
+    <div class="bento">
+      <a href="pages/1-aesthetics/index.html" class="tile tile-a">
+        <div class="ch">Chapter 01</div>
+        <h3>Design <em>Aesthetics</em></h3>
+        <div class="meta"><span>8 entries</span><span class="arrow">View →</span></div>
+      </a>
+      <a href="pages/2-scroll-animation/index.html" class="tile tile-b">
+        <div class="ch">Chapter 02</div>
+        <h3>Scroll &amp; <em>Animation</em></h3>
+        <div class="meta"><span>7 entries</span><span class="arrow">View →</span></div>
+      </a>
+      <a href="pages/3-layouts/index.html" class="tile tile-c">
+        <div class="ch">Chapter 03</div>
+        <h3>Layouts</h3>
+        <div class="meta"><span>6 entries</span><span class="arrow">View →</span></div>
+      </a>
+      <a href="pages/4-navigation/index.html" class="tile tile-d">
+        <div class="ch">Chapter 04</div>
+        <h3>Navigation</h3>
+        <div class="meta"><span>6 entries</span><span class="arrow">View →</span></div>
+      </a>
+      <a href="pages/5-typography-color/index.html" class="tile tile-e">
+        <div class="ch">Chapter 05</div>
+        <h3>Type &amp; <em>Color</em></h3>
+        <div class="meta"><span>6 entries</span><span class="arrow">View →</span></div>
+      </a>
+      <a href="pages/6-ui-patterns/index.html" class="tile tile-f">
+        <div class="ch">Chapter 06</div>
+        <h3>UI <em>Patterns</em></h3>
+        <div class="meta"><span>6 entries</span><span class="arrow">View →</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="vocab" id="vocab">
+  <div class="container">
+    <div class="head">
+      <div>
+        <h2>Quick reference <em>vocabulary</em>.</h2>
+        <p class="lede" style="margin-top:16px;">The words to use when you prompt. Combine one from each row.</p>
+      </div>
+    </div>
+    <div class="vocab-grid">
+      <div><b>For aesthetics</b><span>glassmorphism · neumorphism · brutalism · minimalism · dark luxury · bento grid · claymorphism · Y2K</span></div>
+      <div><b>For feel</b><span>premium · editorial · playful · corporate · warm · clean · bold · refined · futuristic</span></div>
+      <div><b>For layout</b><span>hero + feature grid · bento · masonry · fullpage scroll · sidebar+content · split asymmetric</span></div>
+      <div><b>For animation</b><span>scroll-triggered fade-up · parallax · sticky scroll · text reveal · horizontal scroll · smooth lenis</span></div>
+      <div><b>For navigation</b><span>sticky frosted navbar · hamburger fullscreen · mega menu · dot navigation · tab navigation</span></div>
+      <div><b>For components</b><span>pricing table with toggle · testimonial marquee · FAQ accordion · sticky scroll feature · hero · card grid</span></div>
+      <div><b>For typography</b><span>display headline · type scale · gradient text · font pairing · tight letter-spacing</span></div>
+      <div><b>For color</b><span>60-30-10 rule · near-black dark mode · single accent color · gradient background · monochromatic</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="final-tip">
+  <div class="container-narrow">
+    <div class="tip">
+      <b>The perfect prompt</b> combines: 1 aesthetic + 1 layout + 1 animation + specific colors and fonts. <br>
+      <span class="muted" style="font-size: 14.5px;">Example: "Build a <b style="color:var(--accent);font-style:italic;">glassmorphism</b> hero section with a <b style="color:var(--accent);font-style:italic;">centered layout</b> where feature cards <b style="color:var(--accent);font-style:italic;">fade up on scroll</b>, using a purple-to-blue gradient background, white frosted glass cards, and Clash Display font for the headline."</span>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference · built from The Vibe Coder's Web Design Guide</div>
+    <div><a href="index.html">↑ Top</a></div>
+  </div>
+</footer>
+
+<script src="assets/js/global.js"></script>
+</body>
+</html>

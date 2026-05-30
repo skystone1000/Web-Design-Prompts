@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>1.4 Minimalism · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+<style>
+  /* ===== Live demo: Minimalism ===== */
+  .min-demo {
+    background: #FAFAF9;
+    color: #111;
+    min-height: 760px;
+    padding: 0;
+    font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+  }
+  .min-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 32px 56px;
+    font-size: 14px;
+    color: #111;
+  }
+  .min-nav .brand { font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; font-size: 12px; }
+  .min-nav .links { display: flex; gap: 32px; font-weight: 400; font-size: 13px; color: #555; letter-spacing: 0.08em; text-transform: uppercase; }
+  .min-hero {
+    padding: 80px 56px 56px;
+  }
+  .min-hero .eyebrow { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 16px; color: #888; margin-bottom: 18px; text-transform: none; letter-spacing: 0; }
+  .min-hero h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(48px, 7vw, 78px);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    color: #111;
+    max-width: 14ch;
+  }
+  .min-hero h3 em { font-style: italic; font-weight: 300; }
+  .min-meta {
+    margin-top: 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-top: 1px solid rgba(17,17,17,0.18);
+    padding-top: 18px;
+    font-size: 12px;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+  }
+  .min-grid {
+    padding: 24px 56px 80px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 36px;
+  }
+  .min-tile {
+    background: linear-gradient(180deg, #d8d2c4, #b3aa97);
+    aspect-ratio: 3/4;
+    position: relative;
+  }
+  .min-tile:nth-child(2) { background: linear-gradient(180deg, #c2cdca, #8a9591); transform: translateY(48px); }
+  .min-tile:nth-child(3) { background: linear-gradient(180deg, #d2c2b6, #9c8b80); }
+  .min-tile .cap {
+    position: absolute;
+    bottom: -28px;
+    left: 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    color: #888;
+    letter-spacing: 0.04em;
+  }
+  .min-tile .cap em { font-style: italic; color: #111; }
+  @media (max-width: 760px) {
+    .min-nav { padding: 24px 28px; }
+    .min-hero, .min-grid { padding-left: 28px; padding-right: 28px; }
+    .min-grid { grid-template-columns: 1fr; }
+    .min-tile:nth-child(2) { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Aesthetics</a>
+      <span class="sep">/</span>
+      <span class="here">Minimalism</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">1.4 · Aesthetic</span>
+    <h1 class="title">Minimalism.</h1>
+    <p class="tagline">Content is the design. One typeface, monochromatic palette, whitespace as rhythm.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Minimalism is the philosophy that content is the design. Everything that doesn't serve the content is removed. What remains is: generous white (or off-white) space, a single typeface, a monochromatic or near-monochromatic color palette, and zero decoration. The whitespace itself creates visual rhythm and breathing room.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Think of minimalism as removal. You start with a design and keep asking "can this be removed without losing meaning?" Large padding and margins, a single font used at multiple weights (light, regular, bold), near-black text on near-white background, and content arranged with clear typographic hierarchy. No icons, no illustrations, no gradients — unless they serve a specific purpose.</p>
+      <div class="term-grid">
+        <div><b>Whitespace</b><span>Empty space used intentionally as a design element — not wasted space</span></div>
+        <div><b>Typographic hierarchy</b><span>Using size, weight, and spacing alone to show what's important</span></div>
+        <div><b>Monochromatic</b><span>Using one color at different shades — like all blacks, grays, and whites</span></div>
+        <div><b>Negative space</b><span>The empty areas around and between objects — as important as the objects</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <div class="demo-shell">
+      <div class="demo min-demo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.12); color:#111; border-color:rgba(0,0,0,0.12);">Live</span>
+        <div class="min-nav">
+          <div class="brand">Hannah Kveld</div>
+          <div class="links"><span>Work</span><span>Studio</span><span>Contact</span></div>
+        </div>
+        <div class="min-hero">
+          <div class="eyebrow">Selected work, 2018 — present</div>
+          <h3>Quiet photographs <em>of loud places.</em></h3>
+          <div class="min-meta">
+            <span>Tokyo / Reykjavík / Marseille</span>
+            <span>↘ Scroll for series</span>
+          </div>
+        </div>
+        <div class="min-grid">
+          <div class="min-tile"><div class="cap"><em>Konbini at 4am</em> &nbsp;·&nbsp; Shibuya, 2023</div></div>
+          <div class="min-tile"><div class="cap"><em>Northern light</em> &nbsp;·&nbsp; Vík, 2022</div></div>
+          <div class="min-tile"><div class="cap"><em>Le Vieux Port</em> &nbsp;·&nbsp; Marseille, 2024</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 1.4 Minimalism</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Design a minimalist photography portfolio homepage. Use #FAFAF9 (warm off-white) as the background. Typography only: a single font family (Cormorant Garamond or Playfair Display), hero headline at 72px weight 300, section titles at 32px. Color palette: near-black #111 for text, #888 for captions. No icons, no decorative elements, no gradients. Large padding on all sections (80px vertical). Image grid with generous white space between photos. Let the whitespace be the design.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://awwwards.com/websites/minimal" target="_blank" rel="noopener">Awwwards — Minimalist Category</a><span class="desc">Award-winning minimal websites — filter by 'minimalism'</span></div></li>
+      <li><div><a href="https://linear.app" target="_blank" rel="noopener">Linear.app</a><span class="desc">One of the cleanest, most minimal SaaS designs</span></div></li>
+      <li><div><a href="https://typewolf.com" target="_blank" rel="noopener">Typewolf.com</a><span class="desc">Typography-focused minimal design inspiration, all real websites</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="1.3-brutalism.html" class="prev"><span class="label">← Prev</span><span class="title">1.3 Brutalism</span></a>
+      <a href="1.5-bento-grid.html" class="next"><span class="label">Next →</span><span class="title">1.5 Bento Grid</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

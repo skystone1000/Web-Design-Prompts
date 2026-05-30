@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.1 Parallax Scrolling · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  /* ===== Live demo: Parallax ===== */
+  .pa-demo {
+    position: relative;
+    height: 720px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    border-radius: var(--radius-lg);
+  }
+  .pa-stage { position: relative; height: 1800px; }
+
+  /* Layers — all position:absolute, will-change-transform */
+  .pa-layer { position: absolute; left: 0; right: 0; will-change: transform; }
+
+  /* Sky background — slowest */
+  .pa-sky {
+    top: 0; height: 1000px;
+    background: linear-gradient(180deg, #1a0e3a 0%, #4a2b6a 35%, #c66b6b 65%, #f5b878 92%, #ffd098 100%);
+  }
+  /* Stars in the sky */
+  .pa-stars {
+    top: 40px; height: 400px;
+    background-image:
+      radial-gradient(1px 1px at 30px 80px, #fff, transparent),
+      radial-gradient(1px 1px at 120px 30px, #fff, transparent),
+      radial-gradient(1px 1px at 220px 110px, #fff, transparent),
+      radial-gradient(1px 1px at 340px 60px, #fff, transparent),
+      radial-gradient(1.4px 1.4px at 80px 200px, #fff, transparent),
+      radial-gradient(1px 1px at 280px 240px, #fff, transparent),
+      radial-gradient(1.2px 1.2px at 460px 180px, #fff, transparent),
+      radial-gradient(1px 1px at 530px 90px, #fff, transparent),
+      radial-gradient(1px 1px at 600px 200px, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 700px 50px, #fff, transparent),
+      radial-gradient(1px 1px at 800px 140px, #fff, transparent),
+      radial-gradient(1px 1px at 880px 230px, #fff, transparent);
+    background-size: 1000px 320px;
+    opacity: 0.9;
+  }
+  /* Moon */
+  .pa-moon {
+    top: 70px; left: auto; right: 12%; width: 110px; height: 110px;
+    background: radial-gradient(circle at 30% 30%, #fff7d1, #f0d68a);
+    border-radius: 50%;
+    box-shadow: 0 0 60px rgba(255, 240, 180, 0.5);
+  }
+  /* Far mountains */
+  .pa-far {
+    bottom: -240px; height: 360px;
+    background:
+      conic-gradient(from 220deg at 12% 100%, transparent 0 41deg, #2c1a4a 41deg 60deg, transparent 60deg),
+      conic-gradient(from 220deg at 28% 100%, transparent 0 35deg, #3a2557 35deg 56deg, transparent 56deg),
+      conic-gradient(from 220deg at 50% 100%, transparent 0 38deg, #2c1a4a 38deg 60deg, transparent 60deg),
+      conic-gradient(from 220deg at 70% 100%, transparent 0 35deg, #3a2557 35deg 56deg, transparent 56deg),
+      conic-gradient(from 220deg at 88% 100%, transparent 0 41deg, #2c1a4a 41deg 60deg, transparent 60deg);
+  }
+  /* Mid mountains */
+  .pa-mid {
+    bottom: -340px; height: 320px;
+    background:
+      conic-gradient(from 220deg at 18% 100%, transparent 0 32deg, #1c0e2b 32deg 60deg, transparent 60deg),
+      conic-gradient(from 220deg at 42% 100%, transparent 0 35deg, #1c0e2b 35deg 60deg, transparent 60deg),
+      conic-gradient(from 220deg at 70% 100%, transparent 0 34deg, #1c0e2b 34deg 60deg, transparent 60deg),
+      conic-gradient(from 220deg at 92% 100%, transparent 0 32deg, #1c0e2b 32deg 60deg, transparent 60deg);
+  }
+  /* Ground */
+  .pa-ground {
+    top: 800px; height: 1000px;
+    background: linear-gradient(180deg, #0b0414 0%, #0a0410 100%);
+  }
+  /* Foreground trees (silhouette) */
+  .pa-trees {
+    top: 760px; height: 200px;
+    background:
+      radial-gradient(ellipse 30px 60px at 8% 70%, #000, transparent 75%),
+      radial-gradient(ellipse 24px 50px at 16% 75%, #000, transparent 75%),
+      radial-gradient(ellipse 36px 80px at 28% 65%, #000, transparent 75%),
+      radial-gradient(ellipse 26px 56px at 40% 72%, #000, transparent 75%),
+      radial-gradient(ellipse 40px 90px at 56% 60%, #000, transparent 75%),
+      radial-gradient(ellipse 28px 60px at 70% 68%, #000, transparent 75%),
+      radial-gradient(ellipse 32px 72px at 86% 64%, #000, transparent 75%),
+      radial-gradient(ellipse 26px 58px at 96% 72%, #000, transparent 75%);
+    background-color: transparent;
+  }
+
+  /* Hero text — fastest, normal scroll */
+  .pa-hero {
+    position: relative;
+    z-index: 5;
+    padding-top: 160px;
+    text-align: center;
+    color: #fff;
+    pointer-events: none;
+  }
+  .pa-hero .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.7);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .pa-hero h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(40px, 6vw, 64px);
+    letter-spacing: -0.03em;
+    line-height: 1.0;
+    color: #fff;
+    text-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  .pa-hero h3 em { font-style: italic; font-weight: 300; color: #ffd098; }
+  .pa-hero p {
+    margin-top: 16px;
+    color: rgba(255,255,255,0.85);
+    font-size: 15px;
+    max-width: 28ch;
+    margin-left: auto; margin-right: auto;
+  }
+  .pa-hint {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 6;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    pointer-events: none;
+    animation: pa-bounce 1.6s ease-in-out infinite;
+  }
+  @keyframes pa-bounce { 0%,100%{transform:translateX(-50%) translateY(0);} 50%{transform:translateX(-50%) translateY(6px);} }
+
+  /* Second screen — what you see after scrolling */
+  .pa-second {
+    position: absolute;
+    top: 900px;
+    left: 0; right: 0;
+    padding: 0 32px;
+    text-align: center;
+    color: #fff;
+    z-index: 5;
+  }
+  .pa-second h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 42px;
+    letter-spacing: -0.02em;
+    color: #ffd098;
+  }
+  .pa-second p { color: rgba(255,255,255,0.7); max-width: 38ch; margin: 12px auto 0; font-size: 14.5px; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Parallax</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.1 · Animation</span>
+    <h1 class="title">Parallax <em>Scrolling</em>.</h1>
+    <p class="tagline">Different layers move at different speeds — creating an illusion of depth. Scroll the demo to see three layers separate.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Parallax creates an illusion of depth by making different layers of the page scroll at different speeds. The background moves slowly while the foreground (text, buttons) moves at normal speed. This makes the page feel three-dimensional — like looking through a window where distant objects appear to move slower than close ones.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>The simplest version uses CSS <code>background-attachment: fixed</code> on a background image. More advanced parallax uses JavaScript to track how far the user has scrolled and applies a CSS <code>transform: translateY()</code> at a fraction of that scroll distance to each layer. Three layers minimum: far background (moves 20% of scroll speed), mid background (moves 50%), foreground text (moves 100%).</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside the box below. Sky moves slowest, mountains medium, trees fastest.</p>
+    <div class="demo-shell">
+      <div class="demo pa-demo" id="paDemo">
+        <span class="demo-badge">Live · scroll inside</span>
+        <div class="pa-stage">
+          <div class="pa-layer pa-sky" data-speed="0.15"></div>
+          <div class="pa-layer pa-stars" data-speed="0.25"></div>
+          <div class="pa-layer pa-moon" data-speed="0.35"></div>
+          <div class="pa-layer pa-ground" data-speed="0.55"></div>
+          <div class="pa-layer pa-far" data-speed="0.45" style="top:540px;"></div>
+          <div class="pa-layer pa-mid" data-speed="0.7" style="top:620px;"></div>
+          <div class="pa-layer pa-trees" data-speed="1" style="top:680px;"></div>
+          <div class="pa-hero" data-speed="0.5">
+            <div class="eyebrow">Layer 03 · Foreground</div>
+            <h3>Three layers,<br><em>one horizon.</em></h3>
+            <p>Scroll downward and watch the sky lag behind the trees.</p>
+          </div>
+          <div class="pa-second" data-speed="0.8">
+            <h4>And here you are.</h4>
+            <p>Far mountains barely shifted; trees flew past. That's parallax depth.</p>
+          </div>
+        </div>
+        <div class="pa-hint">↓ scroll inside</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 2.1 Parallax</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Build a parallax hero section with 3 scrolling layers. Background layer: a mountain/nature image that moves at 30% of scroll speed (translateY by 0.3 * scrollY). Middle layer: floating abstract blob shapes that move at 60% speed. Foreground layer: hero headline and CTA that scroll normally at 100%. Use JavaScript IntersectionObserver or requestAnimationFrame to update transforms on scroll. The depth illusion should be clearly visible when scrolling through the section.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://firewatchgame.com" target="_blank" rel="noopener">Firewatch Game Website</a><span class="desc">The most famous parallax website ever — multiple illustrated layers</span></div></li>
+      <li><div><a href="https://university.webflow.com" target="_blank" rel="noopener">Webflow University — Parallax</a><span class="desc">No-code parallax scroll tutorial, great for understanding mechanics</span></div></li>
+      <li><div><a href="https://awwwards.com/websites/parallax" target="_blank" rel="noopener">Awwwards — Parallax Sites</a><span class="desc">Award-winning websites using advanced parallax effects</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="index.html" class="prev"><span class="label">← Chapter</span><span class="title">Scroll &amp; Animation</span></a>
+      <a href="2.2-scroll-triggered.html" class="next"><span class="label">Next →</span><span class="title">2.2 Scroll-triggered</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script>
+  // Parallax via requestAnimationFrame, scoped to the demo container
+  (function () {
+    const scroller = document.getElementById('paDemo');
+    if (!scroller) return;
+    const layers = scroller.querySelectorAll('[data-speed]');
+    let ticking = false;
+
+    function update() {
+      const y = scroller.scrollTop;
+      layers.forEach(el => {
+        const speed = parseFloat(el.getAttribute('data-speed'));
+        // Invert: layer translates UPWARD as user scrolls down. Slower speed = less movement.
+        el.style.transform = `translate3d(0, ${-y * speed}px, 0)`;
+      });
+      ticking = false;
+    }
+    scroller.addEventListener('scroll', () => {
+      if (!ticking) { requestAnimationFrame(update); ticking = true; }
+    }, { passive: true });
+    update();
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

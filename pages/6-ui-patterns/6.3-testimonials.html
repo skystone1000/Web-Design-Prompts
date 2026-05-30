@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>6.3 Testimonials / Social Proof · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .tm-demo {
+    background: #F5F5F5;
+    color: #111;
+    min-height: 620px;
+    padding: 56px 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    position: relative;
+  }
+  .tm-head { text-align: center; padding: 0 32px 32px; }
+  .tm-head h3 { font-family: var(--font-display); font-weight: 400; font-size: clamp(32px, 4.5vw, 48px); color: #111; letter-spacing: -0.02em; margin-bottom: 10px; }
+  .tm-head h3 em { font-style: italic; color: #2563EB; }
+  .tm-head p { color: #555; font-size: 16px; }
+
+  .tm-row {
+    display: flex;
+    width: max-content;
+    gap: 16px;
+    padding: 8px 0;
+    animation: tm-scroll-l 38s linear infinite;
+    will-change: transform;
+  }
+  .tm-row.right { animation: tm-scroll-r 44s linear infinite; }
+  .tm-row:hover { animation-play-state: paused; }
+  @keyframes tm-scroll-l { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes tm-scroll-r { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+  .tm-card {
+    flex: 0 0 300px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+  }
+  .tm-stars { color: #f59e0b; letter-spacing: 0.08em; font-size: 13px; margin-bottom: 10px; }
+  .tm-card q { display: block; font-size: 14.5px; line-height: 1.55; color: #2a2722; margin-bottom: 14px; font-style: normal; }
+  .tm-card q::before { content: open-quote; }
+  .tm-card q::after { content: close-quote; }
+  .tm-line { height: 1px; background: rgba(0,0,0,0.06); margin: 0 0 14px; }
+  .tm-who { display: flex; gap: 12px; align-items: center; }
+  .tm-av {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #60a5fa, #c084fc);
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .tm-who .n { font-size: 13.5px; font-weight: 600; color: #111; }
+  .tm-who .r { font-size: 12px; color: #777; }
+
+  /* Edge fade */
+  .tm-demo::before, .tm-demo::after {
+    content: "";
+    position: absolute;
+    top: 100px; bottom: 0;
+    width: 80px;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .tm-demo::before { left: 0; background: linear-gradient(90deg, #F5F5F5, transparent); }
+  .tm-demo::after { right: 0; background: linear-gradient(-90deg, #F5F5F5, transparent); }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">UI Patterns</a>
+      <span class="sep">/</span>
+      <span class="here">Testimonials</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">6.3 · UI Pattern</span>
+    <h1 class="title">Testimonials /<br><em>Marquee</em>.</h1>
+    <p class="tagline">Two rows scrolling infinitely in opposite directions. Hover any card to pause the row.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A section showing quotes from real users of your product. Social proof is one of the most powerful conversion elements on a website — people trust other people's opinions more than they trust the company selling the product. The best testimonials are specific ("increased our revenue by 40%") rather than generic ("great product, love it").</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Laid out as a 3-column grid, a single large quote, or an auto-scrolling marquee. The marquee version is popular currently — cards scroll continuously, often two rows in opposite directions. Hover stops the scroll. Each card duplicated once for the infinite-loop illusion via <code>translateX(-50%)</code> keyframes.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Two rows. Hover any card to pause.</p>
+    <div class="demo-shell">
+      <div class="demo tm-demo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#111; border-color:rgba(0,0,0,0.1); z-index: 3;">Live · hover to pause</span>
+        <div class="tm-head">
+          <h3>Loved by teams who <em>actually ship</em>.</h3>
+          <p>★★★★★ &nbsp; 4.9 / 5 across 1,200+ reviews</p>
+        </div>
+
+        <div class="tm-row" id="row1">
+          <!-- 8 cards × 2 duplicates -->
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>Replaced three tools and one weekly meeting. We don't miss any of them.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">MR</div><div><div class="n">Maya R.</div><div class="r">Head of Ops · Argent</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>Quiet, fast, opinionated. Three words I never thought I'd use for SaaS.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">JT</div><div><div class="n">Jen T.</div><div class="r">CEO · Northwind</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>Onboarded the whole company in a single afternoon. No tutorials needed.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">DK</div><div><div class="n">Dev K.</div><div class="r">VP Engineering · Quill</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>The command palette alone is worth the price. Everything else is bonus.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">SN</div><div><div class="n">Soraya N.</div><div class="r">PM · Salt &amp; Bone</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>Our retention went up 18% the quarter we switched. I cannot prove causation. I will.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">HK</div><div><div class="n">Hannah K.</div><div class="r">Founder · Field Co.</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>The first dashboard I look at every morning. The last tab I close at night.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">TM</div><div><div class="n">Theo M.</div><div class="r">Designer · Obys</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>Their support replied to my issue in 11 minutes. With a working code patch.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">AL</div><div><div class="n">Anna L.</div><div class="r">Eng Lead · Resn</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>You can tell it was built by people who use it themselves. Every detail.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">RB</div><div><div class="n">Rauno B.</div><div class="r">Designer · Linear</div></div></div></div>
+          <!-- duplicates -->
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>Replaced three tools and one weekly meeting. We don't miss any of them.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">MR</div><div><div class="n">Maya R.</div><div class="r">Head of Ops · Argent</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>Quiet, fast, opinionated. Three words I never thought I'd use for SaaS.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">JT</div><div><div class="n">Jen T.</div><div class="r">CEO · Northwind</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>Onboarded the whole company in a single afternoon. No tutorials needed.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">DK</div><div><div class="n">Dev K.</div><div class="r">VP Engineering · Quill</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>The command palette alone is worth the price. Everything else is bonus.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">SN</div><div><div class="n">Soraya N.</div><div class="r">PM · Salt &amp; Bone</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>Our retention went up 18% the quarter we switched. I cannot prove causation. I will.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">HK</div><div><div class="n">Hannah K.</div><div class="r">Founder · Field Co.</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>The first dashboard I look at every morning. The last tab I close at night.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">TM</div><div><div class="n">Theo M.</div><div class="r">Designer · Obys</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>Their support replied to my issue in 11 minutes. With a working code patch.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">AL</div><div><div class="n">Anna L.</div><div class="r">Eng Lead · Resn</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>You can tell it was built by people who use it themselves. Every detail.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">RB</div><div><div class="n">Rauno B.</div><div class="r">Designer · Linear</div></div></div></div>
+        </div>
+
+        <div class="tm-row right" style="margin-top: 16px;">
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>Killed a four-hour weekly meeting. Worth every penny.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">LP</div><div><div class="n">Lina P.</div><div class="r">Founder · Hex</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>The audit log alone passes our SOC 2 controls. We're done.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">CJ</div><div><div class="n">Chris J.</div><div class="r">CTO · Margo</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>I sent the trial link to my team on Monday. We're paying by Friday.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">FN</div><div><div class="n">Fran N.</div><div class="r">Manager · Brat Girl</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>The product evolves so fast I check the changelog like Twitter.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">JO</div><div><div class="n">Jo O.</div><div class="r">Engineer · Aurora</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>Best onboarding I've ever shipped. Conversion went from 9% to 24%.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">RS</div><div><div class="n">Rae S.</div><div class="r">Growth · Lumen</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>Honestly hard to imagine going back. Even the empty states are charming.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">VT</div><div><div class="n">Vivian T.</div><div class="r">Designer · Aurora</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>Realtime that actually feels realtime. Cursors are addictive.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">PK</div><div><div class="n">Priya K.</div><div class="r">Eng · Salt</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>One of those tools that fades into the work. The biggest compliment I can give.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">EG</div><div><div class="n">Eli G.</div><div class="r">CEO · Field Co.</div></div></div></div>
+          <!-- duplicates -->
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>Killed a four-hour weekly meeting. Worth every penny.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">LP</div><div><div class="n">Lina P.</div><div class="r">Founder · Hex</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>The audit log alone passes our SOC 2 controls. We're done.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">CJ</div><div><div class="n">Chris J.</div><div class="r">CTO · Margo</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>I sent the trial link to my team on Monday. We're paying by Friday.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">FN</div><div><div class="n">Fran N.</div><div class="r">Manager · Brat Girl</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>The product evolves so fast I check the changelog like Twitter.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">JO</div><div><div class="n">Jo O.</div><div class="r">Engineer · Aurora</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>Best onboarding I've ever shipped. Conversion went from 9% to 24%.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">RS</div><div><div class="n">Rae S.</div><div class="r">Growth · Lumen</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>Honestly hard to imagine going back. Even the empty states are charming.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">VT</div><div><div class="n">Vivian T.</div><div class="r">Designer · Aurora</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>Realtime that actually feels realtime. Cursors are addictive.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">PK</div><div><div class="n">Priya K.</div><div class="r">Eng · Salt</div></div></div></div>
+          <div class="tm-card"><div class="tm-stars">★★★★★</div><q>One of those tools that fades into the work. The biggest compliment I can give.</q><div class="tm-line"></div><div class="tm-who"><div class="tm-av">EG</div><div><div class="n">Eli G.</div><div class="r">CEO · Field Co.</div></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 6.3 Testimonials Marquee</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Create a testimonial section with a dual-row infinite marquee. Two rows of testimonial cards, each row auto-scrolling horizontally at different speeds. Row 1 scrolls left at 30px/s, Row 2 scrolls right at 20px/s. Each card (280px wide, white background, 12px border-radius, subtle shadow): star rating (5 gold stars), quote text in quotes, horizontal divider, avatar circle (40px, initials), name (bold 14px), role and company (12px gray). 8 cards per row duplicated for infinite loop (use CSS animation with keyframes translating X by -50%). Section background: light gray #F5F5F5.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://senja.io" target="_blank" rel="noopener">Senja.io</a><span class="desc">Testimonial collection tool — their own website shows excellent patterns</span></div></li>
+      <li><div><a href="https://testimonial.to" target="_blank" rel="noopener">Testimonial.to</a><span class="desc">Another testimonial widget product — great reference for modern UI</span></div></li>
+      <li><div><a href="https://stripe.com/customers" target="_blank" rel="noopener">Stripe — Customers page</a><span class="desc">How a world-class company does social proof — logos, quotes, case studies</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="6.2-pricing-table.html" class="prev"><span class="label">← Prev</span><span class="title">6.2 Pricing Table</span></a>
+      <a href="6.4-accordion-faq.html" class="next"><span class="label">Next →</span><span class="title">6.4 Accordion / FAQ</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

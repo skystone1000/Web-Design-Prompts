@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>6.1 Hero Section · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .hr-demo {
+    background: #050505;
+    color: #fff;
+    min-height: 720px;
+    padding: 64px 32px 40px;
+    border-radius: var(--radius-lg);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hr-demo::before {
+    content: "";
+    position: absolute;
+    top: -10%; left: 50%;
+    transform: translateX(-50%);
+    width: 800px; height: 480px;
+    background: radial-gradient(closest-side, rgba(96,165,250,0.18), transparent 70%);
+    pointer-events: none;
+  }
+  .hr-badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.04);
+    border-radius: 999px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 24px;
+  }
+  .hr-badge::before { content: "✦"; color: #60a5fa; }
+  .hr-headline {
+    position: relative;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(40px, 6vw, 72px);
+    letter-spacing: -0.03em;
+    line-height: 1.0;
+    color: #fff;
+    max-width: 16ch;
+    margin: 0 auto;
+  }
+  .hr-headline .g {
+    background: linear-gradient(90deg, #60a5fa, #c084fc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    font-style: italic;
+    font-weight: 300;
+  }
+  .hr-sub { margin: 22px auto 0; font-size: 19px; color: rgba(255,255,255,0.6); max-width: 48ch; line-height: 1.5; position: relative; }
+  .hr-ctas { margin-top: 28px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; position: relative; }
+  .hr-ctas .p { padding: 13px 22px; background: #2563EB; color: #fff; border-radius: 10px; font-size: 14px; font-weight: 500; box-shadow: 0 8px 24px rgba(37,99,235,0.4); }
+  .hr-ctas .s { padding: 13px 22px; color: #fff; font-size: 14px; font-weight: 500; }
+  .hr-ctas .s::after { content: " →"; }
+  .hr-trust { margin-top: 22px; font-size: 13px; color: rgba(255,255,255,0.5); position: relative; }
+  .hr-trust .stars { color: #f59e0b; letter-spacing: 0.08em; margin-right: 8px; }
+
+  .hr-mock {
+    margin: 40px auto 0;
+    max-width: 720px;
+    background: #0f0f17;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 24px 60px rgba(96,165,250,0.2);
+    position: relative;
+  }
+  .hr-mock .topbar { display: flex; align-items: center; padding: 10px 14px; background: #1a1a22; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .hr-mock .topbar span { width: 9px; height: 9px; border-radius: 50%; background: #444; }
+  .hr-mock .topbar span:nth-child(1) { background: #ed6a5e; }
+  .hr-mock .topbar span:nth-child(2) { background: #f5bf4f; }
+  .hr-mock .topbar span:nth-child(3) { background: #61c554; }
+  .hr-mock .body { padding: 28px; display: grid; grid-template-columns: 120px 1fr; gap: 14px; min-height: 220px; }
+  .hr-mock .side { background: rgba(255,255,255,0.02); border-radius: 8px; padding: 12px 8px; }
+  .hr-mock .side .item { height: 8px; background: rgba(255,255,255,0.06); border-radius: 4px; margin-bottom: 9px; }
+  .hr-mock .side .item.act { background: linear-gradient(90deg, #60a5fa, #c084fc); }
+  .hr-mock .main { background: rgba(255,255,255,0.02); border-radius: 8px; padding: 16px; text-align: left; }
+  .hr-mock .main .h { height: 14px; width: 60%; background: rgba(255,255,255,0.12); border-radius: 4px; margin-bottom: 14px; }
+  .hr-mock .main .p { height: 7px; background: rgba(255,255,255,0.06); border-radius: 3px; margin-bottom: 7px; }
+  .hr-mock .main .p.w1 { width: 90%; } .hr-mock .main .p.w2 { width: 80%; } .hr-mock .main .p.w3 { width: 68%; }
+  .hr-mock .grid2 { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .hr-mock .grid2 > div { aspect-ratio: 16/9; background: linear-gradient(135deg, rgba(96,165,250,0.3), rgba(192,132,252,0.2)); border-radius: 6px; }
+  .hr-mock .grid2 > div:nth-child(2) { background: linear-gradient(135deg, rgba(245,191,79,0.25), rgba(237,106,94,0.18)); }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">UI Patterns</a>
+      <span class="sep">/</span>
+      <span class="here">Hero Section</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">6.1 · UI Pattern</span>
+    <h1 class="title">Hero <em>Section</em>.</h1>
+    <p class="tagline">Your 3-second pitch. Badge, gradient headline, primary + secondary CTA, social proof, product screenshot. The complete recipe.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>The hero is the first thing a visitor sees when they land on your website — before any scrolling. It's your 3-second pitch. A great hero immediately communicates: what this is, who it's for, and why they should care. It typically contains a main headline (the biggest, most prominent text on the page), a supporting subheadline, and one clear call-to-action button.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Hero sections are typically full-width and either full-height (100vh) or tall enough to fill most of the screen. Content is either centered or left-aligned. The visual hierarchy is strict: headline dominates, subtext supports, CTA stands out. A visual element supports the message without competing with the text.</p>
+      <div class="term-grid">
+        <div><b>Above the fold</b><span>Everything visible before scrolling — your hero's domain</span></div>
+        <div><b>Value proposition</b><span>The one sentence that explains what your product does and for whom</span></div>
+        <div><b>Primary CTA</b><span>One main action button — 'Get Started', 'Try Free', 'Book Demo'</span></div>
+        <div><b>Social proof</b><span>Small trust indicator near the CTA — testimonial count or rating</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <div class="demo-shell">
+      <div class="demo hr-demo">
+        <span class="demo-badge">Live</span>
+        <div class="hr-badge">Now with AI · What's new →</div>
+        <h3 class="hr-headline">Do your best work,<br><span class="g">in half the time.</span></h3>
+        <p class="hr-sub">The AI-powered workspace that thinks as fast as you do.</p>
+        <div class="hr-ctas">
+          <span class="p">Start for free</span>
+          <span class="s">See how it works</span>
+        </div>
+        <div class="hr-trust"><span class="stars">★★★★★</span>Loved by 10,000+ teams</div>
+        <div class="hr-mock">
+          <div class="topbar"><span></span><span></span><span></span></div>
+          <div class="body">
+            <div class="side">
+              <div class="item act"></div>
+              <div class="item"></div>
+              <div class="item"></div>
+              <div class="item"></div>
+              <div class="item"></div>
+            </div>
+            <div class="main">
+              <div class="h"></div>
+              <div class="p w1"></div>
+              <div class="p w2"></div>
+              <div class="p w3"></div>
+              <div class="grid2"><div></div><div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 6.1 Hero Section</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Build a hero section for a productivity SaaS. Layout: centered, full-width, dark background (#050505). Badge at top: small pill shape with text 'Now with AI • What's new →'. H1 headline at 72px bold: 'Do your best work,' — next line: 'in half the time.' with 'half the time' in gradient text. Subtext at 20px muted gray: 'The AI-powered workspace that thinks as fast as you do.' Two buttons: primary ('Start for free', blue filled) and secondary ('See how it works →', text only). Below buttons: small trust row '★★★★★ Loved by 10,000+ teams'. Below that: a product screenshot in a browser chrome mockup with a subtle glow effect.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://landingfolio.com" target="_blank" rel="noopener">Landingfolio — Heroes</a><span class="desc">500+ hero section designs filtered by style</span></div></li>
+      <li><div><a href="https://saaspo.com" target="_blank" rel="noopener">Saaspo.com</a><span class="desc">SaaS landing page inspiration gallery</span></div></li>
+      <li><div><a href="https://tailwindui.com/components/marketing/sections/heroes" target="_blank" rel="noopener">Tailwind UI — Hero Sections</a><span class="desc">Pre-built hero section code in multiple styles</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="index.html" class="prev"><span class="label">← Chapter</span><span class="title">UI Patterns</span></a>
+      <a href="6.2-pricing-table.html" class="next"><span class="label">Next →</span><span class="title">6.2 Pricing Table</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

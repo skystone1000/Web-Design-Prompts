@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>5.3 The 60-30-10 Rule · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .rl-demo {
+    min-height: 720px;
+    height: 720px;
+    overflow-y: scroll;
+    background: #FAFAF7; /* 60% — dominant */
+    color: #111;
+    border-radius: var(--radius-lg);
+    padding: 0;
+  }
+  .rl-nav {
+    background: #FAFAF7;
+    padding: 22px 36px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .rl-nav .b { font-family: var(--font-display); font-size: 22px; font-weight: 500; color: #111; }
+  .rl-nav .l { display: flex; gap: 28px; font-size: 13px; color: #555; }
+  .rl-nav .l span { cursor: pointer; transition: color 0.2s; }
+  .rl-nav .l span:hover { color: #2563EB; } /* 10% — accent on hover */
+  .rl-nav .cta { padding: 9px 16px; background: #2563EB; color: #fff; border-radius: 8px; font-size: 13px; font-weight: 500; }
+
+  .rl-hero {
+    background: #FAFAF7;
+    padding: 60px 36px 40px;
+    text-align: center;
+  }
+  .rl-hero h3 { font-family: var(--font-display); font-size: clamp(36px, 5.5vw, 56px); font-weight: 400; color: #111; letter-spacing: -0.02em; line-height: 1.0; margin-bottom: 14px; }
+  .rl-hero h3 em { font-style: italic; color: #2563EB; font-weight: 300; }
+  .rl-hero p { color: #555; font-size: 16px; max-width: 50ch; margin: 0 auto; }
+
+  .rl-section {
+    background: #F0EDE8; /* 30% — secondary */
+    padding: 56px 36px;
+    border-top: 1px solid rgba(0,0,0,0.04);
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+  .rl-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    max-width: 920px;
+    margin: 0 auto;
+  }
+  .rl-card {
+    padding: 22px;
+    background: #FAFAF7; /* small return to dominant for cards within secondary */
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 12px;
+  }
+  .rl-card .ic {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: rgba(37,99,235,0.12);
+    color: #2563EB;
+    display: grid;
+    place-items: center;
+    margin-bottom: 14px;
+    font-family: var(--font-mono);
+  }
+  .rl-card h5 { font-size: 15px; font-weight: 600; color: #111; margin-bottom: 4px; }
+  .rl-card p { font-size: 13.5px; color: #555; line-height: 1.55; }
+
+  .rl-footer {
+    background: #F0EDE8; /* 30% */
+    padding: 36px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #888;
+  }
+  .rl-footer a { color: #2563EB; border-bottom: 1px solid currentColor; padding-bottom: 2px; }
+
+  /* Legend overlay */
+  .rl-legend {
+    position: sticky;
+    top: 16px;
+    z-index: 9;
+    margin: 16px auto 0;
+    max-width: 460px;
+    background: rgba(255,255,255,0.94);
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 999px;
+    padding: 8px 16px;
+    display: flex;
+    gap: 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #555;
+    backdrop-filter: blur(6px);
+  }
+  .rl-legend > span { display: inline-flex; align-items: center; gap: 6px; }
+  .rl-sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; border: 1px solid rgba(0,0,0,0.1); }
+  .rl-sw.dom { background: #FAFAF7; }
+  .rl-sw.sec { background: #F0EDE8; }
+  .rl-sw.acc { background: #2563EB; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Typography &amp; Color</a>
+      <span class="sep">/</span>
+      <span class="here">60-30-10 Rule</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">5.3 · Color</span>
+    <h1 class="title">The 60-30-10 <em>rule</em>.</h1>
+    <p class="tagline">A color distribution formula. 60% dominant (background), 30% secondary (cards), 10% accent (CTAs only).</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>The 60-30-10 rule is a simple color distribution formula borrowed from interior design. 60% of the visual area uses the dominant color (usually a neutral). 30% uses the secondary color (slightly different tone for cards, sections). 10% uses the accent color (your brand color — for CTAs, highlights, icons).</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>The dominant 60% sets the overall mood. The secondary 30% creates depth and section differentiation. The accent 10% draws the eye to what matters — your CTA button, important stats, or links. If your accent appears more than 10% of the time, it loses its ability to draw attention.</p>
+      <div class="term-grid">
+        <div><b>Dominant (60%)</b><span>Your background color — neutral, sets the overall mood</span></div>
+        <div><b>Secondary (30%)</b><span>Card backgrounds, alternate sections, sidebar backgrounds</span></div>
+        <div><b>Accent (10%)</b><span>Brand color — ONLY for CTAs, highlights, active states, key icons</span></div>
+        <div><b>Tints &amp; shades</b><span>Lighter/darker versions of one color — creates depth without adding new colors</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. The sticky legend at the top names the three colors. Notice how rarely the accent blue appears.</p>
+    <div class="demo-shell">
+      <div class="demo rl-demo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#111; border-color:rgba(0,0,0,0.1);">Live · scroll</span>
+        <div class="rl-legend">
+          <span><span class="rl-sw dom"></span> 60% #FAFAF7</span>
+          <span><span class="rl-sw sec"></span> 30% #F0EDE8</span>
+          <span><span class="rl-sw acc"></span> 10% #2563EB</span>
+        </div>
+        <nav class="rl-nav">
+          <div class="b">Field Co.</div>
+          <div class="l"><span>Shop</span><span>Journal</span><span>About</span></div>
+          <div class="cta">Join</div>
+        </nav>
+        <div class="rl-hero">
+          <h3>Made by <em>hand</em>, made to outlast.</h3>
+          <p>Batch 12 is shipping now. 240 numbered jackets, in waxed Lancashire cotton.</p>
+        </div>
+        <div class="rl-section">
+          <div class="rl-cards">
+            <div class="rl-card"><div class="ic">◆</div><h5>Material</h5><p>10oz waxed cotton from one mill in England.</p></div>
+            <div class="rl-card"><div class="ic">✦</div><h5>Hardware</h5><p>Solid brass, lacquered, lifetime guarantee.</p></div>
+            <div class="rl-card"><div class="ic">⌘</div><h5>Make</h5><p>Cut, sewn, finished by five hands in Brooklyn.</p></div>
+          </div>
+        </div>
+        <div class="rl-hero">
+          <h3>Read the <em>journal</em> →</h3>
+          <p>Essays on slow craft, every other Friday.</p>
+        </div>
+        <div class="rl-footer">© Field Co. · est. 2019 · <a>Become a member →</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 5.3 60-30-10 Rule</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Design a website using the 60-30-10 color rule. Dominant color (60%): #FAFAF7 (warm off-white) for page backgrounds. Secondary color (30%): #F0EDE8 (slightly warmer gray) for cards, alternate sections, and footer. Accent color (10%): #2563EB (electric blue) ONLY for primary CTA buttons, active navigation links, highlighted text, and icons. Text: #111111 for headings, #555555 for body text, #888888 for captions. Never use the electric blue for anything decorative — only for actionable and important elements.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://coolors.co" target="_blank" rel="noopener">Coolors.co</a><span class="desc">Color palette generator — generate and lock colors until you find the perfect palette</span></div></li>
+      <li><div><a href="https://paletton.com" target="_blank" rel="noopener">Paletton.com</a><span class="desc">Color theory-based palette builder showing complementary, triadic, analogous</span></div></li>
+      <li><div><a href="https://huemint.com" target="_blank" rel="noopener">Huemint.com</a><span class="desc">AI-powered brand color palette generator — generates full palettes instantly</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="5.2-font-pairing.html" class="prev"><span class="label">← Prev</span><span class="title">5.2 Font Pairing</span></a>
+      <a href="5.4-gradient-text.html" class="next"><span class="label">Next →</span><span class="title">5.4 Gradient Text</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

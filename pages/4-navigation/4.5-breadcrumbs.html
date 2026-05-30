@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>4.5 Breadcrumbs · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type":"ListItem","position":1,"name":"Home","item":"#"},
+    {"@type":"ListItem","position":2,"name":"Men's Clothing","item":"#"},
+    {"@type":"ListItem","position":3,"name":"Outerwear","item":"#"},
+    {"@type":"ListItem","position":4,"name":"Winter Jackets","item":"#"}
+  ]
+}
+</script>
+<style>
+  .bc-demo {
+    background: #FAFAF7;
+    color: #1A1814;
+    min-height: 620px;
+    border-radius: var(--radius-lg);
+    padding: 0;
+    overflow: hidden;
+  }
+  .bc-bar {
+    padding: 16px 28px;
+    background: #fff;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .bc-bar .b { font-family: var(--font-display); font-size: 22px; color: #111; font-weight: 500; }
+  .bc-bar .l { display: flex; gap: 28px; font-size: 13px; color: #555; }
+
+  .bc-crumb {
+    padding: 14px 28px;
+    background: #fff;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+  .bc-crumb nav ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .bc-crumb nav li {
+    font-size: 13px;
+    color: #888;
+  }
+  .bc-crumb nav li + li::before {
+    content: "›";
+    margin: 0 10px;
+    color: #ccc;
+    display: inline-block;
+  }
+  .bc-crumb nav li a {
+    color: #888;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .bc-crumb nav li a:hover { color: #111; }
+  .bc-crumb nav li[aria-current="page"] { color: #111; font-weight: 500; }
+
+  .bc-content {
+    padding: 40px 28px;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+  .bc-prod-img {
+    aspect-ratio: 4/5;
+    background: linear-gradient(135deg, #4a4742, #1a1814);
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .bc-prod-img::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.18), transparent 60%); }
+  .bc-prod h3 { font-family: var(--font-display); font-size: 36px; font-weight: 500; color: #111; letter-spacing: -0.02em; margin-bottom: 10px; }
+  .bc-prod .sub { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #c4a35d; margin-bottom: 18px; }
+  .bc-prod .price { font-family: var(--font-display); font-size: 28px; font-weight: 500; color: #111; margin-bottom: 18px; }
+  .bc-prod p { font-size: 15px; line-height: 1.6; color: #2a2722; margin-bottom: 20px; }
+  .bc-prod .add {
+    display: inline-block;
+    padding: 13px 24px;
+    background: #1A1814;
+    color: #fff;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  @media (max-width: 720px) {
+    .bc-content { grid-template-columns: 1fr; }
+    .bc-bar .l { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Navigation</a>
+      <span class="sep">/</span>
+      <span class="here">Breadcrumbs</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">4.5 · Navigation</span>
+    <h1 class="title">Breadcrumbs.</h1>
+    <p class="tagline">A small horizontal trail showing where you are in the site hierarchy. Essential for any site more than two levels deep.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Breadcrumbs are a secondary navigation element showing the user's current location within the website's hierarchy. Named after the Hansel and Gretel fairy tale, they appear as a horizontal trail of links: Home › Category › Subcategory › Current Page. They let users understand where they are and jump back to any parent level with one click.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Breadcrumbs use an ordered list (<code>ol</code>) of links separated by a visual divider — usually a forward slash, chevron, or angle bracket. The current page is the last item and is NOT a link (it's where you already are). All items before it are clickable. Visual style is intentionally subtle — small font, muted color — so it doesn't compete with the main page heading.</p>
+      <div class="term-grid">
+        <div><b>ol element</b><span>Breadcrumbs use an ordered list for correct HTML semantics</span></div>
+        <div><b>aria-label="breadcrumb"</b><span>Accessibility attribute that tells screen readers this is a breadcrumb</span></div>
+        <div><b>aria-current="page"</b><span>Marks the current (last) item for screen readers — no link</span></div>
+        <div><b>schema.org markup</b><span>Structured data that makes breadcrumbs appear in Google search results</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <div class="demo-shell">
+      <div class="demo bc-demo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#111; border-color:rgba(0,0,0,0.1);">Live</span>
+        <header class="bc-bar">
+          <div class="b">Field Co.</div>
+          <div class="l"><span>Shop</span><span>Journal</span><span>Stockists</span><span>About</span></div>
+        </header>
+        <div class="bc-crumb">
+          <nav aria-label="Breadcrumb">
+            <ol>
+              <li><a href="#">Home</a></li>
+              <li><a href="#">Men's Clothing</a></li>
+              <li><a href="#">Outerwear</a></li>
+              <li aria-current="page">Winter Jackets</li>
+            </ol>
+          </nav>
+        </div>
+        <div class="bc-content">
+          <div class="bc-prod-img"></div>
+          <div class="bc-prod">
+            <div class="sub">★ Batch 12 · numbered</div>
+            <h3>The Field Jacket</h3>
+            <div class="price">$485</div>
+            <p>Waxed Lancashire cotton, brass hardware. Made in batch 12 — limited to 240 numbered pieces. The kind of coat you bring with you when the forecast is uncertain.</p>
+            <span class="add">Add to bag — $485</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 4.5 Breadcrumbs</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Add a breadcrumb navigation to a product detail page. HTML structure: &lt;nav aria-label='Breadcrumb'&gt;&lt;ol&gt; with li items separated by CSS-generated dividers. Style: font-size:13px, color:#888888. Each link (except last): color:#888, text-decoration:none, hover:color:#111 with 0.2s transition. Last item (current page): color:#111, font-weight:500, no link. Separator: CSS li + li::before { content: '›'; margin: 0 8px; color:#CCCCCC }. The breadcrumb path for this page: Home → Men's Clothing → Outerwear → Winter Jackets. Wrap in a container with 16px top and bottom padding. Also add JSON-LD schema.org BreadcrumbList markup in the head for SEO.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://amazon.com" target="_blank" rel="noopener">Amazon.com product pages</a><span class="desc">Every product page has breadcrumbs — the most-seen implementation in the world</span></div></li>
+      <li><div><a href="https://developer.mozilla.org" target="_blank" rel="noopener">MDN Web Docs</a><span class="desc">Documentation portal with clean breadcrumb navigation</span></div></li>
+      <li><div><a href="https://zalando.com" target="_blank" rel="noopener">Zalando.com</a><span class="desc">E-commerce with excellent breadcrumb implementation and schema markup</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="4.4-dot-navigation.html" class="prev"><span class="label">← Prev</span><span class="title">4.4 Dot Navigation</span></a>
+      <a href="4.6-tab-navigation.html" class="next"><span class="label">Next →</span><span class="title">4.6 Tab Navigation</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

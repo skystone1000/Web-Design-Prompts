@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>4.6 Tab Navigation · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .tb-demo {
+    background: #fff;
+    color: #111;
+    min-height: 620px;
+    border-radius: var(--radius-lg);
+    padding: 36px;
+  }
+  .tb-prod {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+    align-items: center;
+  }
+  .tb-prod .img {
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, #4a4742, #1a1814);
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .tb-prod .img::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.18), transparent 60%); }
+  .tb-prod h3 { font-family: var(--font-display); font-size: 32px; font-weight: 500; color: #111; margin-bottom: 6px; letter-spacing: -0.02em; }
+  .tb-prod .meta { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #6B7280; margin-bottom: 12px; }
+  .tb-prod .price { font-family: var(--font-display); font-size: 24px; font-weight: 500; color: #111; }
+
+  .tb-tabs {
+    position: relative;
+    border-bottom: 1px solid #E5E7EB;
+    display: flex;
+  }
+  .tb-tab {
+    background: transparent;
+    border: none;
+    padding: 14px 24px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 500;
+    color: #6B7280;
+    cursor: pointer;
+    transition: color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tb-tab.active { color: #111; }
+  .tb-tab .badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: #F3F4F6;
+    color: #6B7280;
+    letter-spacing: 0;
+  }
+  .tb-tab.active .badge { background: #DBEAFE; color: #2563EB; }
+  .tb-indicator {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    height: 2px;
+    background: #2563EB;
+    transition: transform 0.28s var(--ease), width 0.28s var(--ease);
+    pointer-events: none;
+  }
+
+  .tb-panels {
+    padding: 22px 0 0;
+  }
+  .tb-panel {
+    display: none;
+    animation: tb-fade 0.25s var(--ease);
+  }
+  .tb-panel.active { display: block; }
+  @keyframes tb-fade { from { opacity: 0; } to { opacity: 1; } }
+  .tb-panel h4 { font-family: var(--font-display); font-size: 20px; font-weight: 500; color: #111; margin-bottom: 10px; letter-spacing: -0.01em; }
+  .tb-panel p { font-size: 15px; line-height: 1.65; color: #444; margin-bottom: 12px; }
+  .tb-panel ul { margin: 8px 0 12px; padding-left: 0; }
+  .tb-panel ul li { padding: 6px 0; font-size: 14.5px; color: #2a2722; display: flex; gap: 10px; align-items: center; }
+  .tb-panel ul li::before { content: "✓"; color: #2563EB; font-weight: 700; }
+
+  .tb-spec { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .tb-spec div { padding: 12px 14px; background: #F9FAFB; border-radius: 8px; }
+  .tb-spec div b { display: block; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #6B7280; margin-bottom: 4px; }
+  .tb-spec div span { font-size: 14px; color: #111; }
+
+  .tb-review { padding: 14px 0; border-bottom: 1px solid #F3F4F6; }
+  .tb-review .who { display: flex; gap: 8px; align-items: center; font-size: 13px; color: #111; font-weight: 600; }
+  .tb-review .stars { color: #f59e0b; letter-spacing: 0.06em; margin: 4px 0; font-size: 13px; }
+  .tb-review p { font-size: 14px; color: #444; line-height: 1.55; margin: 0; }
+
+  .tb-faq { padding: 12px 0; border-bottom: 1px solid #F3F4F6; }
+  .tb-faq .q { font-weight: 600; color: #111; margin-bottom: 4px; font-size: 14.5px; }
+  .tb-faq .a { font-size: 14px; color: #555; }
+
+  @media (max-width: 600px) {
+    .tb-prod { grid-template-columns: 1fr; }
+    .tb-tabs { overflow-x: auto; }
+    .tb-tab { white-space: nowrap; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Navigation</a>
+      <span class="sep">/</span>
+      <span class="here">Tab Navigation</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">4.6 · Navigation</span>
+    <h1 class="title">Tab <em>Navigation</em>.</h1>
+    <p class="tagline">Swap content panels without leaving the page. Watch the blue underline slide between tabs in the demo.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Tabs are a horizontal row of clickable labels at the top of a content area, where clicking a tab swaps the content panel below it. Tabs are perfect for organizing related content that users need to switch between without leaving the page: product specs vs reviews vs Q&amp;A on a product page, or different dashboard views.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>A row of button elements acts as the tab strip. The active tab is indicated by an underline, a filled background, or bold text. Clicking a tab adds the 'active' class to that tab and shows its corresponding content panel while hiding all others.</p>
+      <div class="term-grid">
+        <div><b>Active indicator</b><span>Underline, filled background, or bold text showing the selected tab</span></div>
+        <div><b>Panel swap</b><span>Other panels set to display:none or opacity:0 when their tab is inactive</span></div>
+        <div><b>role="tab" / "tabpanel"</b><span>Accessibility attributes so keyboard and screen reader users can navigate</span></div>
+        <div><b>Animated indicator</b><span>A sliding underline that moves smoothly between tabs — premium touch</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="tip"><b>Tip.</b> The sliding animated tab indicator is a great detail. Achieve it with a separate underline element (<code>position:absolute; bottom:0</code>) that moves via <code>transform:translateX()</code> when tabs are clicked. Calculate target X from the clicked tab's <code>offsetLeft</code>.</div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Click between tabs. Watch the blue underline slide and the panel cross-fade.</p>
+    <div class="demo-shell">
+      <div class="demo tb-demo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#111; border-color:rgba(0,0,0,0.1);">Live · click tabs</span>
+        <div class="tb-prod">
+          <div class="img"></div>
+          <div>
+            <div class="meta">★ Batch 12 · numbered</div>
+            <h3>The Field Jacket</h3>
+            <div class="price">$485</div>
+          </div>
+        </div>
+        <div class="tb-tabs" role="tablist" id="tbTabs">
+          <button class="tb-tab active" data-tab="overview" role="tab" aria-selected="true">Overview</button>
+          <button class="tb-tab" data-tab="specs" role="tab">Specifications</button>
+          <button class="tb-tab" data-tab="reviews" role="tab">Reviews <span class="badge">128</span></button>
+          <button class="tb-tab" data-tab="faq" role="tab">FAQ</button>
+          <div class="tb-indicator" id="tbInd"></div>
+        </div>
+        <div class="tb-panels">
+          <div class="tb-panel active" data-tab="overview" role="tabpanel">
+            <h4>Built to outlast a season.</h4>
+            <p>The Field Jacket is hand-cut from Lancashire-mill waxed cotton, lined in cotton flannel, and finished with solid brass hardware. Designed for cold mornings and longer evenings.</p>
+            <ul>
+              <li>Numbered, signed inside seam by maker</li>
+              <li>Two-year free repair guarantee</li>
+              <li>Re-waxing service available, $40 + return shipping</li>
+            </ul>
+          </div>
+          <div class="tb-panel" data-tab="specs" role="tabpanel">
+            <h4>Specifications</h4>
+            <div class="tb-spec">
+              <div><b>Material</b><span>10oz waxed cotton, Lancashire mill</span></div>
+              <div><b>Lining</b><span>100% cotton flannel</span></div>
+              <div><b>Hardware</b><span>Solid brass, lacquered</span></div>
+              <div><b>Weight</b><span>1.4 kg / 3.1 lb (size M)</span></div>
+              <div><b>Origin</b><span>Cut, sewn, finished in Brooklyn, NY</span></div>
+              <div><b>Care</b><span>Brush off, spot clean, re-wax annually</span></div>
+            </div>
+          </div>
+          <div class="tb-panel" data-tab="reviews" role="tabpanel">
+            <h4>What 128 owners say.</h4>
+            <div class="tb-review">
+              <div class="who">★ Hannah K. <span style="color:#888; font-weight:400; font-size:12px;">· verified · NYC</span></div>
+              <div class="stars">★★★★★</div>
+              <p>Wore it through every winter day this year. The wax softens beautifully — looks better at month 12 than day 1.</p>
+            </div>
+            <div class="tb-review">
+              <div class="who">★ Theo M. <span style="color:#888; font-weight:400; font-size:12px;">· verified · Reykjavík</span></div>
+              <div class="stars">★★★★★</div>
+              <p>Worth every dollar. The brass hardware alone is worth half the price.</p>
+            </div>
+            <div class="tb-review">
+              <div class="who">★ Soraya N. <span style="color:#888; font-weight:400; font-size:12px;">· verified · Portland</span></div>
+              <div class="stars">★★★★☆</div>
+              <p>Sleeves run slightly long for me, otherwise perfect. They offered free hemming.</p>
+            </div>
+          </div>
+          <div class="tb-panel" data-tab="faq" role="tabpanel">
+            <h4>Frequently asked.</h4>
+            <div class="tb-faq"><div class="q">Is the jacket waterproof?</div><div class="a">Water-resistant. The wax sheds light to moderate rain. For full waterproofing, re-wax annually.</div></div>
+            <div class="tb-faq"><div class="q">What size should I order?</div><div class="a">Order your usual size. The fit is intentionally roomy in the shoulders to layer a heavy sweater underneath.</div></div>
+            <div class="tb-faq"><div class="q">Can it be machine washed?</div><div class="a">Never. Brush off dirt, spot-clean stains. The wax will dissolve in detergent.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 4.6 Tab Navigation</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Build a product detail page with tab navigation. Tab bar: 4 tabs — Overview, Specifications, Reviews (with count badge), FAQ. Tab strip styling: white background, bottom border 1px solid #E5E7EB, tabs have padding:14px 24px, font-size:15px, font-weight:500, color:#6B7280. Active tab: color:#111, border-bottom:2px solid #2563EB (brand blue), margin-bottom:-1px to overlap container border. Add a sliding animated indicator: a 2px blue line (position:absolute, bottom:-1px, transition:transform 0.25s ease, width matches the active tab) that slides across when tabs are clicked. Content panels: only the active panel is visible (others display:none). Each panel has fade-in: opacity 0 to 1 over 0.2s on activation.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://github.com" target="_blank" rel="noopener">GitHub repository pages</a><span class="desc">The Code / Issues / Pull Requests / Actions tab bar</span></div></li>
+      <li><div><a href="https://radix-ui.com/primitives/docs/components/tabs" target="_blank" rel="noopener">Radix UI — Tabs component</a><span class="desc">Fully accessible, animated tab component with code examples</span></div></li>
+      <li><div><a href="https://amazon.com" target="_blank" rel="noopener">Amazon product pages</a><span class="desc">Product Details / Reviews / Q&amp;A tabs — high-traffic implementation</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="4.5-breadcrumbs.html" class="prev"><span class="label">← Prev</span><span class="title">4.5 Breadcrumbs</span></a>
+      <a href="../5-typography-color/index.html" class="next"><span class="label">Next chapter →</span><span class="title">Typography &amp; Color</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    const tabBar = document.getElementById('tbTabs');
+    const ind = document.getElementById('tbInd');
+    if (!tabBar || !ind) return;
+    const tabs = tabBar.querySelectorAll('.tb-tab');
+    const panels = document.querySelectorAll('.tb-panel');
+    function moveIndTo(btn) {
+      ind.style.width = btn.offsetWidth + 'px';
+      ind.style.transform = `translateX(${btn.offsetLeft}px)`;
+    }
+    function activate(name) {
+      tabs.forEach(t => {
+        const on = t.getAttribute('data-tab') === name;
+        t.classList.toggle('active', on);
+        t.setAttribute('aria-selected', on);
+        if (on) moveIndTo(t);
+      });
+      panels.forEach(p => p.classList.toggle('active', p.getAttribute('data-tab') === name));
+    }
+    tabBar.addEventListener('click', (e) => {
+      const b = e.target.closest('.tb-tab');
+      if (!b) return;
+      activate(b.getAttribute('data-tab'));
+    });
+    // Initial position
+    requestAnimationFrame(() => moveIndTo(tabBar.querySelector('.tb-tab.active')));
+    window.addEventListener('resize', () => moveIndTo(tabBar.querySelector('.tb-tab.active')));
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

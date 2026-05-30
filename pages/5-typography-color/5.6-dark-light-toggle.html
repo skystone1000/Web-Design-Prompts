@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>5.6 Dark / Light Mode Toggle · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  /* Scoped theme system for the demo only */
+  .dl-demo {
+    --dl-bg: #FFFFFF;
+    --dl-bg-2: #F5F5F5;
+    --dl-text: #111111;
+    --dl-muted: #666666;
+    --dl-border: #E5E7EB;
+    --dl-accent: #2563EB;
+    background: var(--dl-bg);
+    color: var(--dl-text);
+    min-height: 620px;
+    padding: 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: background 0.35s var(--ease), color 0.35s var(--ease);
+  }
+  .dl-demo[data-mode="dark"] {
+    --dl-bg: #0D0D0D;
+    --dl-bg-2: #1A1A1A;
+    --dl-text: #F1F1EE;
+    --dl-muted: #888888;
+    --dl-border: #2A2A2A;
+    --dl-accent: #3B82F6;
+  }
+
+  .dl-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 28px;
+    background: var(--dl-bg);
+    border-bottom: 1px solid var(--dl-border);
+    transition: background 0.35s var(--ease), border-color 0.35s var(--ease);
+  }
+  .dl-bar .b { font-family: var(--font-display); font-size: 20px; font-weight: 500; color: var(--dl-text); }
+  .dl-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: var(--dl-bg-2);
+    border: 1px solid var(--dl-border);
+    color: var(--dl-text);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.35s var(--ease), border-color 0.35s var(--ease), color 0.35s var(--ease);
+  }
+  .dl-toggle svg { width: 14px; height: 14px; }
+  .dl-toggle .moon { display: block; }
+  .dl-toggle .sun { display: none; }
+  .dl-demo[data-mode="dark"] .dl-toggle .moon { display: none; }
+  .dl-demo[data-mode="dark"] .dl-toggle .sun { display: block; }
+
+  .dl-body { padding: 50px 32px; max-width: 700px; margin: 0 auto; }
+  .dl-eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dl-accent); margin-bottom: 18px; }
+  .dl-body h3 { font-family: var(--font-display); font-weight: 400; font-size: clamp(32px, 5vw, 48px); letter-spacing: -0.02em; line-height: 1.05; color: var(--dl-text); margin-bottom: 14px; }
+  .dl-body h3 em { font-style: italic; color: var(--dl-accent); }
+  .dl-body p { font-size: 16px; line-height: 1.65; color: var(--dl-muted); margin-bottom: 14px; }
+  .dl-row {
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .dl-card {
+    padding: 18px;
+    background: var(--dl-bg-2);
+    border: 1px solid var(--dl-border);
+    border-radius: 12px;
+    transition: background 0.35s var(--ease), border-color 0.35s var(--ease);
+  }
+  .dl-card h5 { font-size: 14px; color: var(--dl-text); font-weight: 600; margin-bottom: 4px; }
+  .dl-card p { font-size: 13px; color: var(--dl-muted); margin: 0; }
+  .dl-cta {
+    display: inline-block;
+    margin-top: 22px;
+    padding: 12px 22px;
+    background: var(--dl-accent);
+    color: #fff;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  @media (max-width: 640px) { .dl-row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Typography &amp; Color</a>
+      <span class="sep">/</span>
+      <span class="here">Dark / Light Toggle</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">5.6 · Color</span>
+    <h1 class="title">Dark / Light<br><em>Toggle</em>.</h1>
+    <p class="tagline">CSS custom properties + a data attribute + localStorage. The demo toggle is real — it remembers your last choice.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A toggle that lets users switch between two complete visual themes — a light version (white/off-white background, dark text) and a dark version (near-black background, light text). Many users prefer dark mode for night-time reading, reduced eye strain, or aesthetic preference. Offering both is now standard on quality websites.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>The entire color system is built using CSS custom properties defined on the <code>:root</code> element. Two sets of values are defined — one for light, one for dark. Switching modes means updating the <code>data-theme</code> attribute on the HTML element, which triggers a different set of CSS variable values. JS saves the preference to <code>localStorage</code> so it persists. The <code>prefers-color-scheme</code> media query sets the default based on the user's OS setting.</p>
+      <div class="term-grid">
+        <div><b>CSS custom properties</b><span>Variables that change value when theme switches</span></div>
+        <div><b>data-theme attribute</b><span>&lt;html data-theme='dark'&gt; — the selector that triggers dark mode CSS</span></div>
+        <div><b>prefers-color-scheme</b><span>CSS media query detecting if the OS is set to dark or light mode</span></div>
+        <div><b>localStorage</b><span>Browser storage that saves the theme choice across sessions</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Toggle the demo. Its preference is stored separately so it doesn't affect the rest of this site.</p>
+    <div class="demo-shell">
+      <div class="demo dl-demo" id="dlDemo" data-mode="light">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#fff; border-color:rgba(255,255,255,0.2);">Live · click toggle</span>
+        <div class="dl-bar">
+          <div class="b">Aurora</div>
+          <button class="dl-toggle" id="dlToggle">
+            <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+            <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+            <span id="dlLabel">Dark</span>
+          </button>
+        </div>
+        <div class="dl-body">
+          <div class="dl-eyebrow">— Demo</div>
+          <h3>Pages that <em>adapt</em>.</h3>
+          <p>One color system, two appearances. Click the toggle in the top right and watch every surface, border, and accent smoothly transition. The setting persists across visits.</p>
+          <div class="dl-row">
+            <div class="dl-card"><h5>Tokens</h5><p>One set of CSS variables, swapped on data-theme.</p></div>
+            <div class="dl-card"><h5>Transitions</h5><p>Background and color animate over 0.35s ease.</p></div>
+            <div class="dl-card"><h5>Persistence</h5><p>localStorage remembers your last choice.</p></div>
+          </div>
+          <a class="dl-cta">Try it now →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 5.6 Dark / Light Toggle</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Implement a complete dark/light mode system. In CSS, define on :root: --bg:#FFFFFF, --bg-secondary:#F5F5F5, --text:#111111, --text-muted:#666666, --border:#E5E7EB, --accent:#2563EB. Define [data-theme='dark']: --bg:#0D0D0D, --bg-secondary:#1A1A1A, --text:#F1F1EE, --text-muted:#888888, --border:#2A2A2A, --accent:#3B82F6. Apply to all elements: background:var(--bg), color:var(--text). Add body { transition: background 0.3s ease, color 0.3s ease }. Toggle button: on click, toggle data-theme='dark' on the html element and save to localStorage. On page load: check localStorage first, then check prefers-color-scheme media query as fallback. Toggle button shows sun icon in dark mode and moon icon in light mode.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://linear.app" target="_blank" rel="noopener">Linear.app</a><span class="desc">Excellent dark/light mode toggle — smooth transition, every color adapts</span></div></li>
+      <li><div><a href="https://joshwcomeau.com/react/dark-mode" target="_blank" rel="noopener">Josh W Comeau — Dark Mode Guide</a><span class="desc">The most comprehensive guide to building dark mode without the flash</span></div></li>
+      <li><div><a href="https://rauno.me" target="_blank" rel="noopener">Rauno Freiberg's portfolio</a><span class="desc">Designer at Linear — beautifully implemented theme toggle</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="5.5-display-hero-type.html" class="prev"><span class="label">← Prev</span><span class="title">5.5 Display Typography</span></a>
+      <a href="../6-ui-patterns/index.html" class="next"><span class="label">Next chapter →</span><span class="title">UI Patterns</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    const demo = document.getElementById('dlDemo');
+    const btn = document.getElementById('dlToggle');
+    const label = document.getElementById('dlLabel');
+    if (!demo || !btn) return;
+
+    // Restore from localStorage; otherwise default by prefers-color-scheme
+    const stored = localStorage.getItem('vibe-demo-theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initial = stored || (prefersDark ? 'dark' : 'light');
+    demo.setAttribute('data-mode', initial);
+    label.textContent = initial === 'dark' ? 'Light' : 'Dark';
+
+    btn.addEventListener('click', () => {
+      const cur = demo.getAttribute('data-mode') === 'dark' ? 'light' : 'dark';
+      demo.setAttribute('data-mode', cur);
+      label.textContent = cur === 'dark' ? 'Light' : 'Dark';
+      try { localStorage.setItem('vibe-demo-theme', cur); } catch (e) {}
+    });
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

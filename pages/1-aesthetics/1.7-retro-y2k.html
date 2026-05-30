@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>1.7 Retro / Y2K · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+<style>
+  /* ===== Live demo: Y2K ===== */
+  .y2k-demo {
+    background: #0A0A0A;
+    color: #fff;
+    min-height: 760px;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+    font-family: 'Bebas Neue', 'Arial Narrow', sans-serif;
+  }
+  /* Sparkles */
+  .y2k-demo::before, .y2k-demo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(circle at 12% 18%, #00E5FF 0, transparent 1px),
+      radial-gradient(circle at 88% 22%, #FF1493 0, transparent 1px),
+      radial-gradient(circle at 30% 70%, #AAFF00 0, transparent 1px),
+      radial-gradient(circle at 70% 80%, #fff 0, transparent 1px),
+      radial-gradient(circle at 50% 40%, #FF1493 0, transparent 1px);
+    opacity: 0.85;
+  }
+  .y2k-stars {
+    position: absolute; inset: 0; pointer-events: none; z-index: 1;
+    font-size: 18px; color: #fff;
+  }
+  .y2k-stars span {
+    position: absolute;
+    color: #00E5FF;
+    text-shadow: 0 0 8px currentColor;
+    animation: y2k-twink 2.5s ease-in-out infinite;
+  }
+  .y2k-stars span:nth-child(1) { top:8%; left:14%; color:#FF1493; animation-delay: 0s; }
+  .y2k-stars span:nth-child(2) { top:18%; left:80%; color:#00E5FF; animation-delay: 0.4s; font-size: 22px; }
+  .y2k-stars span:nth-child(3) { top:38%; left:6%; color:#AAFF00; animation-delay: 0.8s; }
+  .y2k-stars span:nth-child(4) { top:48%; left:90%; color:#FF1493; animation-delay: 1.2s; font-size: 16px; }
+  .y2k-stars span:nth-child(5) { top:68%; left:28%; color:#00E5FF; animation-delay: 1.6s; }
+  .y2k-stars span:nth-child(6) { top:78%; left:74%; color:#AAFF00; animation-delay: 2.0s; font-size: 24px; }
+  @keyframes y2k-twink {
+    0%, 100% { opacity: 0.3; transform: scale(0.8) rotate(0); }
+    50% { opacity: 1; transform: scale(1.2) rotate(180deg); }
+  }
+
+  .y2k-nav {
+    position: relative;
+    z-index: 2;
+    padding: 22px 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .y2k-nav .brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.04em;
+    background: linear-gradient(180deg, #fff, #ccc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 12px rgba(255,255,255,0.4);
+  }
+  .y2k-nav .links {
+    display: flex;
+    gap: 28px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 17px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .y2k-nav .links span { cursor: pointer; position: relative; transition: color 0.2s; }
+  .y2k-nav .links span:hover { color: #00E5FF; text-shadow: 0 0 12px #00E5FF; }
+
+  .y2k-hero {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 80px 32px 40px;
+  }
+  .y2k-tag {
+    display: inline-block;
+    padding: 6px 14px;
+    border: 1px solid #FF1493;
+    color: #FF1493;
+    font-size: 14px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    text-shadow: 0 0 8px currentColor;
+  }
+  .y2k-hero h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(64px, 10vw, 132px);
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+    background: linear-gradient(180deg, #fff 0%, #fff 40%, #aaa 60%, #fff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 32px rgba(255,255,255,0.18);
+  }
+  .y2k-hero h3 em { font-style: italic; background: linear-gradient(180deg, #FF1493, #FF6BB6); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+  .y2k-hero p {
+    margin-top: 18px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.08em;
+    color: #00E5FF;
+    text-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
+  }
+
+  /* divider */
+  .y2k-divider {
+    height: 6px;
+    background: linear-gradient(90deg, #FF1493, #00E5FF, #AAFF00, #FF1493);
+    background-size: 200% 100%;
+    animation: y2k-flow 4s linear infinite;
+    margin: 36px 36px 0;
+    border-radius: 999px;
+  }
+  @keyframes y2k-flow { from { background-position: 0% 0%; } to { background-position: -200% 0%; } }
+
+  .y2k-cards {
+    position: relative;
+    z-index: 2;
+    padding: 36px 36px 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .y2k-card {
+    padding: 22px;
+    border-radius: 18px;
+    border: 1px solid;
+    text-align: center;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(6px);
+  }
+  .y2k-card:nth-child(1) { border-color: #FF1493; box-shadow: 0 0 24px rgba(255,20,147,0.3); }
+  .y2k-card:nth-child(2) { border-color: #00E5FF; box-shadow: 0 0 24px rgba(0,229,255,0.3); }
+  .y2k-card:nth-child(3) { border-color: #AAFF00; box-shadow: 0 0 24px rgba(170,255,0,0.3); }
+  .y2k-card h4 { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.06em; color: #fff; margin-bottom: 8px; }
+  .y2k-card:nth-child(1) h4 { color: #FF1493; text-shadow: 0 0 10px #FF1493; }
+  .y2k-card:nth-child(2) h4 { color: #00E5FF; text-shadow: 0 0 10px #00E5FF; }
+  .y2k-card:nth-child(3) h4 { color: #AAFF00; text-shadow: 0 0 10px #AAFF00; }
+  .y2k-card p { font-family: var(--font-body); font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5; }
+  @media (max-width: 720px) { .y2k-cards { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Aesthetics</a>
+      <span class="sep">/</span>
+      <span class="here">Retro / Y2K</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">1.7 · Aesthetic</span>
+    <h1 class="title">Retro / <em>Y2K</em>.</h1>
+    <p class="tagline">Hot pink, cyan, lime, sparkles, chrome metallic text — the energy of the early internet, before everyone agreed on "good taste."</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Retro and Y2K design draws nostalgia from the 90s and early 2000s internet — neon gradients, pixel art, bold typography, starfield backgrounds, and the visual energy of early web design before everyone agreed on "good taste". Ironically, Gen Z designers have made this one of the hottest aesthetics right now.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Key visual ingredients: hot pink (<code>#FF00FF</code>) and cyan (<code>#00FFFF</code>) or bright lime green (<code>#AAFF00</code>) as main colors, often on a black or very dark background. Pixel or display fonts with a technological or retro feel. Star/sparkle decorations scattered across the page. Bold italic type. Bright gradients that look unafraid. Sometimes actual animated GIF-style elements. Chrome/metallic text effects.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <div class="demo-shell">
+      <div class="demo y2k-demo">
+        <span class="demo-badge">Live</span>
+        <div class="y2k-stars" aria-hidden="true">
+          <span>✦</span><span>✦</span><span>✧</span><span>★</span><span>✦</span><span>✧</span>
+        </div>
+        <nav class="y2k-nav">
+          <div class="brand">N0V4.LAND</div>
+          <div class="links"><span>HOME</span><span>WORK</span><span>BLOG</span><span>CONTACT</span></div>
+        </nav>
+        <div class="y2k-hero">
+          <div class="y2k-tag">▼ PORTFOLIO — DROP 04</div>
+          <h3>MAKE IT<br><em>LOUDER.</em></h3>
+          <p>★ INTERFACES FOR HYPER-ONLINE BRANDS ★</p>
+        </div>
+        <div class="y2k-divider"></div>
+        <div class="y2k-cards">
+          <div class="y2k-card"><h4>★ SELECT</h4><p>10 picks from the last 12 months — fashion, gaming, music.</p></div>
+          <div class="y2k-card"><h4>◆ PROCESS</h4><p>How a project starts: a moodboard, a Discord, a deadline.</p></div>
+          <div class="y2k-card"><h4>✦ STUDIO</h4><p>Three humans in a too-small Brooklyn loft. Pets included.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 1.7 Y2K</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Create a Y2K-inspired portfolio website on a #0A0A0A background. Color palette: hot pink #FF1493, electric cyan #00E5FF, and neon lime #AAFF00 as accents. Use a bold display font like Bebas Neue or Black Han Sans for headings. Add CSS sparkle/star decorations (small ✦ symbols) scattered on the page. Hero headline in chrome metallic gradient text (silver to white). Sections separated by bright gradient dividers. Navigation links in bold uppercase with a neon hover underline effect.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://dribbble.com/tags/y2k" target="_blank" rel="noopener">Y2K Aesthetic on Dribbble</a><span class="desc">Search 'Y2K web design' for hundreds of references</span></div></li>
+      <li><div><a href="https://bratgirlstudio.com" target="_blank" rel="noopener">Brat Girl Studio</a><span class="desc">Real brand that fully commits to bright Y2K colors and energy</span></div></li>
+      <li><div><a href="https://awwwards.com" target="_blank" rel="noopener">Awwwards — Experimental</a><span class="desc">Find retro and experimental sites that push beyond convention</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="1.6-dark-luxury.html" class="prev"><span class="label">← Prev</span><span class="title">1.6 Dark Luxury</span></a>
+      <a href="1.8-claymorphism.html" class="next"><span class="label">Next →</span><span class="title">1.8 Claymorphism</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

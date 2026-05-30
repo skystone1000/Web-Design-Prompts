@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>1.1 Glassmorphism · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  /* ===== Live demo: Glassmorphism ===== */
+  .glass-demo {
+    position: relative;
+    min-height: 620px;
+    padding: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    overflow: hidden;
+  }
+  .glass-demo::before,
+  .glass-demo::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.55;
+  }
+  .glass-demo::before {
+    width: 380px; height: 380px;
+    background: #f093fb;
+    top: -100px; left: -80px;
+  }
+  .glass-demo::after {
+    width: 460px; height: 460px;
+    background: #4facfe;
+    bottom: -160px; right: -120px;
+  }
+  .glass-nav {
+    position: relative;
+    z-index: 2;
+    margin: 18px;
+    padding: 14px 22px;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+  }
+  .glass-nav .logo { font-family: var(--font-display); font-size: 18px; font-weight: 500; letter-spacing: -0.01em; }
+  .glass-nav .links { display: flex; gap: 22px; font-size: 13.5px; font-family: var(--font-body); }
+  .glass-nav .links span { opacity: 0.85; cursor: pointer; }
+  .glass-nav .btn-glass {
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.22);
+    border: 1px solid rgba(255,255,255,0.35);
+    font-size: 13px;
+    color: #fff;
+  }
+  .glass-hero {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: #fff;
+    padding: 56px 24px 28px;
+  }
+  .glass-hero h3 {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    color: #fff;
+  }
+  .glass-hero h3 em { font-style: italic; }
+  .glass-hero p { color: rgba(255,255,255,0.85); margin-top: 12px; font-size: 16px; }
+  .glass-cards {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    padding: 24px 32px 48px;
+    max-width: 920px;
+    margin: 0 auto;
+  }
+  .glass-card {
+    padding: 28px 24px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    border: 1px solid rgba(255,255,255,0.30);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.18);
+    color: #fff;
+    transition: transform 0.25s var(--ease);
+  }
+  .glass-card:hover { transform: translateY(-4px); }
+  .glass-card .icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.25);
+    display: grid;
+    place-items: center;
+    font-family: var(--font-mono);
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+  .glass-card h4 { font-family: var(--font-body); font-size: 17px; font-weight: 600; margin-bottom: 6px; }
+  .glass-card p { font-size: 13.5px; color: rgba(255,255,255,0.85); line-height: 1.55; }
+  @media (max-width: 720px) { .glass-cards { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Aesthetics</a>
+      <span class="sep">/</span>
+      <span class="here">Glassmorphism</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">1.1 · Aesthetic</span>
+    <h1 class="title">Glassmorphism.</h1>
+    <p class="tagline">Frosted-glass UI — semi-transparent, blurred, with a thin highlight border. Designed to be read against vivid, colorful backgrounds.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Glassmorphism makes UI elements look like frosted glass — semi-transparent, blurred, with a subtle border. Imagine a glass panel sitting in front of a colorful, blurry background. The panel lets some of the background bleed through while remaining readable.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>The magic happens with two CSS properties: <code>backdrop-filter: blur()</code> which blurs everything behind the element, and a <code>background-color</code> set to <code>rgba()</code> (red, green, blue, alpha) where alpha is a low value like 0.15 making it partially transparent. A thin white border at low opacity completes the glass look. You always need a colorful, vibrant background behind the glass panels — otherwise there's nothing to blur.</p>
+      <div class="term-grid">
+        <div><b>backdrop-filter</b><span>CSS property that blurs the content behind an element</span></div>
+        <div><b>rgba()</b><span>Color with transparency — the 4th value (alpha) controls how see-through it is</span></div>
+        <div><b>Semi-transparent</b><span>Partially see-through — like looking through tinted glass</span></div>
+        <div><b>Best background</b><span>Purple/blue/pink gradients, abstract blobs, or colorful photos</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <div class="demo-shell">
+      <div class="demo glass-demo">
+        <span class="demo-badge">Live</span>
+        <nav class="glass-nav">
+          <div class="logo">Aurora.</div>
+          <div class="links"><span>Features</span><span>Pricing</span><span>Docs</span></div>
+          <div class="btn-glass">Try free</div>
+        </nav>
+        <div class="glass-hero">
+          <h3>Tools that feel <em>weightless</em>.</h3>
+          <p>A glass-style SaaS surface, rendered with backdrop-filter.</p>
+        </div>
+        <div class="glass-cards">
+          <div class="glass-card">
+            <div class="icon">◆</div>
+            <h4>Realtime sync</h4>
+            <p>Every keystroke replicates across devices in under 60ms.</p>
+          </div>
+          <div class="glass-card">
+            <div class="icon">✦</div>
+            <h4>Quiet AI</h4>
+            <p>Suggestions appear only when you pause. Never interrupting.</p>
+          </div>
+          <div class="glass-card">
+            <div class="icon">◈</div>
+            <h4>Private by default</h4>
+            <p>End-to-end encrypted workspaces. Zero analytics.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 1.1 Glassmorphism</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Build a glassmorphism SaaS landing page. Use a vivid purple-to-blue gradient background (#667eea to #764ba2). Create 3 feature cards that look like frosted glass panels — each card should have background: rgba(255,255,255,0.15), a backdrop-filter blur of 12px, a white border at 30% opacity, and a subtle drop shadow. Text should be white. Add a glass-style navbar at the top.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://dribbble.com/tags/glassmorphism" target="_blank" rel="noopener">Halo Lab on Dribbble</a><span class="desc">Classic glassmorphism UI kit with frosted cards and vivid gradients</span></div></li>
+      <li><div><a href="https://icloud.com" target="_blank" rel="noopener">Apple iCloud.com</a><span class="desc">Subtle glass panels in login UI — very refined glassmorphism</span></div></li>
+      <li><div><a href="https://glassmorphism.com" target="_blank" rel="noopener">Glassmorphism.com</a><span class="desc">Interactive CSS generator to understand the effect visually</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="index.html" class="prev">
+        <span class="label">← Chapter</span>
+        <span class="title">Aesthetics overview</span>
+      </a>
+      <a href="1.2-neumorphism.html" class="next">
+        <span class="label">Next →</span>
+        <span class="title">1.2 Neumorphism</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

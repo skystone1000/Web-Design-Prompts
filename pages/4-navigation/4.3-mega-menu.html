@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>4.3 Mega Menu · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .mm-demo {
+    height: 720px;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    background: #FAFAF7;
+    color: #1A1814;
+    position: relative;
+  }
+  .mm-bar {
+    position: relative;
+    z-index: 10;
+    background: #fff;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    height: 64px;
+  }
+  .mm-bar .b { font-family: var(--font-display); font-size: 22px; font-weight: 500; color: #111; letter-spacing: -0.01em; margin-right: 36px; }
+  .mm-bar .links { display: flex; gap: 28px; }
+  .mm-bar .links button {
+    background: transparent;
+    border: none;
+    font-family: var(--font-body);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #111;
+    cursor: pointer;
+    padding: 22px 0;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .mm-bar .links button:hover, .mm-bar .links button.active { border-bottom-color: #111; }
+  .mm-bar .right { margin-left: auto; display: flex; gap: 16px; font-size: 13px; color: #555; }
+  .mm-bar .right span { cursor: pointer; }
+
+  .mm-panel {
+    position: absolute;
+    top: 64px;
+    left: 0; right: 0;
+    background: #fff;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.10);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    padding: 40px 28px;
+    z-index: 9;
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+    transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+  }
+  .mm-panel.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .mm-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+  }
+  .mm-col h6 {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 14px;
+  }
+  .mm-col ul li {
+    padding: 5px 0;
+    font-size: 14px;
+    color: #2a2722;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .mm-col ul li:hover { color: var(--accent); }
+  .mm-featured {
+    background: linear-gradient(135deg, #c4a35d, #6b4f1e);
+    border-radius: 14px;
+    padding: 22px;
+    color: #fff;
+    aspect-ratio: 4/5;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+  .mm-featured::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.22), transparent 60%); }
+  .mm-featured .badge { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 999px; width: fit-content; backdrop-filter: blur(4px); position: relative; z-index: 1; }
+  .mm-featured h5 { font-family: var(--font-display); font-size: 22px; font-weight: 500; line-height: 1.1; position: relative; z-index: 1; }
+  .mm-featured a { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.4); padding-bottom: 4px; width: fit-content; position: relative; z-index: 1; }
+
+  .mm-body {
+    padding: 60px 32px;
+    max-width: 760px;
+    margin: 0 auto;
+    font-family: 'Georgia', serif;
+  }
+  .mm-body h3 { font-family: 'Georgia', serif; font-size: 32px; color: #111; margin-bottom: 12px; font-weight: 600; }
+  .mm-body p { font-size: 17px; line-height: 1.65; color: #2a2722; }
+
+  @media (max-width: 720px) {
+    .mm-grid { grid-template-columns: 1fr 1fr; }
+    .mm-bar .right { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Navigation</a>
+      <span class="sep">/</span>
+      <span class="here">Mega Menu</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">4.3 · Navigation</span>
+    <h1 class="title">Mega <em>Menu</em>.</h1>
+    <p class="tagline">Hover any top-level link in the demo and a wide multi-column panel drops down — with a featured tile on the right.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A large dropdown panel that appears when you hover over (or click) a navigation item. Unlike a simple dropdown with a list of links, a mega menu can contain multiple columns of links, featured images, highlighted promotions, icons, and mini descriptions. Common on e-commerce sites, documentation portals, and large corporate websites.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>When the user hovers a navigation link, an absolutely-positioned full-width panel appears below the nav bar. This panel is typically organized into 3–5 columns, each containing a category heading and 4–8 links. One column might be a "Featured" panel with an image and a CTA. The panel appears with a subtle fade or slide-in. Close when mouse leaves both the link and the panel.</p>
+      <div class="term-grid">
+        <div><b>position:absolute</b><span>The mega menu panel is absolutely positioned below the nav bar</span></div>
+        <div><b>Hover trigger</b><span>Desktop: hover on nav link shows the panel. Mobile: tap/click instead.</span></div>
+        <div><b>Multi-column grid</b><span>Inside the panel, links are organized into 3–5 columns using CSS Grid</span></div>
+        <div><b>Featured column</b><span>One column with an image and CTA — draws attention to a promoted item</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Hover "Women" (or any link). Click outside or move away to close.</p>
+    <div class="demo-shell">
+      <div class="demo mm-demo" id="mmDemo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#111; border-color:rgba(0,0,0,0.1);">Live · hover Women</span>
+        <header class="mm-bar">
+          <div class="b">Maison.</div>
+          <div class="links" id="mmLinks">
+            <button data-cat="women" class="active">Women</button>
+            <button data-cat="men">Men</button>
+            <button data-cat="kids">Kids</button>
+            <button data-cat="sale">Sale</button>
+          </div>
+          <div class="right"><span>Stores</span><span>Account</span><span>Bag (2)</span></div>
+        </header>
+        <div class="mm-panel" id="mmPanel">
+          <div class="mm-grid">
+            <div class="mm-col">
+              <h6>Clothing</h6>
+              <ul><li>Dresses</li><li>Tops &amp; tees</li><li>Jeans &amp; trousers</li><li>Jackets &amp; coats</li><li>Skirts</li><li>Knitwear</li></ul>
+            </div>
+            <div class="mm-col">
+              <h6>Accessories</h6>
+              <ul><li>Bags</li><li>Shoes</li><li>Jewelry</li><li>Scarves</li><li>Belts</li><li>Hats</li></ul>
+            </div>
+            <div class="mm-col">
+              <h6>By occasion</h6>
+              <ul><li>Work</li><li>Weekend</li><li>Evening</li><li>Travel</li><li>Holiday</li><li>Wedding guest</li></ul>
+            </div>
+            <div class="mm-featured">
+              <span class="badge">★ New arrivals</span>
+              <div>
+                <h5>The spring<br>edit, vol. 04</h5>
+              </div>
+              <a>Shop now →</a>
+            </div>
+          </div>
+        </div>
+        <article class="mm-body">
+          <h3>Real mega menus, real mouse hover.</h3>
+          <p>This is a full implementation of the pattern — hover detection, fade-up transition, four-column grid, featured tile, and a click-outside dismissal. Plug it into any e-commerce header.</p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 4.3 Mega Menu</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Create a mega menu for an e-commerce fashion website. Navbar has links: Women, Men, Kids, Sale. When hovering 'Women': a full-width panel drops down (background white, box-shadow: 0 20px 40px rgba(0,0,0,0.1), padding:40px). Panel contains a 4-column CSS grid: Column 1 'Clothing' with links (Dresses, Tops, Jeans, Jackets, Skirts). Column 2 'Accessories' with links (Bags, Shoes, Jewelry, Scarves). Column 3 'By Occasion' with links (Work, Weekend, Party, Holiday). Column 4: a featured image panel with a product photo, 'New Arrivals' label in a badge, and a 'Shop Now' button. Animate the panel: opacity 0 to 1, translateY(-8px) to 0, over 0.2s. Close when mouse leaves both the nav link and the panel.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://asos.com" target="_blank" rel="noopener">ASOS.com</a><span class="desc">One of the best mega menus on the web — clean, fast, multi-column with imagery</span></div></li>
+      <li><div><a href="https://apple.com" target="_blank" rel="noopener">Apple.com navigation</a><span class="desc">Refined mega menu for a product company — minimal but effective</span></div></li>
+      <li><div><a href="https://polaris.shopify.com" target="_blank" rel="noopener">Shopify — Polaris Navigation</a><span class="desc">How Shopify designs mega menus in their design system</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="4.2-hamburger-mobile.html" class="prev"><span class="label">← Prev</span><span class="title">4.2 Hamburger</span></a>
+      <a href="4.4-dot-navigation.html" class="next"><span class="label">Next →</span><span class="title">4.4 Dot Navigation</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    const links = document.getElementById('mmLinks');
+    const panel = document.getElementById('mmPanel');
+    if (!links || !panel) return;
+    let openTimer, closeTimer;
+    function open() { clearTimeout(closeTimer); panel.classList.add('open'); }
+    function close() { closeTimer = setTimeout(() => panel.classList.remove('open'), 120); }
+    links.querySelectorAll('button').forEach(b => {
+      b.addEventListener('mouseenter', open);
+      b.addEventListener('focus', open);
+    });
+    links.addEventListener('mouseleave', close);
+    panel.addEventListener('mouseenter', open);
+    panel.addEventListener('mouseleave', close);
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

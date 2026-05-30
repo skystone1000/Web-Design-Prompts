@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>5.4 Gradient Text · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .gt-demo {
+    background: #0A0A0F;
+    color: #fff;
+    min-height: 620px;
+    padding: 80px 32px;
+    border-radius: var(--radius-lg);
+    text-align: center;
+    display: grid;
+    place-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .gt-demo::before {
+    content: "";
+    position: absolute;
+    top: -20%; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(closest-side, rgba(118,114,234,0.18), transparent 70%);
+  }
+  .gt-eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: #667eea; margin-bottom: 22px; position: relative; }
+  .gt-headline {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(40px, 6.5vw, 76px);
+    letter-spacing: -0.03em;
+    line-height: 1.0;
+    color: #fff;
+    max-width: 18ch;
+    position: relative;
+  }
+  .gt-grad-1 {
+    background: linear-gradient(135deg, #667eea 0%, #f64f59 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    font-style: italic;
+  }
+  .gt-sub {
+    margin-top: 24px;
+    font-size: 17px;
+    color: rgba(255,255,255,0.65);
+    max-width: 46ch;
+    line-height: 1.5;
+    position: relative;
+  }
+  .gt-sub .gt-grad-2 {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    font-weight: 600;
+    font-style: italic;
+  }
+
+  .gt-swatches {
+    margin-top: 40px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .gt-sw {
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.04);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .gt-sw .dot { width: 14px; height: 14px; border-radius: 4px; }
+  .gt-sw.s1 .dot { background: linear-gradient(135deg, #667eea, #f64f59); }
+  .gt-sw.s2 .dot { background: linear-gradient(135deg, #11998e, #38ef7d); }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Typography &amp; Color</a>
+      <span class="sep">/</span>
+      <span class="here">Gradient Text</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">5.4 · Type</span>
+    <h1 class="title">Gradient <em>Text</em>.</h1>
+    <p class="tagline">background-clip:text trick. Apply a gradient to one or two key words while the rest of the headline stays solid.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Instead of a solid color for a heading or key word, the text itself is rendered as a gradient — flowing from one color to another. Extremely popular in AI/tech/SaaS websites because it adds visual interest to plain text without needing additional design elements. Often just one or two words get the gradient treatment.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Three CSS properties together. First, <code>background: linear-gradient(...)</code> on the text element. Second, <code>background-clip: text</code> clips the gradient to the shape of the text characters. Third, <code>-webkit-text-fill-color: transparent</code> makes the actual text color invisible, revealing the gradient through the text shape. Without all three, it doesn't work.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <div class="demo-shell">
+      <div class="demo gt-demo">
+        <span class="demo-badge">Live</span>
+        <div>
+          <div class="gt-eyebrow">— Manifesto, vol. 04</div>
+          <div class="gt-headline">Build websites that actually <span class="gt-grad-1">convert.</span></div>
+          <p class="gt-sub">Stop shipping pretty pages that don't sell. Start shipping pages that <span class="gt-grad-2">earn their pixels.</span></p>
+          <div class="gt-swatches">
+            <span class="gt-sw s1"><span class="dot"></span>linear-gradient(135°, #667eea → #f64f59)</span>
+            <span class="gt-sw s2"><span class="dot"></span>linear-gradient(135°, #11998e → #38ef7d)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 5.4 Gradient Text</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Apply a gradient color effect to key words in the hero headline. The headline reads: 'Build websites that actually convert.' Make the word 'convert' a gradient from #667eea (purple-blue) to #f64f59 (coral-red). CSS: background: linear-gradient(135deg, #667eea 0%, #f64f59 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: transparent. Wrap that specific word in a span with this class. The rest of the headline should be white (on dark background). Add a second gradient word in the subheading using a different gradient (green to cyan: #11998e to #38ef7d).</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://stripe.com" target="_blank" rel="noopener">Stripe.com</a><span class="desc">Masterful use of subtle gradient text in headings — restrained and effective</span></div></li>
+      <li><div><a href="https://vercel.com" target="_blank" rel="noopener">Vercel.com</a><span class="desc">Bold gradient text in the hero headline — electric and attention-grabbing</span></div></li>
+      <li><div><a href="https://cssgradient.io" target="_blank" rel="noopener">CSS Gradient generator</a><span class="desc">Interactive generator for gradient text CSS — copy and paste ready</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="5.3-60-30-10-rule.html" class="prev"><span class="label">← Prev</span><span class="title">5.3 60-30-10 Rule</span></a>
+      <a href="5.5-display-hero-type.html" class="next"><span class="label">Next →</span><span class="title">5.5 Display Type</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

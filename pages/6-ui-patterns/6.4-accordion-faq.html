@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>6.4 Accordion / FAQ · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .ac-demo {
+    background: #FAFAF7;
+    color: #111;
+    min-height: 620px;
+    padding: 56px 32px;
+    border-radius: var(--radius-lg);
+  }
+  .ac-shell { max-width: 640px; margin: 0 auto; }
+  .ac-eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #2563EB; margin-bottom: 12px; }
+  .ac-shell h3 { font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 4vw, 40px); color: #111; letter-spacing: -0.02em; margin-bottom: 20px; }
+  .ac-shell h3 em { font-style: italic; color: #2563EB; }
+
+  .ac-search {
+    position: relative;
+    margin-bottom: 22px;
+  }
+  .ac-search input {
+    width: 100%;
+    padding: 14px 18px 14px 44px;
+    border: 1px solid #E5E7EB;
+    background: #fff;
+    border-radius: 12px;
+    font-size: 14.5px;
+    color: #111;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .ac-search input:focus { outline: none; border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+  .ac-search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: #888; }
+  .ac-search .empty { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #888; margin-top: 14px; display: none; }
+  .ac-shell.no-results .ac-search .empty { display: block; }
+
+  .ac-list { background: #fff; border-radius: 14px; border: 1px solid #E5E7EB; overflow: hidden; }
+  .ac-item { border-bottom: 1px solid #E5E7EB; }
+  .ac-item:last-child { border-bottom: 0; }
+  .ac-item.hidden { display: none; }
+
+  .ac-q {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 22px;
+    cursor: pointer;
+    font-size: 15.5px;
+    font-weight: 500;
+    color: #111;
+    background: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+    transition: background 0.15s;
+  }
+  .ac-q:hover { background: #FAFAF7; }
+  .ac-plus {
+    width: 18px; height: 18px;
+    position: relative;
+    flex-shrink: 0;
+    transition: transform 0.3s var(--ease);
+  }
+  .ac-plus::before, .ac-plus::after {
+    content: "";
+    position: absolute;
+    background: #111;
+    border-radius: 2px;
+  }
+  .ac-plus::before { top: 8px; left: 0; right: 0; height: 2px; }
+  .ac-plus::after { left: 8px; top: 0; bottom: 0; width: 2px; transition: transform 0.3s var(--ease); }
+  .ac-item.open .ac-plus { transform: rotate(45deg); }
+  .ac-item.open .ac-plus::after { background: #2563EB; }
+  .ac-item.open .ac-plus::before { background: #2563EB; }
+
+  .ac-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s var(--ease);
+  }
+  .ac-item.open .ac-a { max-height: 360px; }
+  .ac-a-inner { padding: 0 22px 22px; }
+  .ac-a-inner p { font-size: 14.5px; color: #555; line-height: 1.65; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">UI Patterns</a>
+      <span class="sep">/</span>
+      <span class="here">Accordion / FAQ</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">6.4 · UI Pattern</span>
+    <h1 class="title">Accordion / <em>FAQ</em>.</h1>
+    <p class="tagline">Click any question to expand. Only one open at a time. Search filters live as you type.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A list of questions where clicking any question expands it to reveal the answer. Perfect for FAQ sections, help docs, and any situation where you have many pieces of related content that would be overwhelming if all shown at once. Users scan the questions quickly and only expand the ones they care about.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Each item has a visible question row (with a + icon) and a hidden answer panel. The answer panel starts at <code>max-height: 0; overflow: hidden</code>. When clicked, a class toggles that changes max-height with a smooth CSS transition. The + icon rotates 45° to become an ×. HTML also has a native <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> element that does this without JS.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Type in the search to filter. Click any question — only one stays open.</p>
+    <div class="demo-shell">
+      <div class="demo ac-demo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#111; border-color:rgba(0,0,0,0.1);">Live · search + click</span>
+        <div class="ac-shell" id="acShell">
+          <div class="ac-eyebrow">FAQ</div>
+          <h3>Questions, <em>answered</em>.</h3>
+
+          <div class="ac-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            <input id="acSearch" type="search" placeholder="Search the answers..." autocomplete="off" />
+            <div class="empty">No matching questions. Try fewer words.</div>
+          </div>
+
+          <div class="ac-list" id="acList">
+            <div class="ac-item">
+              <button class="ac-q">How does the 14-day trial work?<span class="ac-plus"></span></button>
+              <div class="ac-a"><div class="ac-a-inner"><p>Start free with one click, no credit card. After 14 days, choose a plan to continue or your workspace becomes read-only. We never auto-charge you.</p></div></div>
+            </div>
+            <div class="ac-item">
+              <button class="ac-q">Can I cancel anytime?<span class="ac-plus"></span></button>
+              <div class="ac-a"><div class="ac-a-inner"><p>Yes. Cancel any time from your billing settings. You'll keep access through the end of your billing period.</p></div></div>
+            </div>
+            <div class="ac-item">
+              <button class="ac-q">Do you offer student or non-profit discounts?<span class="ac-plus"></span></button>
+              <div class="ac-a"><div class="ac-a-inner"><p>Students get 50% off with a verified .edu email. Non-profits get the Pro plan free up to 5 seats — email us with your registration number.</p></div></div>
+            </div>
+            <div class="ac-item">
+              <button class="ac-q">Is my data encrypted?<span class="ac-plus"></span></button>
+              <div class="ac-a"><div class="ac-a-inner"><p>Yes — at rest with AES-256 and in transit with TLS 1.3. Customer-managed keys are available on Enterprise.</p></div></div>
+            </div>
+            <div class="ac-item">
+              <button class="ac-q">Can I export my data?<span class="ac-plus"></span></button>
+              <div class="ac-a"><div class="ac-a-inner"><p>One-click export to JSON, Markdown, or CSV from any workspace at any time. No support ticket needed.</p></div></div>
+            </div>
+            <div class="ac-item">
+              <button class="ac-q">Do you have an API?<span class="ac-plus"></span></button>
+              <div class="ac-a"><div class="ac-a-inner"><p>REST and GraphQL on Pro and above. Rate limits start at 1,000 requests/minute. Detailed docs at api.example.com.</p></div></div>
+            </div>
+            <div class="ac-item">
+              <button class="ac-q">What payment methods do you accept?<span class="ac-plus"></span></button>
+              <div class="ac-a"><div class="ac-a-inner"><p>All major credit cards, ACH, SEPA, and wire transfer for annual plans. We invoice for Enterprise.</p></div></div>
+            </div>
+            <div class="ac-item">
+              <button class="ac-q">How do I contact support?<span class="ac-plus"></span></button>
+              <div class="ac-a"><div class="ac-a-inner"><p>Email support@example.com — median response time is 11 minutes during business hours. Enterprise customers get a dedicated Slack channel.</p></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 6.4 Accordion / FAQ</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Build an FAQ section with 8 questions. Each FAQ item: full-width, white background, separated by a 1px #E5E7EB border. Question row: padding 20px, question text in font-weight:500, and a + icon on the right that rotates 45deg to × when open. Answer panel: starts height:0 overflow:hidden, transitions to auto height in 0.3s ease. Answer text is muted gray (#6B7280), 16px, with 20px padding. Only one question can be open at a time (opening a new one closes the previous). Add a search input at the top of the FAQ that filters questions as the user types.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://university.webflow.com" target="_blank" rel="noopener">Webflow University — FAQ Templates</a><span class="desc">No-code accordion FAQ examples with styling guidance</span></div></li>
+      <li><div><a href="https://headlessui.com" target="_blank" rel="noopener">Headless UI (Tailwind Labs)</a><span class="desc">Accessible accordion components with animations</span></div></li>
+      <li><div><a href="https://linear.app/pricing" target="_blank" rel="noopener">Linear.app/pricing FAQ</a><span class="desc">Simple, clean FAQ at the bottom of their pricing page</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="6.3-testimonials.html" class="prev"><span class="label">← Prev</span><span class="title">6.3 Testimonials</span></a>
+      <a href="6.5-modal-dialog.html" class="next"><span class="label">Next →</span><span class="title">6.5 Modal / Dialog</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    const list = document.getElementById('acList');
+    const shell = document.getElementById('acShell');
+    const search = document.getElementById('acSearch');
+    if (!list) return;
+    list.addEventListener('click', (e) => {
+      const q = e.target.closest('.ac-q');
+      if (!q) return;
+      const item = q.parentElement;
+      const wasOpen = item.classList.contains('open');
+      list.querySelectorAll('.ac-item').forEach(i => i.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    });
+    if (search) {
+      search.addEventListener('input', () => {
+        const q = search.value.trim().toLowerCase();
+        let any = false;
+        list.querySelectorAll('.ac-item').forEach(i => {
+          const txt = i.textContent.toLowerCase();
+          const show = !q || txt.includes(q);
+          i.classList.toggle('hidden', !show);
+          if (show) any = true;
+        });
+        shell.classList.toggle('no-results', q && !any);
+      });
+    }
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

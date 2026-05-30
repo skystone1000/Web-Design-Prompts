@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.4 Sticky Sections / Pinning · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  /* ===== Live demo: sticky pinning ===== */
+  .sp-demo {
+    height: 720px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background: var(--bg-elev);
+    border-radius: var(--radius-lg);
+    padding: 0;
+  }
+  .sp-grid {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    min-height: 100%;
+  }
+  /* Left sticky column */
+  .sp-left {
+    position: sticky;
+    top: 0;
+    height: 720px; /* match the scroll viewport */
+    align-self: start;
+    padding: 32px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(180deg, #0E0E14, #1A1A22);
+    border-right: 1px solid var(--border);
+  }
+  .sp-mock {
+    width: 100%;
+    max-width: 320px;
+    aspect-ratio: 9/16;
+    border-radius: 28px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: #0a0a10;
+    position: relative;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+  }
+  .sp-screen {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.5s var(--ease);
+    padding: 20px 14px;
+  }
+  .sp-screen.active { opacity: 1; }
+  .sp-screen .bar { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-mono); font-size: 9px; color: rgba(255,255,255,0.5); letter-spacing: 0.12em; }
+  .sp-screen h6 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 22px;
+    color: #fff;
+    margin: 24px 0 12px;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .sp-screen p { font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.55; }
+
+  /* Screen 1 — calendar */
+  .sp-screen.s1 .grid {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+  .sp-screen.s1 .grid div {
+    aspect-ratio: 1;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: rgba(255,255,255,0.4);
+    display: grid;
+    place-items: center;
+  }
+  .sp-screen.s1 .grid div.act { background: var(--accent); color: #1A1300; }
+  /* Screen 2 — task list */
+  .sp-screen.s2 ul { margin-top: 14px; }
+  .sp-screen.s2 li { padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 12px; color: rgba(255,255,255,0.8); display: flex; align-items: center; gap: 10px; }
+  .sp-screen.s2 li::before { content: ""; width: 12px; height: 12px; border-radius: 4px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); }
+  .sp-screen.s2 li.done::before { background: var(--accent); border-color: var(--accent); }
+  .sp-screen.s2 li.done { color: rgba(255,255,255,0.4); text-decoration: line-through; }
+  /* Screen 3 — chart */
+  .sp-screen.s3 .chart {
+    margin-top: 14px;
+    height: 140px;
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+  }
+  .sp-screen.s3 .chart span {
+    flex: 1;
+    background: linear-gradient(180deg, var(--accent), var(--accent-2));
+    border-radius: 3px 3px 0 0;
+    opacity: 0.85;
+  }
+  /* Screen 4 — chat */
+  .sp-screen.s4 .chat { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+  .sp-screen.s4 .msg { padding: 8px 12px; border-radius: 12px; max-width: 80%; font-size: 11.5px; line-height: 1.4; }
+  .sp-screen.s4 .msg.you { background: var(--accent); color: #1A1300; align-self: flex-end; border-bottom-right-radius: 4px; }
+  .sp-screen.s4 .msg.them { background: rgba(255,255,255,0.08); color: #fff; align-self: flex-start; border-bottom-left-radius: 4px; }
+
+  .sp-tag {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    pointer-events: none;
+  }
+
+  /* Right scrolling column */
+  .sp-right {
+    padding: 80px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+  }
+  .sp-block {
+    min-height: 400px;
+    padding: 28px;
+    border-radius: 18px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    transition: border-color 0.3s;
+  }
+  .sp-block.in-view { border-color: var(--accent); }
+  .sp-block .ix {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  .sp-block h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 28px;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  .sp-block p { font-size: 15px; color: var(--text-soft); line-height: 1.6; }
+
+  @media (max-width: 720px) {
+    .sp-grid { grid-template-columns: 1fr; }
+    .sp-left { position: relative; height: 320px; top: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Sticky pinning</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.4 · Animation</span>
+    <h1 class="title">Sticky sections /<br><em>pinning</em>.</h1>
+    <p class="tagline">A visual on one side stays in place while features scroll past on the other. The screenshot swaps to match the active feature.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>An element stays fixed on the screen while the user scrolls, but ONLY within its parent section. Once the user scrolls past that section, the element releases and scrolls away normally. This is called "pinning". It's perfect for feature explanations where you want to show one product screenshot on the left while the user scrolls through a list of features on the right.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>The simplest implementation uses CSS <code>position: sticky; top: 0</code>, which keeps the element at the top of the viewport as long as its parent is in view. A common layout has two columns: left column with <code>position: sticky</code> (the persistent visual) and right column that scrolls normally (the feature list). As the user scrolls through features on the right, the visual on the left stays put and can change to reflect each feature.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside the box. Phone on the left stays pinned; its content swaps based on the active feature block.</p>
+    <div class="demo-shell">
+      <div class="demo sp-demo" id="spDemo">
+        <span class="demo-badge">Live · scroll inside</span>
+        <div class="sp-grid">
+          <div class="sp-left">
+            <div class="sp-mock">
+              <div class="sp-screen s1 active" data-screen="1">
+                <div class="bar"><span>9:41</span><span>●●●</span></div>
+                <h6>Plan the<br>quiet week.</h6>
+                <div class="grid">
+                  <div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div><div>S</div>
+                  <div>1</div><div>2</div><div>3</div><div class="act">4</div><div>5</div><div>6</div><div>7</div>
+                  <div>8</div><div>9</div><div>10</div><div>11</div><div>12</div><div>13</div><div>14</div>
+                </div>
+              </div>
+              <div class="sp-screen s2" data-screen="2">
+                <div class="bar"><span>9:41</span><span>●●●</span></div>
+                <h6>Today's<br>shortlist.</h6>
+                <ul>
+                  <li class="done">Send draft to Sam</li>
+                  <li class="done">Renew passport</li>
+                  <li>Review pricing page</li>
+                  <li>Buy oat milk + figs</li>
+                  <li>Call Mom</li>
+                </ul>
+              </div>
+              <div class="sp-screen s3" data-screen="3">
+                <div class="bar"><span>9:41</span><span>●●●</span></div>
+                <h6>You shipped<br>72 things.</h6>
+                <p>April was your best month.</p>
+                <div class="chart"><span style="height:30%"></span><span style="height:50%"></span><span style="height:35%"></span><span style="height:65%"></span><span style="height:80%"></span><span style="height:45%"></span><span style="height:95%"></span></div>
+              </div>
+              <div class="sp-screen s4" data-screen="4">
+                <div class="bar"><span>9:41</span><span>●●●</span></div>
+                <h6>Replies<br>that wait.</h6>
+                <div class="chat">
+                  <div class="msg them">hey, when can you ship?</div>
+                  <div class="msg you">drafted — sending Tuesday 🙂</div>
+                  <div class="msg them">amazing, ty</div>
+                </div>
+              </div>
+              <span class="sp-tag">Screen syncs with scroll</span>
+            </div>
+          </div>
+          <div class="sp-right">
+            <div class="sp-block in-view" data-feature="1">
+              <div class="ix">Feature 01</div>
+              <h4>Plan around your weeks.</h4>
+              <p>Calendar-first planning — drag, drop, and re-order. Capacity-aware so you don't over-promise.</p>
+            </div>
+            <div class="sp-block" data-feature="2">
+              <div class="ix">Feature 02</div>
+              <h4>Shortlists, not backlogs.</h4>
+              <p>A focused list of what matters today. Done items disappear quietly. No graveyard of to-dos.</p>
+            </div>
+            <div class="sp-block" data-feature="3">
+              <div class="ix">Feature 03</div>
+              <h4>Quiet metrics.</h4>
+              <p>End-of-month summaries you'd actually read. No notifications, no dashboards in your face.</p>
+            </div>
+            <div class="sp-block" data-feature="4">
+              <div class="ix">Feature 04</div>
+              <h4>Replies that wait.</h4>
+              <p>Draft your responses. Hold them. Send them when you're ready — not when the notification arrives.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 2.4 Sticky pinning</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Design a SaaS feature explanation section with a sticky scroll layout. Left column (40% width): a phone mockup or browser window screenshot with position:sticky top:80px that stays in view. Right column (60% width): 4 feature blocks stacked vertically, each 400px tall, with icon, heading, and 2-line description. As the user scrolls through each feature block on the right, use IntersectionObserver to detect which block is most visible and update the left screenshot to show the corresponding product UI screen with a smooth crossfade transition.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://notion.so" target="_blank" rel="noopener">Notion.so Features page</a><span class="desc">Classic sticky scroll — left screenshot stays while feature text scrolls right</span></div></li>
+      <li><div><a href="https://linear.app" target="_blank" rel="noopener">Linear.app</a><span class="desc">Excellent sticky feature sections with animated product screenshots</span></div></li>
+      <li><div><a href="https://lottiefiles.com" target="_blank" rel="noopener">Lottiefiles.com</a><span class="desc">Uses sticky panels with animated Lottie illustrations alongside text</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.3-horizontal-scroll.html" class="prev"><span class="label">← Prev</span><span class="title">2.3 Horizontal scroll</span></a>
+      <a href="2.5-text-reveal.html" class="next"><span class="label">Next →</span><span class="title">2.5 Text reveal</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    const root = document.getElementById('spDemo');
+    if (!root) return;
+    const blocks = root.querySelectorAll('.sp-block');
+    const screens = root.querySelectorAll('.sp-screen');
+    function setActive(idx) {
+      blocks.forEach((b, i) => b.classList.toggle('in-view', i === idx));
+      screens.forEach((s, i) => s.classList.toggle('active', i === idx));
+    }
+    const io = new IntersectionObserver((entries) => {
+      // pick the entry with the highest intersection ratio
+      let best = null;
+      entries.forEach(e => {
+        if (!best || e.intersectionRatio > best.intersectionRatio) best = e;
+      });
+      if (best && best.intersectionRatio > 0.4) {
+        const idx = parseInt(best.target.getAttribute('data-feature'), 10) - 1;
+        setActive(idx);
+      }
+    }, { root, threshold: [0.4, 0.6, 0.8] });
+    blocks.forEach(b => io.observe(b));
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

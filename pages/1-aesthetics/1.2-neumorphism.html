@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>1.2 Neumorphism · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  /* ===== Live demo: Neumorphism ===== */
+  .neu-demo {
+    --neu: #e0e5ec;
+    --neu-dark: #b8bec7;
+    --neu-light: #ffffff;
+    --neu-text: #2d3748;
+    background: var(--neu);
+    min-height: 620px;
+    padding: 56px 24px;
+    display: grid;
+    place-items: center;
+  }
+  .neu-player {
+    width: 100%;
+    max-width: 420px;
+    padding: 40px 36px;
+    background: var(--neu);
+    border-radius: 28px;
+    box-shadow: 14px 14px 28px var(--neu-dark), -14px -14px 28px var(--neu-light);
+    color: var(--neu-text);
+    text-align: center;
+  }
+  .neu-art {
+    width: 168px;
+    height: 168px;
+    margin: 0 auto 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #d1d9e6, #f0f3f7);
+    box-shadow: inset 8px 8px 16px var(--neu-dark), inset -8px -8px 16px var(--neu-light);
+    display: grid;
+    place-items: center;
+    position: relative;
+  }
+  .neu-art::after {
+    content: "";
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--neu);
+    box-shadow: inset 2px 2px 4px var(--neu-dark), inset -2px -2px 4px var(--neu-light);
+  }
+  .neu-art .ring {
+    position: absolute;
+    inset: 14px;
+    border-radius: 50%;
+    border: 1px dashed rgba(45,55,72,0.18);
+  }
+  .neu-title { font-family: var(--font-display); font-weight: 500; font-size: 22px; letter-spacing: -0.02em; color: var(--neu-text); }
+  .neu-artist { font-size: 13px; color: #718096; margin-top: 4px; }
+
+  .neu-progress {
+    margin: 28px 0 8px;
+    height: 10px;
+    background: var(--neu);
+    border-radius: 999px;
+    box-shadow: inset 3px 3px 6px var(--neu-dark), inset -3px -3px 6px var(--neu-light);
+    position: relative;
+  }
+  .neu-progress::after {
+    content: "";
+    position: absolute;
+    left: 6px; top: 3px;
+    width: 38%;
+    height: 4px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+  }
+  .neu-times { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 11px; color: #718096; }
+
+  .neu-controls {
+    margin-top: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+  .neu-btn {
+    width: 58px; height: 58px;
+    border-radius: 50%;
+    background: var(--neu);
+    box-shadow: 6px 6px 12px var(--neu-dark), -6px -6px 12px var(--neu-light);
+    display: grid;
+    place-items: center;
+    transition: box-shadow 0.18s var(--ease), transform 0.05s;
+    color: var(--neu-text);
+    border: none;
+    cursor: pointer;
+  }
+  .neu-btn:active {
+    box-shadow: inset 4px 4px 8px var(--neu-dark), inset -4px -4px 8px var(--neu-light);
+  }
+  .neu-btn svg { width: 18px; height: 18px; }
+  .neu-btn.play {
+    width: 76px; height: 76px;
+    background: var(--neu);
+    box-shadow: 8px 8px 16px var(--neu-dark), -8px -8px 16px var(--neu-light);
+  }
+  .neu-btn.play:active {
+    box-shadow: inset 5px 5px 10px var(--neu-dark), inset -5px -5px 10px var(--neu-light);
+  }
+  .neu-btn.play svg { width: 22px; height: 22px; }
+
+  .neu-volume {
+    margin-top: 28px;
+    padding: 14px 20px;
+    background: var(--neu);
+    border-radius: 999px;
+    box-shadow: inset 4px 4px 8px var(--neu-dark), inset -4px -4px 8px var(--neu-light);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .neu-volume svg { width: 18px; height: 18px; color: #718096; }
+  .neu-volume .v-track {
+    flex: 1;
+    height: 6px;
+    background: var(--neu);
+    border-radius: 999px;
+    box-shadow: inset 2px 2px 4px var(--neu-dark), inset -2px -2px 4px var(--neu-light);
+    position: relative;
+  }
+  .neu-volume .v-track::after {
+    content: "";
+    position: absolute;
+    left: 4px; top: 1px;
+    width: 60%;
+    height: 4px;
+    border-radius: 999px;
+    background: #a0aec0;
+  }
+  .neu-volume .v-thumb {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--neu);
+    box-shadow: 3px 3px 6px var(--neu-dark), -3px -3px 6px var(--neu-light);
+    margin-left: -10px;
+  }
+
+  /* hint instruction */
+  .neu-hint {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #718096;
+    margin-top: 32px;
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Aesthetics</a>
+      <span class="sep">/</span>
+      <span class="here">Neumorphism</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">1.2 · Aesthetic</span>
+    <h1 class="title">Neumorphism.</h1>
+    <p class="tagline">Soft UI. Background and element share a color — dual shadows do the entire 3D illusion. Click the buttons in the demo to feel them press.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Neumorphism (new + skeuomorphism) creates buttons and cards that look like they are physically pushed out of or pressed into the background surface. Everything is the SAME color — the background and the element share an identical color. What creates the 3D illusion is a pair of shadows: one dark shadow from the bottom-right and one light (near-white) shadow from the top-left.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>The trick is all in <code>box-shadow</code>. You apply two shadows simultaneously. The dark shadow simulates where light would NOT hit a raised surface. The light shadow simulates where light WOULD hit. Because both the background and the element are the exact same color (like <code>#e0e5ec</code>), the element appears to grow organically from the surface rather than sit on top of it.</p>
+      <div class="term-grid">
+        <div><b>box-shadow</b><span>CSS property — you can apply TWO shadows to one element separated by a comma</span></div>
+        <div><b>Concave</b><span>Pressed inward — feels like a pressed button (inner shadow)</span></div>
+        <div><b>Convex</b><span>Pushed outward — feels like a raised element (outer shadow)</span></div>
+        <div><b>Color rule</b><span>Background color and element color MUST match exactly</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="tip"><b>Tip.</b> Neumorphism looks best at low contrast. It's ideal for dark mode music players, control panels, and dashboard widgets. It struggles with accessibility on bright screens because the contrast is very low — don't use it for critical text or important CTAs.</div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <div class="demo-shell">
+      <div class="demo neu-demo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#2d3748; border-color:rgba(0,0,0,0.1);">Live · tap buttons</span>
+        <div>
+          <div class="neu-player">
+            <div class="neu-art"><span class="ring"></span></div>
+            <div class="neu-title">Late Night Driver</div>
+            <div class="neu-artist">Sōhne Trio · Vol. II</div>
+            <div class="neu-progress"></div>
+            <div class="neu-times"><span>1:24</span><span>3:42</span></div>
+            <div class="neu-controls">
+              <button class="neu-btn" aria-label="Previous"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5" stroke="currentColor" stroke-width="2"/></svg></button>
+              <button class="neu-btn play" aria-label="Play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></button>
+              <button class="neu-btn" aria-label="Next"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2"/></svg></button>
+            </div>
+            <div class="neu-volume">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              <div class="v-track"></div>
+              <div class="v-thumb"></div>
+            </div>
+            <div class="neu-hint">↑ tap any button</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 1.2 Neumorphism</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Create a neumorphism music player dashboard on a #e0e5ec background. Build raised circular play/pause buttons using dual box-shadows: box-shadow: 6px 6px 12px #b8bec7, -6px -6px 12px #ffffff. Add pressed (active) state with inset shadows: inset 4px 4px 8px #b8bec7, inset -4px -4px 8px #ffffff. Include a volume slider and track progress bar in the same neumorphic style.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://neumorphism.io" target="_blank" rel="noopener">Neumorphism.io</a><span class="desc">CSS generator — drag the sliders and watch the effect build. Best way to learn it.</span></div></li>
+      <li><div><a href="https://dribbble.com/tags/neumorphism" target="_blank" rel="noopener">Dribbble — Neumorphism UI</a><span class="desc">Hundreds of beautiful Neumorphism UI examples for reference</span></div></li>
+      <li><div><a href="https://ui8.net/tags/neumorphism" target="_blank" rel="noopener">UI8 Soft UI Kits</a><span class="desc">Downloadable neumorphism design kits showing real app screens</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="1.1-glassmorphism.html" class="prev"><span class="label">← Prev</span><span class="title">1.1 Glassmorphism</span></a>
+      <a href="1.3-brutalism.html" class="next"><span class="label">Next →</span><span class="title">1.3 Brutalism</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

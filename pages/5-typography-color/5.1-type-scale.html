@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>5.1 Type Scale &amp; Hierarchy · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .ts-demo {
+    background: #FAFAF7;
+    color: #1A1814;
+    min-height: 720px;
+    padding: 48px 40px;
+    border-radius: var(--radius-lg);
+  }
+  .ts-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 28px;
+    align-items: baseline;
+    padding: 22px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .ts-row .label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #888;
+    text-align: right;
+  }
+  .ts-row .label small { display: block; font-size: 10px; color: #b3a994; margin-top: 4px; letter-spacing: 0.12em; }
+  .ts-row .sample {
+    font-family: var(--font-display);
+    color: #111;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .ts-display { font-size: clamp(56px, 8vw, 96px); font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; }
+  .ts-h1 { font-size: clamp(40px, 5vw, 64px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
+  .ts-h2 { font-size: clamp(28px, 3.5vw, 44px); font-weight: 600; line-height: 1.15; }
+  .ts-h3 { font-size: 24px; font-weight: 600; line-height: 1.2; }
+  .ts-body { font-family: var(--font-body); font-size: 17px; font-weight: 400; line-height: 1.7; color: #2a2722; letter-spacing: 0; }
+  .ts-small { font-family: var(--font-body); font-size: 14px; font-weight: 400; line-height: 1.5; color: #6b6862; letter-spacing: 0; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Typography &amp; Color</a>
+      <span class="sep">/</span>
+      <span class="here">Type Scale</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">5.1 · Type</span>
+    <h1 class="title">Type Scale &amp;<br><em>Hierarchy</em>.</h1>
+    <p class="tagline">Predetermined font sizes that work together. Pick a ratio, multiply up and down from base. The demo shows the live specimen.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A type scale is a system of predetermined font sizes that work harmoniously together. Instead of choosing random sizes (40px here, 22px there), you pick a scale ratio — like 1.25x or 1.414x — and multiply up and down from a base size. This creates visual harmony because every size is mathematically related to the others. Hierarchy means using size, weight, and color to communicate importance.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Start with a base body size of 16–18px. Multiply by your ratio for each level. At 1.25× from 16: body=16, H4=20, H3=25, H2=31, H1=39, display=49. For landing pages, be more aggressive — H1 at 56–80px. The <code>clamp()</code> CSS function creates fluid typography that scales smoothly with viewport width.</p>
+      <div class="term-grid">
+        <div><b>clamp(min, fluid, max)</b><span>Font size fluidly between min and max — clamp(40px, 6vw, 80px)</span></div>
+        <div><b>Font weight</b><span>100=thin, 400=normal, 600=semibold, 700=bold, 900=black</span></div>
+        <div><b>Letter-spacing</b><span>Negative values (-0.02em) on large headings makes them feel tighter and modern</span></div>
+        <div><b>Line-height</b><span>1.1–1.2 for headings, 1.6–1.7 for body text — critical for readability</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Resize your window — the display sizes fluidly clamp.</p>
+    <div class="demo-shell">
+      <div class="demo ts-demo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#111; border-color:rgba(0,0,0,0.1);">Live · resize me</span>
+
+        <div class="ts-row">
+          <div class="label">Display<small>clamp(56,8vw,96)</small></div>
+          <div class="sample ts-display">Quiet things.</div>
+        </div>
+        <div class="ts-row">
+          <div class="label">H1<small>clamp(40,5vw,64)</small></div>
+          <div class="sample ts-h1">Built with intention.</div>
+        </div>
+        <div class="ts-row">
+          <div class="label">H2<small>clamp(28,3.5vw,44)</small></div>
+          <div class="sample ts-h2">For teams that ship.</div>
+        </div>
+        <div class="ts-row">
+          <div class="label">H3<small>24 / 600</small></div>
+          <div class="sample ts-h3">A subsection</div>
+        </div>
+        <div class="ts-row">
+          <div class="label">Body<small>17 / 1.7 lh</small></div>
+          <div class="sample ts-body">This is a paragraph at the default body size. Line height is generous — 1.7 — so the text breathes and the eye can scan multiple lines without strain. Body sizes are usually one or two ticks below the smallest heading.</div>
+        </div>
+        <div class="ts-row" style="border-bottom: 0;">
+          <div class="label">Small<small>14 / 1.5 lh</small></div>
+          <div class="sample ts-small">Used for captions, metadata, and tertiary information. Muted color, smaller line-height, never used for primary content.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 5.1 Type Scale</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Define a complete typography system using CSS custom properties. --font-display: clamp(56px, 8vw, 96px), font-weight:800, letter-spacing:-0.04em, line-height:1.05. --font-h1: clamp(40px, 5vw, 64px), font-weight:700, letter-spacing:-0.02em. --font-h2: clamp(28px, 3.5vw, 44px), font-weight:600. --font-h3: 24px, font-weight:600. --font-body: 17px, font-weight:400, line-height:1.7. --font-small: 14px, font-weight:400, color: muted gray. Apply this system consistently throughout the page so the visual hierarchy is immediately clear.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://typescale.com" target="_blank" rel="noopener">Typescale.com</a><span class="desc">Interactive tool — choose a scale ratio and see all the sizes generated</span></div></li>
+      <li><div><a href="https://fontjoy.com" target="_blank" rel="noopener">Fontjoy.com</a><span class="desc">AI-powered font pairing tool — generates complementary font combinations</span></div></li>
+      <li><div><a href="https://typewolf.com" target="_blank" rel="noopener">Typewolf.com</a><span class="desc">Daily typography inspiration from real websites, with font identification</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="index.html" class="prev"><span class="label">← Chapter</span><span class="title">Typography &amp; Color</span></a>
+      <a href="5.2-font-pairing.html" class="next"><span class="label">Next →</span><span class="title">5.2 Font Pairing</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

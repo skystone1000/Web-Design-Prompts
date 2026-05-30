@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>3.6 Sidebar + Content · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .sc-demo {
+    height: 720px;
+    overflow: hidden;
+    background: #F9FAFB;
+    color: #111827;
+    border-radius: var(--radius-lg);
+    display: grid;
+    grid-template-columns: 240px 1fr;
+  }
+  .sc-side {
+    background: #111827;
+    color: #fff;
+    padding: 22px 16px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    overflow: hidden;
+  }
+  .sc-logo {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 8px 22px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .sc-logo::before { content: ""; width: 10px; height: 10px; background: #3B82F6; border-radius: 50%; box-shadow: 0 0 12px #3B82F6; }
+  .sc-nav { padding: 18px 0; display: flex; flex-direction: column; gap: 2px; }
+  .sc-nav a {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: rgba(255,255,255,0.72);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .sc-nav a:hover { background: rgba(255,255,255,0.04); color: #fff; }
+  .sc-nav a.active { background: rgba(59,130,246,0.15); color: #93c5fd; }
+  .sc-nav a .ic { width: 18px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 13px; }
+  .sc-nav-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    padding: 14px 12px 8px;
+  }
+  .sc-user {
+    margin-top: auto;
+    padding: 14px 12px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sc-user .av { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #3B82F6, #8B5CF6); color: #fff; font-size: 11px; font-weight: 700; display: grid; place-items: center; }
+  .sc-user .name { font-size: 13px; color: #fff; }
+  .sc-user .role { font-size: 11px; color: rgba(255,255,255,0.5); }
+
+  .sc-main {
+    overflow-y: scroll;
+    padding: 0;
+    background: #F9FAFB;
+  }
+  .sc-bar {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 18px 28px;
+    background: #fff;
+    border-bottom: 1px solid #E5E7EB;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .sc-bar h4 { font-family: var(--font-display); font-size: 22px; font-weight: 500; color: #111; letter-spacing: -0.01em; }
+  .sc-bar .actions { display: flex; gap: 8px; }
+  .sc-bar .btn { padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; }
+  .sc-bar .btn.ghost { border: 1px solid #E5E7EB; color: #555; background: #fff; }
+  .sc-bar .btn.primary { background: #3B82F6; color: #fff; border: none; }
+  .sc-body { padding: 24px 28px 40px; }
+  .sc-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .sc-stat {
+    padding: 18px;
+    background: #fff;
+    border: 1px solid #E5E7EB;
+    border-radius: 10px;
+  }
+  .sc-stat .label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: #6B7280; }
+  .sc-stat .num { font-family: var(--font-display); font-size: 30px; font-weight: 500; color: #111; margin-top: 6px; line-height: 1; letter-spacing: -0.02em; }
+  .sc-stat .delta { margin-top: 6px; font-size: 12px; color: #16a34a; }
+  .sc-stat .delta.down { color: #dc2626; }
+
+  .sc-table {
+    background: #fff;
+    border: 1px solid #E5E7EB;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .sc-table .head, .sc-table .row {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr 80px;
+    padding: 12px 18px;
+    align-items: center;
+    font-size: 13px;
+  }
+  .sc-table .head {
+    background: #F9FAFB;
+    border-bottom: 1px solid #E5E7EB;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #6B7280;
+  }
+  .sc-table .row { border-bottom: 1px solid #F3F4F6; color: #111; }
+  .sc-table .row:last-child { border-bottom: 0; }
+  .sc-table .row .who { display: flex; align-items: center; gap: 10px; }
+  .sc-table .row .av { width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg, #3B82F6, #8B5CF6); color: #fff; font-size: 10px; font-weight: 700; display: grid; place-items: center; }
+  .sc-table .row .pill { padding: 3px 9px; border-radius: 999px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; display: inline-block; width: fit-content; }
+  .sc-table .row .pill.ok { background: #DCFCE7; color: #15803d; }
+  .sc-table .row .pill.pend { background: #FEF3C7; color: #92400e; }
+  .sc-table .row .pill.fail { background: #FEE2E2; color: #b91c1c; }
+
+  @media (max-width: 720px) {
+    .sc-demo { grid-template-columns: 64px 1fr; }
+    .sc-side .name, .sc-side .role, .sc-nav a span:not(.ic), .sc-nav-label, .sc-logo { display: none; }
+    .sc-logo::before { margin: 0 auto; }
+    .sc-stats { grid-template-columns: 1fr 1fr; }
+    .sc-table .head, .sc-table .row { grid-template-columns: 1fr 1fr 60px; }
+    .sc-table .head > div:nth-child(3), .sc-table .row > div:nth-child(3),
+    .sc-table .head > div:nth-child(4), .sc-table .row > div:nth-child(4) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Layouts</a>
+      <span class="sep">/</span>
+      <span class="here">Sidebar + Content</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">3.6 · Layout</span>
+    <h1 class="title">Sidebar + <em>Content</em>.</h1>
+    <p class="tagline">The universal web app layout. Fixed left nav, scrolling content area. Every dashboard you've ever used.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A persistent navigation panel on the left side of the screen, with the main working area on the right. This is the universal layout for web applications, dashboards, and admin interfaces. The sidebar stays fixed as the main content area scrolls.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>The outer container uses <code>display: flex</code> or CSS Grid with two columns: a fixed-width sidebar (240–280px) and a flex-1 content area. The sidebar gets <code>position: sticky; top: 0</code> with <code>height: 100vh</code>. The sidebar contains the logo at top, navigation links in the middle (with icons), and user profile at the bottom. The content area has its own internal scrolling.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Sidebar stays fixed. Scroll the right content area.</p>
+    <div class="demo-shell">
+      <div class="demo sc-demo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#fff; border-color:rgba(255,255,255,0.18);">Live</span>
+        <aside class="sc-side">
+          <div class="sc-logo">Lumen</div>
+          <div class="sc-nav-label">Workspace</div>
+          <div class="sc-nav">
+            <a class="active"><span class="ic">◆</span><span>Dashboard</span></a>
+            <a><span class="ic">📊</span><span>Analytics</span></a>
+            <a><span class="ic">📁</span><span>Projects</span></a>
+            <a><span class="ic">👥</span><span>Team</span></a>
+          </div>
+          <div class="sc-nav-label">Settings</div>
+          <div class="sc-nav">
+            <a><span class="ic">⚙</span><span>Workspace</span></a>
+            <a><span class="ic">🔔</span><span>Notifications</span></a>
+            <a><span class="ic">💳</span><span>Billing</span></a>
+          </div>
+          <div class="sc-user">
+            <div class="av">AM</div>
+            <div>
+              <div class="name">Aditya M.</div>
+              <div class="role">Admin</div>
+            </div>
+          </div>
+        </aside>
+        <main class="sc-main">
+          <div class="sc-bar">
+            <h4>Dashboard</h4>
+            <div class="actions">
+              <span class="btn ghost">Export</span>
+              <span class="btn primary">+ New project</span>
+            </div>
+          </div>
+          <div class="sc-body">
+            <div class="sc-stats">
+              <div class="sc-stat"><div class="label">Users</div><div class="num">12,408</div><div class="delta">+8.2% vs last week</div></div>
+              <div class="sc-stat"><div class="label">Revenue</div><div class="num">$84.2k</div><div class="delta">+12.6%</div></div>
+              <div class="sc-stat"><div class="label">Orders</div><div class="num">1,927</div><div class="delta down">−2.1%</div></div>
+              <div class="sc-stat"><div class="label">Growth</div><div class="num">24%</div><div class="delta">+1.4%</div></div>
+            </div>
+
+            <div class="sc-table">
+              <div class="head">
+                <div>Customer</div>
+                <div>Plan</div>
+                <div>MRR</div>
+                <div>Status</div>
+                <div></div>
+              </div>
+              <div class="row"><div class="who"><div class="av">NL</div>Northwind Labs</div><div>Team</div><div>$640</div><div><span class="pill ok">Active</span></div><div>→</div></div>
+              <div class="row"><div class="who"><div class="av">AG</div>Argent Group</div><div>Pro</div><div>$320</div><div><span class="pill ok">Active</span></div><div>→</div></div>
+              <div class="row"><div class="who"><div class="av">SB</div>Salt &amp; Bone</div><div>Pro</div><div>$320</div><div><span class="pill pend">Pending</span></div><div>→</div></div>
+              <div class="row"><div class="who"><div class="av">QU</div>Quill</div><div>Solo</div><div>$24</div><div><span class="pill ok">Active</span></div><div>→</div></div>
+              <div class="row"><div class="who"><div class="av">FC</div>Field Co.</div><div>Team</div><div>$640</div><div><span class="pill fail">Failed</span></div><div>→</div></div>
+              <div class="row"><div class="who"><div class="av">OB</div>Obys Studio</div><div>Pro</div><div>$320</div><div><span class="pill ok">Active</span></div><div>→</div></div>
+              <div class="row"><div class="who"><div class="av">RS</div>Resn</div><div>Enterprise</div><div>$2,400</div><div><span class="pill ok">Active</span></div><div>→</div></div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 3.6 Sidebar + Content</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Build a SaaS dashboard layout with a sidebar + content structure. Sidebar: 240px wide, dark background (#111827), fixed to left side, height:100vh. Contains: logo at top, navigation links with icons (Dashboard, Analytics, Projects, Settings, Team) with active state highlighted in blue, and user avatar + name at bottom. Main content area: flex-1, light gray background (#F9FAFB), has a top header bar with page title and action buttons. Content below shows: 4 stat cards in a row (Users, Revenue, Orders, Growth), then a data table. On mobile, sidebar collapses behind a hamburger menu.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://vercel.com/dashboard" target="_blank" rel="noopener">Vercel Dashboard</a><span class="desc">The reference for modern SaaS dashboards — sidebar + content done perfectly</span></div></li>
+      <li><div><a href="https://tailwindui.com/components#application-ui" target="_blank" rel="noopener">Tailwind UI — Application UI</a><span class="desc">Pre-built sidebar dashboard components showing all variations</span></div></li>
+      <li><div><a href="https://adminlte.io" target="_blank" rel="noopener">AdminLTE Demo</a><span class="desc">Open-source admin dashboard template showing complex sidebar layouts</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="3.5-fullpage-scroll.html" class="prev"><span class="label">← Prev</span><span class="title">3.5 Full-Page Scroll</span></a>
+      <a href="../4-navigation/index.html" class="next"><span class="label">Next chapter →</span><span class="title">Navigation</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

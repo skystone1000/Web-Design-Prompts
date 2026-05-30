@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>6.6 Card Component · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .cc-demo {
+    background: #FAFAF7;
+    color: #111;
+    min-height: 720px;
+    padding: 48px 32px;
+    border-radius: var(--radius-lg);
+  }
+  .cc-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+    gap: 18px;
+  }
+  .cc-head h3 { font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 4vw, 40px); color: #111; letter-spacing: -0.02em; }
+  .cc-head h3 em { font-style: italic; color: #2563EB; }
+  .cc-head .more { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #2563EB; border-bottom: 1px solid currentColor; padding-bottom: 3px; }
+
+  .cc-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  @media (max-width: 1024px) { .cc-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 700px) { .cc-grid { grid-template-columns: 1fr; } }
+
+  .cc-card {
+    display: block;
+    background: #fff;
+    border: 1px solid #E5E7EB;
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), border-color 0.25s var(--ease);
+  }
+  .cc-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 36px rgba(0,0,0,0.1);
+    border-color: #D0D0D0;
+  }
+  .cc-img {
+    aspect-ratio: 16/9;
+    background: #F0EDE8;
+    position: relative;
+    overflow: hidden;
+  }
+  .cc-img::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.22), transparent 65%); }
+  .cc-img.a { background: linear-gradient(135deg, #c4a35d, #6b4f1e); }
+  .cc-img.b { background: linear-gradient(135deg, #2c1a4a, #4a2b6a); }
+  .cc-img.c { background: linear-gradient(135deg, #6FB5A8, #1A1814); }
+  .cc-img.d { background: linear-gradient(135deg, #ed6a5e, #4a2b1a); }
+  .cc-img.e { background: linear-gradient(135deg, #4ECDC4, #1e3a8a); }
+  .cc-img.f { background: linear-gradient(135deg, #F59E0B, #d97706); }
+
+  .cc-body { padding: 20px; }
+  .cc-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #DBEAFE;
+    color: #2563EB;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .cc-tag.design { background: #FEE2E2; color: #DC2626; }
+  .cc-tag.eng { background: #DCFCE7; color: #15803D; }
+  .cc-tag.essay { background: #F3E8FF; color: #7C3AED; }
+
+  .cc-title {
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight: 500;
+    color: #111;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .cc-excerpt {
+    font-size: 14px;
+    color: #6B7280;
+    line-height: 1.55;
+    margin-bottom: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .cc-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #888;
+  }
+  .cc-av {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #60a5fa, #c084fc);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .cc-meta .who { color: #111; font-weight: 500; }
+  .cc-meta .dot { color: #ccc; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">UI Patterns</a>
+      <span class="sep">/</span>
+      <span class="here">Card Component</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">6.6 · UI Pattern</span>
+    <h1 class="title">Card <em>Component</em>.</h1>
+    <p class="tagline">The most universal building block. Image, tag, line-clamped title, excerpt, meta row. Hover any card to feel the lift.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A card is a self-contained rectangular container that groups related information about a single subject — a blog post, a product, a team member, a project. Cards are the most universal building block of web UI design. They create visual separation between items without requiring hard dividers, and they make complex pages scannable.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>A basic card has: a visual area at the top, a content area with title, description, optional metadata (date, author, tags), and sometimes a CTA. Cards are grouped in grids (2, 3, or 4 columns) and often have a hover state — a subtle lift effect (<code>translateY(-4px)</code> with increased shadow) that signals interactivity.</p>
+      <div class="term-grid">
+        <div><b>Visual area</b><span>Top section: image, video thumbnail, illustration, or solid color block</span></div>
+        <div><b>Content area</b><span>Padded section below the visual: title, description, meta info, CTA</span></div>
+        <div><b>Hover lift</b><span>translateY(-4px) + increased box-shadow — signals the card is clickable</span></div>
+        <div><b>aspect-ratio</b><span>e.g. 16/9 on the image keeps cards consistent height</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="tip"><b>Tip.</b> Three things make or break a card grid: consistent image aspect ratios (<code>aspect-ratio: 16/9</code> on the image container), comfortable internal padding (20–24px), and a clear hover state. Without a hover state, cards feel static and users don't know they're clickable.</div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Hover any card. Notice the consistent aspect ratio and clamped text.</p>
+    <div class="demo-shell">
+      <div class="demo cc-demo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#111; border-color:rgba(0,0,0,0.1);">Live · hover</span>
+        <div class="cc-head">
+          <h3>From the <em>journal</em>.</h3>
+          <a class="more">View all posts →</a>
+        </div>
+        <div class="cc-grid">
+          <a class="cc-card">
+            <div class="cc-img a"></div>
+            <div class="cc-body">
+              <span class="cc-tag essay">Essay</span>
+              <div class="cc-title">The quiet art of building software no one notices</div>
+              <div class="cc-excerpt">When a tool does its job perfectly, it disappears. We've forgotten how to design for invisibility — and it's costing every product team more than they realize.</div>
+              <div class="cc-meta"><div class="cc-av">HK</div><span class="who">Hannah K.</span><span class="dot">·</span><span>May 30</span><span class="dot">·</span><span>7 min</span></div>
+            </div>
+          </a>
+          <a class="cc-card">
+            <div class="cc-img b"></div>
+            <div class="cc-body">
+              <span class="cc-tag">Notes</span>
+              <div class="cc-title">A short list of details we got wrong on launch day</div>
+              <div class="cc-excerpt">Honest hand-written notes after batch 12 shipped. What broke, what surprised us, what we'd do differently in batch 13.</div>
+              <div class="cc-meta"><div class="cc-av">TM</div><span class="who">Theo M.</span><span class="dot">·</span><span>May 28</span><span class="dot">·</span><span>4 min</span></div>
+            </div>
+          </a>
+          <a class="cc-card">
+            <div class="cc-img c"></div>
+            <div class="cc-body">
+              <span class="cc-tag design">Design</span>
+              <div class="cc-title">Why we picked Fraunces and Inter Tight (and not the obvious ones)</div>
+              <div class="cc-excerpt">Designing for an editorial-feeling product reference site without using the same six fonts every other AI-built site uses.</div>
+              <div class="cc-meta"><div class="cc-av">SN</div><span class="who">Soraya N.</span><span class="dot">·</span><span>May 25</span><span class="dot">·</span><span>6 min</span></div>
+            </div>
+          </a>
+          <a class="cc-card">
+            <div class="cc-img d"></div>
+            <div class="cc-body">
+              <span class="cc-tag eng">Engineering</span>
+              <div class="cc-title">Scroll-snap is doing more than you think it is</div>
+              <div class="cc-excerpt">A short tour of CSS scroll-snap features beyond the basics — and where the browser surprises you with native momentum behavior.</div>
+              <div class="cc-meta"><div class="cc-av">DK</div><span class="who">Dev K.</span><span class="dot">·</span><span>May 22</span><span class="dot">·</span><span>9 min</span></div>
+            </div>
+          </a>
+          <a class="cc-card">
+            <div class="cc-img e"></div>
+            <div class="cc-body">
+              <span class="cc-tag">Field notes</span>
+              <div class="cc-title">Two weeks in Reykjavík with a camera and a sketchbook</div>
+              <div class="cc-excerpt">A travel journal as a design exercise. What changed about my work when I let it be slow for fourteen days in a row.</div>
+              <div class="cc-meta"><div class="cc-av">MR</div><span class="who">Maya R.</span><span class="dot">·</span><span>May 19</span><span class="dot">·</span><span>8 min</span></div>
+            </div>
+          </a>
+          <a class="cc-card">
+            <div class="cc-img f"></div>
+            <div class="cc-body">
+              <span class="cc-tag design">Design</span>
+              <div class="cc-title">An apology for the loading skeleton</div>
+              <div class="cc-excerpt">The shimmering grey shapes you see while data loads are not lazy filler. They're a quiet promise about what's about to arrive.</div>
+              <div class="cc-meta"><div class="cc-av">RB</div><span class="who">Rauno B.</span><span class="dot">·</span><span>May 16</span><span class="dot">·</span><span>5 min</span></div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head">
+        <span class="lang">Prompt · 6.6 Card Component</span>
+        <button class="copy-btn" aria-label="Copy prompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre class="prompt-body"><code>Build a blog post card grid with 3 columns. Each card: white background (#FFFFFF), border:1px solid #E5E7EB, border-radius:12px, overflow:hidden, cursor:pointer. Hover state: transform:translateY(-4px), box-shadow:0 12px 30px rgba(0,0,0,0.1), border-color:#D0D0D0. All transitions: 0.25s ease. Card structure: image container (aspect-ratio:16/9, background:#F0F0F0 as placeholder) → content area with padding:20px containing: category tag (small pill, colored background, 11px uppercase text), H3 title (18px, font-weight:600, 2-line clamp with -webkit-line-clamp:2), excerpt paragraph (14px, muted gray, 3-line clamp), bottom meta row (author avatar 28px circle + name + date + reading time, all 13px muted). Entire card is wrapped in an &lt;a&gt; tag. On mobile (under 768px): 1 column. Tablet (768-1024px): 2 columns.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://dribbble.com" target="_blank" rel="noopener">Dribbble.com</a><span class="desc">Dribbble's own project cards — hover effect, image, title, author meta</span></div></li>
+      <li><div><a href="https://tailwindui.com/components/marketing/elements/cards" target="_blank" rel="noopener">Tailwind UI — Card Components</a><span class="desc">Pre-built card components in multiple styles</span></div></li>
+      <li><div><a href="https://read.cv" target="_blank" rel="noopener">Read.cv</a><span class="desc">Portfolio platform with beautifully crafted card-based profile and post layouts</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="6.5-modal-dialog.html" class="prev"><span class="label">← Prev</span><span class="title">6.5 Modal / Dialog</span></a>
+      <a href="../../index.html" class="next"><span class="label">Back to →</span><span class="title">Home</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>© Vibe Design Reference</div>
+    <div><a href="../../index.html">↑ Home</a></div>
+  </div>
+</footer>
+
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>
