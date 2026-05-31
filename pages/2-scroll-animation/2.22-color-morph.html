@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.22 Section Color Theme Morph · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .cm-demo {
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+    background: var(--bg);
+    color: var(--fg);
+    position: relative;
+    transition: background 0.45s var(--ease), color 0.45s var(--ease);
+    --bg: #0E0E14;
+    --fg: #fff;
+    --accent: #E8B339;
+  }
+  .cm-pin {
+    position: sticky; top: 0;
+    height: 80px;
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 28px;
+    z-index: 10;
+    border-bottom: 1px solid currentColor;
+    border-color: rgba(255,255,255,0.08);
+    transition: background 0.45s, color 0.45s, border-color 0.45s;
+  }
+  .cm-pin .b { font-family: var(--font-display); font-size: 18px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+  .cm-pin .b::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); transition: background 0.45s, box-shadow 0.45s; }
+  .cm-pin .chip {
+    padding: 6px 12px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    transition: color 0.45s, border-color 0.45s;
+  }
+
+  .cm-sec {
+    min-height: 640px;
+    padding: 100px 32px;
+    display: grid;
+    place-items: center;
+    text-align: center;
+  }
+  .cm-sec .num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .cm-sec h3 { font-family: var(--font-display); font-size: clamp(40px, 6vw, 64px); font-weight: 400; letter-spacing: -0.03em; line-height: 1.0; max-width: 16ch; margin: 0 auto; }
+  .cm-sec h3 em { font-style: italic; color: var(--accent); }
+  .cm-sec p { margin-top: 18px; max-width: 48ch; font-size: 16px; line-height: 1.55; opacity: 0.7; margin-left: auto; margin-right: auto; }
+  .cm-sec .cta {
+    display: inline-block;
+    margin-top: 26px;
+    padding: 12px 22px;
+    background: var(--accent);
+    color: var(--bg);
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 13.5px;
+    transition: background 0.45s, color 0.45s;
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Color Morph</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.22 · Animation</span>
+    <h1 class="title">Section Color <em>Theme Morph</em>.</h1>
+    <p class="tagline">The page background and accent color smoothly transition as each section enters view. One palette per section — and the navbar, CTAs, and dot indicator all update in lockstep.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Each section of the page has its own palette. As you scroll, the body background and accent color of all UI chrome (navbar, buttons, glowing dot) animate smoothly to the next section's colors. The effect: the page itself feels like it's morphing through a story — each scene gets its own mood. Used by Apple product pages, Stripe Sessions microsites, Spotify Wrapped, almost any modern long-scroll narrative.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Each section element has <code>data-bg</code>, <code>data-fg</code>, and <code>data-accent</code> attributes. An IntersectionObserver watches them — when a section becomes the most-visible one, JS sets corresponding CSS custom properties (<code>--bg</code>, <code>--fg</code>, <code>--accent</code>) on a high-level container with a transition. Because every UI element references those vars, the entire chrome morphs in one go with a single 0.45s transition. The clever bit is just: <em>store the palette on the section, let the section announce itself when in view</em>.</p>
+      <div class="term-grid">
+        <div><b>Data attributes per section</b><span>data-bg / data-fg / data-accent — colors travel with the content</span></div>
+        <div><b>IntersectionObserver</b><span>Detects which section is most visible; sets active palette</span></div>
+        <div><b>CSS custom properties</b><span>--bg --fg --accent on a parent; everything inside uses var()</span></div>
+        <div><b>Single transition</b><span>One 0.45s color transition on the root — all chrome moves together</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. Background, navbar, accent dot, and CTA all morph at each section.</p>
+    <div class="demo-shell">
+      <div class="demo cm-demo" id="cmDemo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.4); border-color:rgba(255,255,255,0.2);">Live · scroll inside</span>
+        <nav class="cm-pin"><div class="b">Aurora</div><div class="chip" id="cmChip">Section 01 / 4</div></nav>
+        <section class="cm-sec" data-bg="#0E0E14" data-fg="#F2EFE7" data-accent="#E8B339" data-name="Hero">
+          <div>
+            <div class="num">01 / Hero</div>
+            <h3>Built for <em>focus</em>.</h3>
+            <p>Warm gold accent on near-black. The opening note.</p>
+            <a class="cta">Get started →</a>
+          </div>
+        </section>
+        <section class="cm-sec" data-bg="#1a0e3a" data-fg="#f8eaff" data-accent="#c084fc" data-name="Features">
+          <div>
+            <div class="num">02 / Features</div>
+            <h3>Quiet by <em>default</em>.</h3>
+            <p>Deep violet stage with lilac accent. The mood shifts.</p>
+            <a class="cta">See features →</a>
+          </div>
+        </section>
+        <section class="cm-sec" data-bg="#0a3d4d" data-fg="#dff7ff" data-accent="#00D9FF" data-name="Speed">
+          <div>
+            <div class="num">03 / Speed</div>
+            <h3>Faster than <em>last year's</em> tools.</h3>
+            <p>Marine teal with electric cyan accent — cooler, sharper.</p>
+            <a class="cta">Run a benchmark →</a>
+          </div>
+        </section>
+        <section class="cm-sec" data-bg="#F8F4EA" data-fg="#1A1814" data-accent="#8b1a1a" data-name="Closing">
+          <div>
+            <div class="num">04 / Closing</div>
+            <h3>Start a workspace, <em>quietly</em>.</h3>
+            <p>The page flips to a warm cream finale. Editorial closer.</p>
+            <a class="cta">Create one →</a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.22 Section Color Theme Morph</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a long-scroll page where the background, text color, and accent color morph as each section enters view. The page root has CSS custom properties --bg, --fg, --accent with a transition:background 0.45s ease, color 0.45s ease on it. Every chrome element references those vars — the sticky navbar uses var(--bg) + var(--fg) + var(--accent); the section CTA buttons use background:var(--accent) color:var(--bg). Each section element has data-bg, data-fg, data-accent attributes carrying its palette. Sections: (1) HERO — black + warm gold; (2) FEATURES — deep violet + lilac; (3) SPEED — marine teal + electric cyan; (4) CLOSING — warm cream + deep red. Use IntersectionObserver (threshold:0.55) on every section — when a section becomes the most-intersecting one, read its data-* attributes and assign them to the root's --bg/--fg/--accent CSS variables. Show a small "Section N / 4" chip in the navbar that updates with the section's name. The whole chrome (background, headlines, navbar, dot indicator, CTA button) animates together in a single 0.45s ease transition — feels like the page changes scene.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.apple.com/macbook-air" target="_blank" rel="noopener">Apple MacBook Air</a><span class="desc">Background color shifts through several palettes as you scroll</span></div></li>
+      <li><div><a href="https://stripe.com/sessions" target="_blank" rel="noopener">Stripe Sessions</a><span class="desc">Microsite where the entire theme morphs per scene</span></div></li>
+      <li><div><a href="https://www.framer.com" target="_blank" rel="noopener">Framer.com</a><span class="desc">Hero theme transitions on long product pages</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.21-cross-section.html" class="prev"><span class="label">← Prev</span><span class="title">2.21 Cross-section</span></a>
+      <a href="2.23-svg-path-follow.html" class="next"><span class="label">Next →</span><span class="title">2.23 SVG Path Follow</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const root = document.getElementById('cmDemo');
+    const chip = document.getElementById('cmChip');
+    if (!root) return;
+    const secs = root.querySelectorAll('.cm-sec');
+    const io = new IntersectionObserver((entries) => {
+      let best = null;
+      entries.forEach(e => { if (!best || e.intersectionRatio > best.intersectionRatio) best = e; });
+      if (best && best.intersectionRatio > 0.4) {
+        const s = best.target;
+        root.style.setProperty('--bg', s.dataset.bg);
+        root.style.setProperty('--fg', s.dataset.fg);
+        root.style.setProperty('--accent', s.dataset.accent);
+        const idx = Array.from(secs).indexOf(s) + 1;
+        chip.textContent = `Section 0${idx} / ${secs.length} · ${s.dataset.name}`;
+      }
+    }, { root, threshold: [0.4, 0.55, 0.75] });
+    secs.forEach(s => io.observe(s));
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

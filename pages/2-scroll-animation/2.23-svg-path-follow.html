@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.23 SVG Path Follow · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .pf-demo {
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, #060611 0%, #1a0e3a 100%);
+    color: #fff;
+    position: relative;
+  }
+  .pf-spacer { height: 200px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+  .pf-pin {
+    position: sticky; top: 0;
+    height: 720px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    align-items: center;
+    gap: 32px;
+    padding: 40px;
+  }
+  .pf-svg { width: 100%; height: 100%; overflow: visible; }
+  .pf-track {
+    fill: none;
+    stroke: rgba(255,255,255,0.12);
+    stroke-width: 2;
+    stroke-dasharray: 6 8;
+  }
+  .pf-track-drawn {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-dasharray: var(--len, 1000);
+    stroke-dashoffset: calc(var(--len, 1000) * (1 - var(--p, 0)));
+    filter: drop-shadow(0 0 8px var(--accent));
+  }
+  /* Waypoint markers on the path */
+  .pf-stop {
+    fill: rgba(255,255,255,0.06);
+    stroke: rgba(255,255,255,0.5);
+    stroke-width: 1.5;
+    transition: fill 0.3s, stroke 0.3s, r 0.3s;
+  }
+  .pf-stop.on { fill: var(--accent); stroke: var(--accent); }
+
+  /* The plane that follows */
+  .pf-plane {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: grid;
+    place-items: center;
+    color: #1A1300;
+    font-size: 18px;
+    font-weight: 700;
+    box-shadow: 0 0 24px var(--accent), 0 4px 14px rgba(0,0,0,0.4);
+  }
+  .pf-plane svg { width: 20px; height: 20px; }
+
+  .pf-info {
+    color: #fff;
+    padding: 24px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    backdrop-filter: blur(12px);
+  }
+  .pf-info .num { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+  .pf-info h4 { font-family: var(--font-display); font-weight: 400; font-size: 28px; letter-spacing: -0.02em; line-height: 1.05; margin-bottom: 10px; }
+  .pf-info h4 em { font-style: italic; color: var(--accent); }
+  .pf-info p { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.55; }
+
+  .pf-progress {
+    position: absolute;
+    bottom: 24px; left: 40px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    z-index: 5;
+  }
+  .pf-progress b { color: var(--accent); font-weight: 700; }
+
+  @media (max-width: 760px) {
+    .pf-pin { grid-template-columns: 1fr; }
+    .pf-info { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">SVG Path Follow</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.23 · Animation</span>
+    <h1 class="title">SVG Path <em>Follow</em>.</h1>
+    <p class="tagline">An element travels along a winding SVG curve as you scroll. The path draws itself behind it; waypoint stops light up as the traveller passes them. Story-driven journey scrolls.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>An element (an icon, a planet, a vehicle, an idea-bubble) follows a curved SVG path drawn across the page. The path itself draws in behind the traveller using the stroke-dashoffset trick (see 2.13). Waypoint markers along the path light up as the element passes them, and a side panel updates with copy for the current waypoint. Used by airline route maps, journey / onboarding pages, and brand-history narratives.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Define an SVG <code>&lt;path&gt;</code> with a smooth curve. Get its total length with <code>path.getTotalLength()</code>. On scroll, calculate progress 0→1; for the path-draw, set <code>stroke-dashoffset</code> = length × (1 − progress). For the traveller, call <code>path.getPointAtLength(length × progress)</code> which returns an <code>{x, y}</code> coordinate — use it to position the traveller via CSS transform or inline x/y attributes. Waypoint detection is just: which waypoint's progress threshold has been crossed?</p>
+      <div class="term-grid">
+        <div><b>getTotalLength()</b><span>SVG method returning the path's total length in user units</span></div>
+        <div><b>getPointAtLength(t)</b><span>Returns {x,y} on the path at distance t — perfect for follow</span></div>
+        <div><b>stroke-dashoffset draw</b><span>Same trick as 2.13 — set offset to length × (1 - progress)</span></div>
+        <div><b>Waypoint thresholds</b><span>Each stop has its own progress %; highlight when crossed</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. The amber dot travels the winding path. Waypoints light up. The side panel updates with copy.</p>
+    <div class="demo-shell">
+      <div class="demo pf-demo" id="pfDemo">
+        <span class="demo-badge">Live · scroll inside</span>
+        <div class="pf-spacer">↓ scroll to journey</div>
+        <div style="height: 2200px; position: relative;">
+          <div class="pf-pin" id="pfPin" style="--p: 0">
+            <svg class="pf-svg" viewBox="0 0 600 500" id="pfSvg" preserveAspectRatio="xMidYMid meet">
+              <!-- The path: a winding S-curve through 4 stops -->
+              <path id="pfPath" class="pf-track" d="M50 80 Q 220 -10, 300 150 T 540 280 Q 460 420, 280 380 T 80 460" />
+              <path id="pfDrawn" class="pf-track-drawn" d="M50 80 Q 220 -10, 300 150 T 540 280 Q 460 420, 280 380 T 80 460" />
+              <!-- Waypoint dots — positions are evaluated by JS along the path -->
+              <circle class="pf-stop" id="stop0" r="9"/>
+              <circle class="pf-stop" id="stop1" r="9"/>
+              <circle class="pf-stop" id="stop2" r="9"/>
+              <circle class="pf-stop" id="stop3" r="9"/>
+              <foreignObject id="pfTraveler" width="44" height="44" x="0" y="0">
+                <div xmlns="http://www.w3.org/1999/xhtml" class="pf-plane">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </div>
+              </foreignObject>
+            </svg>
+            <div class="pf-info" id="pfInfo">
+              <div class="num">Stop <span id="pfStopNum">01</span> / 04</div>
+              <h4 id="pfStopTtl">Reykjavík <em>departure</em>.</h4>
+              <p id="pfStopDesc">A cold morning in May. The whole batch packed into one van.</p>
+            </div>
+          </div>
+        </div>
+        <div class="pf-spacer">— journey complete —</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.23 SVG Path Follow</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a journey-style scroll where an element travels along a winding SVG path. Sticky pin (position:sticky top:0 height:100vh) inside a tall 2200px section. Inside the pin, an SVG viewBox 600 500 with two overlapping paths sharing the same "d" attribute — a winding cubic-Bezier S-curve through 4 stops — one rendered as a faint dashed gray "track" (the background path), the other as the "drawn" path in accent color with stroke-dasharray and stroke-dashoffset for the draw-in animation. Use path.getTotalLength() to set both dasharray and the initial dashoffset (full length so it's invisible by default). 4 waypoint &lt;circle&gt; markers positioned along the path using path.getPointAtLength(length * t) at t = 0, 0.33, 0.66, 1. A foreignObject element holds the "traveller" — a 44px accent-gradient circle with a glowing shadow and an arrow icon. On scroll: (1) compute progress 0→1 from section scroll; (2) set dashoffset = length * (1 - progress) so the path draws in behind the traveller; (3) position the traveller using path.getPointAtLength(length * progress) — set x/y attributes on the foreignObject; (4) highlight whichever waypoint we've passed by adding an .on class; (5) update a side info panel with the current stop's copy. Result: a smooth animated journey that drives narrative as you scroll.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.airbnb.com" target="_blank" rel="noopener">Airbnb — Plus / journey pages</a><span class="desc">Path-follow used for itinerary visualizations</span></div></li>
+      <li><div><a href="https://www.stripe.com/atlas" target="_blank" rel="noopener">Stripe Atlas — journey</a><span class="desc">Scroll-driven path through "starting a company" stages</span></div></li>
+      <li><div><a href="https://gsap.com" target="_blank" rel="noopener">GSAP MotionPathPlugin</a><span class="desc">Library plugin that makes path-follow trivial in production</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.22-color-morph.html" class="prev"><span class="label">← Prev</span><span class="title">2.22 Color Morph</span></a>
+      <a href="2.24-globe-rotate.html" class="next"><span class="label">Next →</span><span class="title">2.24 Globe Rotation</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const sc = document.getElementById('pfDemo');
+    const pin = document.getElementById('pfPin');
+    const path = document.getElementById('pfPath');
+    const drawn = document.getElementById('pfDrawn');
+    const trav = document.getElementById('pfTraveler');
+    const tall = sc.querySelector('[style*="2200"]');
+    const stopNum = document.getElementById('pfStopNum');
+    const stopTtl = document.getElementById('pfStopTtl');
+    const stopDesc = document.getElementById('pfStopDesc');
+    if (!sc || !path) return;
+
+    const len = path.getTotalLength();
+    drawn.style.setProperty('--len', len);
+    drawn.setAttribute('stroke-dasharray', len);
+
+    const stops = [
+      { t: 0,    name: 'Reykjavík', ttl: 'Reykjavík <em>departure</em>.', desc: 'A cold morning in May. The whole batch packed into one van.' },
+      { t: 0.33, name: 'Bergen',    ttl: 'Bergen, <em>by ferry</em>.',     desc: 'Three days at sea. The jackets ride above-deck under tarps.' },
+      { t: 0.66, name: 'Brooklyn',  ttl: 'Brooklyn <em>arrival</em>.',      desc: 'Cleared customs Tuesday. First fitting Wednesday.' },
+      { t: 1,    name: 'Shipped',   ttl: 'Out to <em>customers</em>.',      desc: '240 numbered jackets dispatched to 14 cities by Friday.' },
+    ];
+    const stopEls = ['stop0', 'stop1', 'stop2', 'stop3'].map(id => document.getElementById(id));
+    // Place waypoint circles
+    stops.forEach((s, i) => {
+      const p = path.getPointAtLength(len * s.t);
+      stopEls[i].setAttribute('cx', p.x);
+      stopEls[i].setAttribute('cy', p.y);
+    });
+
+    function update() {
+      const r = tall.getBoundingClientRect();
+      const sr = sc.getBoundingClientRect();
+      const start = r.top - sr.top;
+      const total = tall.offsetHeight - sr.height;
+      const p = Math.max(0, Math.min(1, -start / total));
+      pin.style.setProperty('--p', p.toFixed(4));
+      drawn.setAttribute('stroke-dashoffset', len * (1 - p));
+      const pt = path.getPointAtLength(len * p);
+      trav.setAttribute('x', pt.x - 22);
+      trav.setAttribute('y', pt.y - 22);
+
+      // Active stop = the latest one we've passed
+      let active = 0;
+      for (let i = 0; i < stops.length; i++) {
+        if (p >= stops[i].t - 0.01) active = i;
+      }
+      stopEls.forEach((el, i) => el.classList.toggle('on', i <= active));
+      stopNum.textContent = String(active + 1).padStart(2, '0');
+      stopTtl.innerHTML = stops[active].ttl;
+      stopDesc.textContent = stops[active].desc;
+    }
+    sc.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

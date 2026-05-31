@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.33 Clockwork Gears · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .cw-demo {
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, #1a1410 0%, #0a0808 100%);
+    color: #f4ede1;
+    position: relative;
+  }
+  .cw-spacer { height: 200px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+  .cw-pin {
+    position: sticky; top: 0;
+    height: 720px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+  .cw-machine {
+    position: relative;
+    width: min(560px, 90vw);
+    height: 420px;
+  }
+
+  /* Gears */
+  .cw-gear {
+    position: absolute;
+    border-radius: 50%;
+    background:
+      conic-gradient(from 0deg,
+        #c4a35d 0deg, #c4a35d 8deg,
+        #6b4f1e 8deg, #6b4f1e 22deg,
+        #c4a35d 22deg, #c4a35d 30deg,
+        #6b4f1e 30deg, #6b4f1e 44deg);
+    background-size: 30deg auto;
+    border: 1px solid #6b4f1e;
+    box-shadow: 0 0 0 6px rgba(212,176,109,0.06), inset 0 0 20px rgba(0,0,0,0.6);
+    transition: transform 0.05s linear;
+  }
+  .cw-gear::before {
+    content: "";
+    position: absolute;
+    inset: 14%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #d4c08a, #8a6b32 60%, #4a3517 100%);
+    box-shadow: inset 0 0 14px rgba(0,0,0,0.5);
+  }
+  .cw-gear::after {
+    content: "";
+    position: absolute;
+    inset: 42%;
+    border-radius: 50%;
+    background: #1a1410;
+    box-shadow: 0 0 8px rgba(0,0,0,0.5);
+  }
+  /* Spokes line */
+  .cw-spoke {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 60%; height: 4px;
+    transform-origin: 0 50%;
+    background: linear-gradient(90deg, #1a1410, transparent);
+    pointer-events: none;
+  }
+
+  /* Sizes & positions; rotation direction encoded in --dir */
+  .cw-g1 { width: 220px; height: 220px; top: 20px; left: 30px; transform: rotate(calc(var(--p, 0) * 360deg)); }
+  .cw-g2 { width: 160px; height: 160px; top: 200px; left: 220px; transform: rotate(calc(var(--p, 0) * -495deg)); }
+  .cw-g3 { width: 130px; height: 130px; top: 50px; left: 340px; transform: rotate(calc(var(--p, 0) * 610deg)); }
+  .cw-g4 { width: 100px; height: 100px; top: 240px; left: 410px; transform: rotate(calc(var(--p, 0) * -790deg)); }
+
+  /* Clock face — uses g1 as backdrop */
+  .cw-face {
+    position: absolute;
+    inset: 25%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #fdfaf2, #d2c4a8 80%, #8a6b32 100%);
+    border: 2px solid #4a3517;
+    box-shadow: inset 0 0 18px rgba(0,0,0,0.3);
+    display: grid;
+    place-items: center;
+    z-index: 5;
+  }
+  .cw-face .num {
+    position: absolute;
+    font-family: 'Georgia', serif;
+    font-size: 14px;
+    color: #4a3517;
+    font-weight: 700;
+  }
+  .cw-face .n12 { top: 6%; left: 50%; transform: translateX(-50%); }
+  .cw-face .n3  { right: 8%; top: 50%; transform: translateY(-50%); }
+  .cw-face .n6  { bottom: 6%; left: 50%; transform: translateX(-50%); }
+  .cw-face .n9  { left: 8%; top: 50%; transform: translateY(-50%); }
+  .cw-hand {
+    position: absolute;
+    top: 50%; left: 50%;
+    background: #1a1410;
+    border-radius: 4px;
+    transform-origin: 50% 100%;
+  }
+  .cw-h1 { width: 4px; height: 26%; transform: translate(-50%, -100%) rotate(calc(var(--p, 0) * 1080deg)); } /* second hand fast */
+  .cw-h2 { width: 5px; height: 22%; transform: translate(-50%, -100%) rotate(calc(var(--p, 0) * 90deg)); } /* hour hand slow */
+  .cw-pivot {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #c4a35d, #6b4f1e);
+    transform: translate(-50%, -50%);
+    z-index: 6;
+  }
+
+  .cw-label {
+    position: absolute;
+    top: 28px; left: 0; right: 0;
+    text-align: center;
+    z-index: 10;
+  }
+  .cw-label .eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: #c4a35d; margin-bottom: 6px; }
+  .cw-label h4 { font-family: var(--font-display); font-weight: 400; font-size: clamp(26px, 4vw, 38px); letter-spacing: -0.02em; color: #f4ede1; }
+  .cw-label h4 em { font-style: italic; color: #c4a35d; }
+
+  .cw-readout {
+    position: absolute;
+    bottom: 28px; left: 0; right: 0;
+    text-align: center;
+    z-index: 10;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(244,237,225,0.7);
+  }
+  .cw-readout b { color: #c4a35d; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Clockwork Gears</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.33 · Animation</span>
+    <h1 class="title">Clockwork <em>Gears</em>.</h1>
+    <p class="tagline">Four interlocking gears rotate at different speeds and directions as you scroll. Small gears spin fast, big gears barely move — like a real watch movement.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>An exposed watch / clockwork movement where you can see the gears turning. Different gears spin at different speeds (small = fast, large = slow) and opposite directions (because in a real gear train, alternating gears rotate opposite). The largest gear has a clock face on it with hands that move too. Used by Swiss watch brands, slow-craft sites, and anything that wants to communicate "mechanical engineering at the core."</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Each gear is a circle with a <code>conic-gradient</code> background that creates alternating tooth segments around its edge. Inside each gear, an inner circle and a hub create depth. As scroll progress <code>--p</code> grows, each gear's <code>transform: rotate</code> uses a different multiplier — gear-1 rotates 360°, gear-2 rotates -495° (opposite direction, faster), gear-3 rotates 610°, gear-4 rotates -790°. The clock face inside the biggest gear has minute / hour hands that also rotate at different speeds tied to the same <code>--p</code>.</p>
+      <div class="term-grid">
+        <div><b>conic-gradient teeth</b><span>Alternating segments around 360° create the gear-tooth silhouette</span></div>
+        <div><b>Different rotation multipliers</b><span>Small gears get larger multipliers (faster), big gears smaller</span></div>
+        <div><b>Alternating directions</b><span>Sign flips between adjacent gears — physics of real gear trains</span></div>
+        <div><b>Hands on the same --p</b><span>Clock hands use different multipliers for "second" vs "hour" speeds</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. Four gears rotate at different speeds + directions. The clock hands move too.</p>
+    <div class="demo-shell">
+      <div class="demo cw-demo" id="cwDemo">
+        <span class="demo-badge" style="background:rgba(244,237,225,0.18); color:#c4a35d; border-color:rgba(196,163,93,0.3);">Live · scroll inside</span>
+        <div class="cw-spacer">↓ scroll to wind the watch</div>
+        <div style="height: 2400px; position: relative;">
+          <div class="cw-pin" id="cwPin" style="--p: 0">
+            <div class="cw-label">
+              <div class="eyebrow">— Calibre 04</div>
+              <h4>Every gear, <em>turning together</em>.</h4>
+            </div>
+            <div class="cw-machine">
+              <div class="cw-gear cw-g1">
+                <div class="cw-face">
+                  <span class="num n12">XII</span>
+                  <span class="num n3">III</span>
+                  <span class="num n6">VI</span>
+                  <span class="num n9">IX</span>
+                  <div class="cw-hand cw-h2"></div>
+                  <div class="cw-hand cw-h1"></div>
+                  <div class="cw-pivot"></div>
+                </div>
+              </div>
+              <div class="cw-gear cw-g2"></div>
+              <div class="cw-gear cw-g3"></div>
+              <div class="cw-gear cw-g4"></div>
+            </div>
+            <div class="cw-readout">Crown rotation: <b id="cwRot">0°</b> · Tempo: <b id="cwTempo">stopped</b></div>
+          </div>
+        </div>
+        <div class="cw-spacer">— mechanism complete —</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.33 Clockwork Gears</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a scroll-driven Swiss watch movement with 4 interlocking gears. Sticky pin (top:0 height:100vh) inside a tall 2400px section, dark warm "watchmaker's bench" background. Inside the pin a 560×420 stage holding 4 gear divs: g1 (220px, top-left, biggest), g2 (160px, center), g3 (130px, top-right), g4 (100px, bottom-right). Each gear is a circle with: conic-gradient(from 0deg, gold 0deg gold 8deg, dark-bronze 8deg dark-bronze 22deg, ...) repeating every 30deg via background-size to make a tooth ring; an inset ::before for the polished disc; an inset ::after for the center hole. As scroll progress --p (0→1) grows, each gear's transform:rotate uses a different multiplier AND sign so they spin at varying speeds and directions: g1: rotate(--p × 360deg), g2: rotate(--p × -495deg), g3: rotate(--p × 610deg), g4: rotate(--p × -790deg). Inside g1, place a "clock face" — a cream circle with Roman numerals (XII, III, VI, IX), a thin "second hand" rotating --p × 1080deg, a chunky "hour hand" rotating --p × 90deg, and a center pivot dot. Add a "Crown rotation" readout at the bottom showing the current angle and a "Tempo" label that reads "stopped / winding / running / fast" based on scroll speed. Aesthetic: aged brass (#c4a35d), dark bronze (#6b4f1e), cream watch face — Swiss watchmaker palette.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.patek.com" target="_blank" rel="noopener">Patek Philippe</a><span class="desc">Watch brand sites with mechanical animations</span></div></li>
+      <li><div><a href="https://www.hodinkee.com" target="_blank" rel="noopener">Hodinkee</a><span class="desc">Watch journalism with rich movement renders</span></div></li>
+      <li><div><a href="https://codepen.io/search/pens?q=gears+css" target="_blank" rel="noopener">CodePen — CSS gears</a><span class="desc">Various pure-CSS gear demos to study</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.32-particle-assembly.html" class="prev"><span class="label">← Prev</span><span class="title">2.32 Particle Assembly</span></a>
+      <a href="2.34-filmstrip.html" class="next"><span class="label">Next →</span><span class="title">2.34 Filmstrip Scrub</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const sc = document.getElementById('cwDemo');
+    const pin = document.getElementById('cwPin');
+    const rotEl = document.getElementById('cwRot');
+    const tempoEl = document.getElementById('cwTempo');
+    const tall = sc.querySelector('[style*="2400"]');
+    let lastP = 0, lastT = performance.now();
+    function update() {
+      const r = tall.getBoundingClientRect();
+      const sr = sc.getBoundingClientRect();
+      const start = r.top - sr.top;
+      const total = tall.offsetHeight - sr.height;
+      const p = Math.max(0, Math.min(1, -start / total));
+      pin.style.setProperty('--p', p.toFixed(4));
+      rotEl.textContent = Math.round(p * 360) + '°';
+
+      const now = performance.now();
+      const dt = now - lastT;
+      const speed = Math.abs(p - lastP) / Math.max(1, dt);
+      tempoEl.textContent = speed < 0.0001 ? 'stopped' : (speed < 0.0008 ? 'winding' : (speed < 0.003 ? 'running' : 'fast'));
+      lastP = p; lastT = now;
+    }
+    sc.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

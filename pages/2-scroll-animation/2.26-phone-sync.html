@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.26 Phone Screen Scroll Sync · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .ps-demo {
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+    background: var(--bg-elev);
+    color: var(--text);
+    position: relative;
+  }
+  .ps-spacer { height: 200px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); }
+  .ps-pin {
+    position: sticky; top: 0; height: 720px;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    align-items: center;
+    gap: 40px;
+    padding: 40px;
+  }
+  .ps-info { padding-left: 16px; }
+  .ps-info .num { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 18px; transition: color 0.4s; }
+  .ps-info h4 { font-family: var(--font-display); font-weight: 400; font-size: clamp(34px, 5vw, 48px); letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 14px; transition: opacity 0.4s; }
+  .ps-info h4 em { font-style: italic; color: var(--accent); }
+  .ps-info p { color: var(--text-soft); font-size: 16px; line-height: 1.55; max-width: 38ch; }
+
+  /* Phone mockup */
+  .ps-phone {
+    position: relative;
+    width: 280px;
+    height: 580px;
+    margin: 0 auto;
+    background: #14141B;
+    border-radius: 44px;
+    border: 12px solid #1A1A22;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.04);
+    overflow: hidden;
+  }
+  .ps-notch {
+    position: absolute;
+    top: 6px; left: 50%;
+    transform: translateX(-50%);
+    width: 90px; height: 22px;
+    background: #0a0a14;
+    border-radius: 999px;
+    z-index: 10;
+  }
+  .ps-screen {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: #0a0a14;
+    padding-top: 38px;
+  }
+  /* The "inner content" scrolls based on page scroll */
+  .ps-content {
+    position: relative;
+    transform: translateY(calc(var(--p, 0) * -1400px));
+    transition: transform 0.05s linear;
+    will-change: transform;
+    color: #fff;
+  }
+  .ps-content .status { display: flex; justify-content: space-between; padding: 0 18px 12px; font-family: var(--font-mono); font-size: 11px; color: #fff; }
+
+  .ps-screen1, .ps-screen2, .ps-screen3 {
+    padding: 20px 18px;
+    min-height: 540px;
+  }
+  .ps-screen1 h6, .ps-screen2 h6, .ps-screen3 h6 {
+    font-family: var(--font-display); font-size: 26px; font-weight: 500; color: #fff; margin-bottom: 14px; letter-spacing: -0.02em;
+  }
+  .ps-screen1 h6 em, .ps-screen2 h6 em, .ps-screen3 h6 em { color: var(--accent); font-style: italic; }
+  .ps-card-mini {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .ps-card-mini .av { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #1A1300; font-size: 11px; font-weight: 700; display: grid; place-items: center; flex-shrink: 0; }
+  .ps-card-mini .t { font-size: 12.5px; color: #fff; font-weight: 500; }
+  .ps-card-mini .s { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+  .ps-divider { padding: 26px 18px; text-align: center; }
+  .ps-divider .lbl { display: inline-block; padding: 6px 12px; border: 1px solid rgba(255,255,255,0.18); border-radius: 999px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.6); }
+
+  .ps-screen2 { background: linear-gradient(180deg, rgba(124,92,255,0.08), transparent); }
+  .ps-screen3 { background: linear-gradient(180deg, rgba(0,217,255,0.06), transparent); }
+
+  .ps-hint {
+    position: absolute;
+    bottom: 24px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  @media (max-width: 760px) {
+    .ps-pin { grid-template-columns: 1fr; }
+    .ps-info { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Phone Screen Sync</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.26 · Animation</span>
+    <h1 class="title">Phone Screen <em>Scroll Sync</em>.</h1>
+    <p class="tagline">A phone mockup pins in place. As you scroll the page, the content INSIDE the phone's screen scrolls too — three different app screens flow past while a description on the left updates.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A phone mockup is pinned on the screen while you scroll. The phone's frame stays still, but its inner screen content scrolls vertically inside, showing a sequence of app screens (feed → search → profile, for example). The text panel next to the phone narrates what each screen does. The technique that makes "show, don't tell" work for mobile-app marketing.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Sticky-pinned phone frame inside a tall section. The phone has <code>overflow: hidden</code> on its screen. Inside the screen, a tall content column holds all the screens stacked vertically. As the user scrolls the outer page, JS calculates progress 0→1 and translates the inner content by <code>translateY(progress × -contentHeight)</code> — so the screen scrolls in sync. Crossing a section threshold also swaps the descriptive copy on the side. The phone stays still, the magic is purely the inner translate.</p>
+      <div class="term-grid">
+        <div><b>Pinned outer phone</b><span>The phone frame uses position:sticky to stay on screen</span></div>
+        <div><b>Inner translateY</b><span>The content inside translates UP by (progress × distance)</span></div>
+        <div><b>overflow: hidden</b><span>The screen clips content so only one screen is visible at a time</span></div>
+        <div><b>Section thresholds</b><span>As progress crosses each ⅓ mark, swap the side copy via class change</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. The phone frame stays put; its inner screen scrolls through three app views.</p>
+    <div class="demo-shell">
+      <div class="demo ps-demo" id="psDemo">
+        <span class="demo-badge">Live · scroll inside</span>
+        <div class="ps-spacer">↓ scroll to swipe screens</div>
+        <div style="height: 2400px; position: relative;">
+          <div class="ps-pin" id="psPin" style="--p: 0">
+            <div class="ps-info" id="psInfo">
+              <div class="num" id="psNum">01 / 03 — Feed</div>
+              <h4 id="psTtl">A quiet, chronological <em>feed</em>.</h4>
+              <p id="psDesc">No algorithm, no recommendations. Just the people you actually follow, in the order they posted.</p>
+            </div>
+            <div class="ps-phone">
+              <div class="ps-notch"></div>
+              <div class="ps-screen">
+                <div class="ps-content" id="psContent">
+                  <div class="status"><span>9:41</span><span>●●●</span></div>
+
+                  <div class="ps-screen1">
+                    <h6>Today's <em>feed</em></h6>
+                    <div class="ps-card-mini"><div class="av">HK</div><div><div class="t">Hannah K. shipped vol. 04</div><div class="s">2h ago</div></div></div>
+                    <div class="ps-card-mini"><div class="av">TM</div><div><div class="t">Theo M. posted 3 photos</div><div class="s">5h ago</div></div></div>
+                    <div class="ps-card-mini"><div class="av">SN</div><div><div class="t">Soraya is in Tokyo</div><div class="s">1d ago</div></div></div>
+                    <div class="ps-card-mini"><div class="av">DK</div><div><div class="t">Dev K. went to a show</div><div class="s">2d ago</div></div></div>
+                    <div class="ps-card-mini"><div class="av">MR</div><div><div class="t">Maya R. is reading</div><div class="s">3d ago</div></div></div>
+                  </div>
+
+                  <div class="ps-divider"><span class="lbl">— next: search —</span></div>
+
+                  <div class="ps-screen2">
+                    <h6>Search <em>anything</em></h6>
+                    <div class="ps-card-mini"><div class="av">★</div><div><div class="t">Trending: small-batch</div><div class="s">421 results</div></div></div>
+                    <div class="ps-card-mini"><div class="av">★</div><div><div class="t">Trending: editorial</div><div class="s">189 results</div></div></div>
+                    <div class="ps-card-mini"><div class="av">★</div><div><div class="t">Trending: slow web</div><div class="s">98 results</div></div></div>
+                    <div class="ps-card-mini"><div class="av">★</div><div><div class="t">Trending: handwriting</div><div class="s">76 results</div></div></div>
+                    <div class="ps-card-mini"><div class="av">★</div><div><div class="t">Trending: vinyl</div><div class="s">54 results</div></div></div>
+                  </div>
+
+                  <div class="ps-divider"><span class="lbl">— next: profile —</span></div>
+
+                  <div class="ps-screen3">
+                    <h6>Your <em>profile</em></h6>
+                    <div class="ps-card-mini" style="background:transparent;border:0;padding:8px 0;"><div class="av" style="width:60px;height:60px;font-size:18px;">AM</div><div><div class="t" style="font-size:16px;">Aditya M.</div><div class="s">@aditya · 128 posts · 421 followers</div></div></div>
+                    <div class="ps-card-mini"><div class="av">⌘</div><div><div class="t">Edit profile</div><div class="s">Bio, links, photo</div></div></div>
+                    <div class="ps-card-mini"><div class="av">⚙</div><div><div class="t">Settings</div><div class="s">Privacy &amp; preferences</div></div></div>
+                    <div class="ps-card-mini"><div class="av">↗</div><div><div class="t">Share profile</div><div class="s">Copy public link</div></div></div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ps-spacer">— end —</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.26 Phone Screen Scroll Sync</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a "phone with synced content" scroll animation. Outer scroll container with tall (2400px) inner section. Inside that section, a sticky pin (top:0 height:100vh) holding a two-column layout: TEXT on the LEFT (small uppercase eyebrow + display headline + paragraph) and the PHONE MOCKUP on the RIGHT. Phone: 280×580 with 12px bezel, 44px corner radius, notch oval at top, deep shadow. Inside the phone: .screen with overflow:hidden, padding-top:38px (status bar). Inside .screen: ONE long .content column containing 3 stacked app-screen sections (Feed / Search / Profile), each min-height:540px with their own gradient tints and mock cards. The .content is transformed via transform:translateY(calc(var(--p, 0) * -1400px)) where --p is a 0-1 scroll progress. Scroll listener: compute the tall section's scroll progress and set --p on the pin. As --p grows 0→1, the inner content slides UP — feeling exactly like swiping through three app screens inside a static phone. Also update the SIDE COPY based on which third of --p we're in — different num label / headline / description for each screen. The side copy uses opacity transitions for swap, the side text uses an italic accent on a keyword.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.notion.so/mobile" target="_blank" rel="noopener">Notion mobile</a><span class="desc">Phone mockup with synced content scroll throughout</span></div></li>
+      <li><div><a href="https://linear.app" target="_blank" rel="noopener">Linear.app</a><span class="desc">Desktop screen synced to scroll across feature sections</span></div></li>
+      <li><div><a href="https://www.figma.com" target="_blank" rel="noopener">Figma.com</a><span class="desc">Pinned product mockup with content swap on scroll</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.25-handoff.html" class="prev"><span class="label">← Prev</span><span class="title">2.25 Hand-off</span></a>
+      <a href="2.27-liquid-morph.html" class="next"><span class="label">Next →</span><span class="title">2.27 Liquid Morph</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const sc = document.getElementById('psDemo');
+    const pin = document.getElementById('psPin');
+    const num = document.getElementById('psNum');
+    const ttl = document.getElementById('psTtl');
+    const desc = document.getElementById('psDesc');
+    const tall = sc.querySelector('[style*="2400"]');
+    const screens = [
+      { num: '01 / 03 — Feed', ttl: 'A quiet, chronological <em>feed</em>.', desc: 'No algorithm, no recommendations. Just the people you actually follow, in the order they posted.' },
+      { num: '02 / 03 — Search', ttl: 'Search across <em>everything</em>.', desc: 'People, posts, places, projects. Fast, fuzzy, ranked by relevance only — never by engagement.' },
+      { num: '03 / 03 — Profile', ttl: 'Your space, <em>quietly</em>.', desc: 'No follower counter on the homepage. Stats live behind a tap; the focus is the work you ship.' },
+    ];
+    let lastIdx = -1;
+    function update() {
+      const r = tall.getBoundingClientRect();
+      const sr = sc.getBoundingClientRect();
+      const start = r.top - sr.top;
+      const total = tall.offsetHeight - sr.height;
+      const p = Math.max(0, Math.min(1, -start / total));
+      pin.style.setProperty('--p', p.toFixed(4));
+      const idx = p < 0.33 ? 0 : (p < 0.66 ? 1 : 2);
+      if (idx !== lastIdx) {
+        num.textContent = screens[idx].num;
+        ttl.innerHTML = screens[idx].ttl;
+        desc.textContent = screens[idx].desc;
+        lastIdx = idx;
+      }
+    }
+    sc.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

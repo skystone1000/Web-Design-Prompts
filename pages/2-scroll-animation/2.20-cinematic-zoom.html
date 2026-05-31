@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.20 Cinematic Pin &amp; Zoom · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .cz-demo {
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+    background: #0E0E14;
+    color: #fff;
+    position: relative;
+  }
+  .cz-spacer { height: 200px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+
+  .cz-pin {
+    position: sticky;
+    top: 0;
+    height: 720px;
+    overflow: hidden;
+  }
+  /* The hero word "AURORA" zooms from huge → tiny → fades */
+  .cz-word {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(calc(20 - var(--p, 0) * 19.6));
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 80px;
+    letter-spacing: -0.06em;
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(255,255,255,0.7);
+    text-stroke: 1.5px rgba(255,255,255,0.7);
+    transition: transform 0.04s linear, opacity 0.04s linear, -webkit-text-stroke-color 0.1s linear;
+    opacity: calc(1 - max(0, (var(--p, 0) - 0.55)) * 2.2);
+    pointer-events: none;
+  }
+  /* The image/orb that emerges from inside the word */
+  .cz-orb {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 380px; height: 380px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(calc(0.05 + var(--p, 0) * var(--p, 0) * 1.4));
+    background:
+      radial-gradient(circle at 35% 30%, #fff 0%, #FFB800 18%, #FF6B9D 45%, #7C5CFF 75%, #0a0a14 100%);
+    filter: blur(calc(20px - var(--p, 0) * 20px));
+    box-shadow: 0 0 calc(var(--p, 0) * 80px) rgba(255,107,157,0.4);
+    transition: transform 0.04s linear;
+    opacity: calc(var(--p, 0) * 1.5);
+  }
+
+  /* The end-state hero text appears after the zoom completes */
+  .cz-end {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) translateY(calc(40px - var(--p2, 0) * 40px));
+    text-align: center;
+    opacity: var(--p2, 0);
+    transition: opacity 0.04s linear, transform 0.04s linear;
+    z-index: 5;
+    pointer-events: none;
+  }
+  .cz-end .eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+  .cz-end h3 { font-family: var(--font-display); font-weight: 400; font-size: clamp(36px, 5vw, 56px); letter-spacing: -0.03em; line-height: 1; color: #fff; max-width: 16ch; margin: 0 auto; }
+  .cz-end h3 em { font-style: italic; color: var(--accent); }
+  .cz-end p { color: rgba(255,255,255,0.65); font-size: 14.5px; margin-top: 14px; max-width: 40ch; margin-left: auto; margin-right: auto; }
+
+  .cz-progress {
+    position: absolute;
+    bottom: 24px; left: 24px; right: 24px;
+    height: 2px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 999px;
+    overflow: hidden;
+    z-index: 5;
+  }
+  .cz-progress::after { content: ""; display: block; height: 100%; width: calc(var(--p, 0) * 100%); background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+  .cz-step {
+    position: absolute;
+    top: 16px; right: 24px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    z-index: 5;
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Cinematic Pin &amp; Zoom</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.20 · Animation</span>
+    <h1 class="title">Cinematic Pin &amp; <em>Zoom</em>.</h1>
+    <p class="tagline">A giant outlined word fills the screen, then shrinks dramatically as a glowing orb emerges from inside it — and the hero copy fades in over the top. The Apple "camera diving in" moment.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A choreographed scroll moment where one element scales massively as you scroll — usually from huge to small, sometimes the reverse — while a second element grows from invisible to fill the same space. The visual effect is the camera "diving in" or "pulling out." Used a lot for product launches, brand reveals, and any moment where you want a scroll gesture to feel like a cut in a film.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Sticky-pinned stage. Inside, two main elements with opposite scale curves driven by the same <code>--p</code> scroll variable. The hero word starts at <code>scale(20)</code> (fills the screen, partially clipped) and scales to <code>scale(0.4)</code> as <code>--p</code> goes 0→1. Simultaneously, a centered orb starts at <code>scale(0.05)</code> with a heavy <code>filter: blur(20px)</code>, scales up to <code>scale(1.4)</code> and unblurs as it grows. A second progress value (<code>--p2</code>) — only active in the last 40% of the scroll — fades in the hero copy text on top.</p>
+      <div class="term-grid">
+        <div><b>Inverse scale curves</b><span>One element shrinks while another grows — they trade places</span></div>
+        <div><b>Blur → sharp on grow</b><span>filter:blur(20px → 0px) makes the emerging element feel like it's coming into focus</span></div>
+        <div><b>Sticky pin</b><span>position:sticky inside a tall parent — the stage pins while extra height scrolls</span></div>
+        <div><b>Sub-progress for final copy</b><span>Map --p > 0.6 to a 0-1 sub-progress for the text fade-in</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. The huge outlined "AURORA" shrinks and the orb grows. At the end, the hero copy appears.</p>
+    <div class="demo-shell">
+      <div class="demo cz-demo" id="czDemo">
+        <span class="demo-badge">Live · scroll inside</span>
+        <div class="cz-spacer">↓ scroll to dive in</div>
+        <div style="height: 2200px; position: relative;">
+          <div class="cz-pin" id="czPin" style="--p: 0; --p2: 0">
+            <div class="cz-step">Phase <span id="czPhase">1</span> / 3</div>
+            <div class="cz-progress"></div>
+            <div class="cz-orb"></div>
+            <div class="cz-word">AURORA</div>
+            <div class="cz-end">
+              <div class="eyebrow">— Now in beta</div>
+              <h3>The quietest <em>workspace</em> you've ever shipped from.</h3>
+              <p>v0.4 is live · scroll up to replay</p>
+            </div>
+          </div>
+        </div>
+        <div class="cz-spacer">— end of sequence —</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.20 Cinematic Pin &amp; Zoom</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a cinematic pin-and-zoom scroll moment. Outer scroll container (overflow-y:scroll) with a tall inner section (2200px). Inside the tall section put a sticky pin (position:sticky top:0 height:100vh overflow:hidden). Inside the pin: (A) A huge outlined display-serif WORD ("AURORA" or your brand) absolutely centered, font-size 80px, color:transparent, -webkit-text-stroke:1.5px white-70%. Its transform is translate(-50%,-50%) scale(calc(20 - var(--p) * 19.6)) — so at --p:0 it's scaled 20× (essentially fills the screen, clipped), and at --p:1 it shrinks to 0.4×. Add opacity fade so it disappears in the last 25% of the scroll. (B) A centered orb (380px circle, radial-gradient white→amber→pink→violet→dark) with filter:blur(20px) and transform: translate(-50%,-50%) scale(calc(0.05 + var(--p)² * 1.4)). Filter blur decreases as --p grows (unblurring as it comes into focus). (C) The final hero copy (eyebrow + display headline + caption) absolutely centered, opacity:var(--p2) where --p2 is a sub-progress = max(0, (--p - 0.6) * 2.5), so the copy fades in only in the last 40% of the scroll. Scroll listener computes both --p and --p2 from the tall section's scroll progress. Bottom progress bar and top "Phase N / 3" counter complete the cinematic chrome.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.apple.com" target="_blank" rel="noopener">Apple product hero zooms</a><span class="desc">The camera "diving" into the product is a recurring motif</span></div></li>
+      <li><div><a href="https://www.figma.com/config" target="_blank" rel="noopener">Figma Config marketing</a><span class="desc">Pin-zoom hero reveals across event pages</span></div></li>
+      <li><div><a href="https://gsap.com/scrolltrigger" target="_blank" rel="noopener">GSAP ScrollTrigger demos</a><span class="desc">Library that makes this kind of scrubbing trivial</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.19-3d-rotate-scroll.html" class="prev"><span class="label">← Prev</span><span class="title">2.19 3D Rotate</span></a>
+      <a href="2.21-cross-section.html" class="next"><span class="label">Next →</span><span class="title">2.21 Cross-section Reveal</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const sc = document.getElementById('czDemo');
+    const pin = document.getElementById('czPin');
+    const phase = document.getElementById('czPhase');
+    const tall = sc.querySelector('[style*="2200"]');
+    function update() {
+      const r = tall.getBoundingClientRect();
+      const sr = sc.getBoundingClientRect();
+      const start = r.top - sr.top;
+      const total = tall.offsetHeight - sr.height;
+      const p = Math.max(0, Math.min(1, -start / total));
+      const p2 = Math.max(0, Math.min(1, (p - 0.6) * 2.5));
+      pin.style.setProperty('--p', p.toFixed(4));
+      pin.style.setProperty('--p2', p2.toFixed(4));
+      phase.textContent = p < 0.4 ? 1 : (p < 0.7 ? 2 : 3);
+    }
+    sc.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

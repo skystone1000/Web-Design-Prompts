@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.31 Origami Fold · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .or-demo {
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, #f4ede1 0%, #d9cdb8 100%);
+    color: #1A1814;
+    position: relative;
+  }
+  .or-spacer { height: 200px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #888; }
+  .or-pin {
+    position: sticky; top: 0;
+    height: 720px;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    perspective: 1200px;
+  }
+  /* The paper: 4 panels that hinge together. Folded = panels stacked. Unfolded = flat sheet. */
+  .or-paper {
+    position: relative;
+    width: 240px;
+    height: 320px;
+    transform-style: preserve-3d;
+    transform:
+      rotateX(calc(-10deg - var(--p, 0) * 10deg))
+      rotateY(calc(15deg - var(--p, 0) * 30deg));
+    transition: transform 0.06s linear;
+  }
+  .or-panel {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #fdfaf2, #e8dfca);
+    border: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    padding: 18px;
+    color: #1A1814;
+    transition: transform 0.06s linear;
+  }
+  /* Pre-built crane illustration via gradients on each panel */
+  .or-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 30% 40%, rgba(139,26,26,0.12), transparent 50%);
+    pointer-events: none;
+  }
+  /* Each panel hinges from a different edge — when --p=1, panels are folded together; when --p=0 they unfold flat in a + shape */
+  .or-p1 { transform-origin: bottom center; transform: rotateX(calc((1 - var(--p, 0)) * -180deg)) translateZ(0); background: linear-gradient(135deg, #fdfaf2, #d2c4a8); }
+  .or-p2 { transform-origin: top center;    transform: rotateX(calc((1 - var(--p, 0)) * 180deg)) translateZ(0); background: linear-gradient(225deg, #fdfaf2, #d2c4a8); }
+  .or-p3 { transform-origin: right center;  transform: rotateY(calc((1 - var(--p, 0)) * 180deg)) translateZ(0); background: linear-gradient(45deg, #fdfaf2, #c8b894); }
+  .or-p4 { transform-origin: left center;   transform: rotateY(calc((1 - var(--p, 0)) * -180deg)) translateZ(0); background: linear-gradient(315deg, #fdfaf2, #c8b894); }
+  /* Crane silhouette in the middle — only visible when folded */
+  .or-crane {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 30% 20% at 50% 35%, #1a1814 0%, transparent 60%),
+      radial-gradient(ellipse 14% 10% at 50% 25%, #1a1814 0%, transparent 60%);
+    opacity: var(--p, 0);
+    transition: opacity 0.06s linear;
+    pointer-events: none;
+  }
+  .or-crane::after {
+    content: "";
+    position: absolute;
+    top: 30%; left: 50%;
+    transform: translateX(-50%);
+    width: 4px; height: 60%;
+    background: linear-gradient(180deg, #1a1814, transparent);
+  }
+
+  /* Fold crease lines */
+  .or-panel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, transparent 49%, rgba(0,0,0,0.1) 49%, rgba(0,0,0,0.1) 51%, transparent 51%);
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  .or-label {
+    position: absolute;
+    top: 36px; left: 0; right: 0;
+    text-align: center;
+    z-index: 5;
+    color: #1A1814;
+  }
+  .or-label .eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #8b1a1a; margin-bottom: 8px; }
+  .or-label h4 { font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 4vw, 40px); letter-spacing: -0.02em; }
+  .or-label h4 em { font-style: italic; color: #8b1a1a; }
+
+  .or-state {
+    position: absolute;
+    bottom: 40px; left: 0; right: 0;
+    text-align: center;
+    z-index: 5;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #555;
+  }
+  .or-state b { color: #8b1a1a; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Origami Fold</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.31 · Animation</span>
+    <h1 class="title">Origami <em>Fold</em>.</h1>
+    <p class="tagline">A flat sheet of paper unfolds outward into four panels — then folds back inward. Each panel hinges from its edge in 3D space. Mechanical, tactile, satisfying.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Four paper panels hinge open and closed around a central square. At <em>folded</em> (scroll start), they're all stacked flat into a single thick sheet — the crane shape visible. As you scroll, they swing outward on their edges in 3D, revealing the unfolded plus-sign layout. It's the web equivalent of unwrapping a piece of paper folding — every paper-stationery / book / fold-out brand site does some variation of this.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>A parent container with <code>perspective</code> and <code>transform-style: preserve-3d</code>. Inside, four panel divs all absolutely-positioned. Each panel gets a different <code>transform-origin</code> (one of its edges: top, bottom, left, right) and rotates <code>180°</code> around that edge when folded. As <code>--p</code> goes from 1 (folded stack) to 0 (flat fold-out), each panel's rotation interpolates from 180° to 0°. The whole paper also tilts (rotateX/Y) for a "viewed from an angle" presentation.</p>
+      <div class="term-grid">
+        <div><b>Per-panel transform-origin</b><span>Each panel hinges from a different edge (top, bottom, left, right)</span></div>
+        <div><b>rotateX / rotateY 0→180°</b><span>Top/bottom panels rotateX; left/right panels rotateY</span></div>
+        <div><b>preserve-3d</b><span>The paper container must preserve-3d so panel rotations render correctly</span></div>
+        <div><b>backface-visibility</b><span>Hide back faces if you want one-sided paper; show them for double-sided</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. The crane folds open into a flat sheet of paper, then folds back together.</p>
+    <div class="demo-shell">
+      <div class="demo or-demo" id="orDemo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.2); color:#1A1814; border-color:rgba(0,0,0,0.1);">Live · scroll inside</span>
+        <div class="or-spacer">↓ scroll to unfold</div>
+        <div style="height: 2400px; position: relative;">
+          <div class="or-pin" id="orPin" style="--p: 1">
+            <div class="or-label">
+              <div class="eyebrow">— Origami crane</div>
+              <h4>Fold, <em>unfold</em>, fold.</h4>
+            </div>
+            <div class="or-paper">
+              <div class="or-panel or-p1"></div>
+              <div class="or-panel or-p2"></div>
+              <div class="or-panel or-p3"></div>
+              <div class="or-panel or-p4"></div>
+              <div class="or-crane"></div>
+            </div>
+            <div class="or-state">Paper is <b id="orState">FOLDED</b></div>
+          </div>
+        </div>
+        <div class="or-spacer">— refolded —</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.31 Origami Fold</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a scroll-driven origami fold animation. Sticky pin (top:0 height:100vh perspective:1200px) inside a tall 2400px section. Inside, a "paper" element (240×320, transform-style:preserve-3d) tilted slightly (rotateX(-10) rotateY(15)) for presentation. Inside the paper, FOUR absolutely-positioned panel divs (each inset:0, paper-cream gradient background, subtle inner shadow + crease lines). Each panel has a different transform-origin and rotation: panel-1 origin:bottom center, rotateX(calc((1 - var(--p)) * -180deg)); panel-2 origin:top center, rotateX(calc((1 - var(--p)) * 180deg)); panel-3 origin:right center, rotateY(calc((1 - var(--p)) * 180deg)); panel-4 origin:left center, rotateY(calc((1 - var(--p)) * -180deg)). When --p:1 all panels are folded together into a single thick stack (the crane visible on top via radial-gradient ellipse silhouette); when --p:0 they unfold flat outward into a + shape. JS scroll listener computes scroll progress and maps to a peak-at-middle curve mapped to 1 → 0 → 1 (so the crane folds open and back). Add a crane silhouette element on top that's only visible when folded (opacity:var(--p)). Hero label "Fold, unfold, fold" at top, state readout "FOLDED / UNFOLDING / OPEN" at the bottom. Paper-cream background (#f4ede1) for the whole stage gives the editorial paper aesthetic.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://github.com/davatron5000/Hover.css" target="_blank" rel="noopener">CSS fold-out menus</a><span class="desc">3D fold patterns reused for menus</span></div></li>
+      <li><div><a href="https://www.fieldnotesbrand.com" target="_blank" rel="noopener">Field Notes brand pages</a><span class="desc">Paper / stationery brands using fold visuals</span></div></li>
+      <li><div><a href="https://codepen.io/search/pens?q=origami" target="_blank" rel="noopener">CodePen — origami CSS</a><span class="desc">3D fold experiments to study</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.30-iris-aperture.html" class="prev"><span class="label">← Prev</span><span class="title">2.30 Iris Aperture</span></a>
+      <a href="2.32-particle-assembly.html" class="next"><span class="label">Next →</span><span class="title">2.32 Particle Assembly</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const sc = document.getElementById('orDemo');
+    const pin = document.getElementById('orPin');
+    const stateEl = document.getElementById('orState');
+    const tall = sc.querySelector('[style*="2400"]');
+    function update() {
+      const r = tall.getBoundingClientRect();
+      const sr = sc.getBoundingClientRect();
+      const start = r.top - sr.top;
+      const total = tall.offsetHeight - sr.height;
+      const p = Math.max(0, Math.min(1, -start / total));
+      // Invert so folded = high, unfolded (middle) = low
+      const eased = 1 - (1 - Math.abs(p - 0.5) * 2);
+      pin.style.setProperty('--p', eased.toFixed(4));
+      stateEl.textContent = eased > 0.85 ? 'FOLDED' : (eased < 0.15 ? 'OPEN' : (p < 0.5 ? 'UNFOLDING' : 'REFOLDING'));
+    }
+    sc.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

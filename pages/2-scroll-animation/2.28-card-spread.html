@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.28 Stacked Card Spread · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .cd-demo {
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, #0E0E14 0%, #1a0e3a 100%);
+    color: #fff;
+    position: relative;
+  }
+  .cd-spacer { height: 200px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+  .cd-pin {
+    position: sticky; top: 0;
+    height: 720px;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+  .cd-stage {
+    position: relative;
+    width: 100%;
+    max-width: 920px;
+    height: 320px;
+    perspective: 1400px;
+  }
+
+  /* Each card sits at the same center point in "stack" mode and fans out to its own column position in "spread" mode */
+  .cd-card {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 180px; height: 260px;
+    border-radius: 18px;
+    transform-origin: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    color: #fff;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    will-change: transform;
+    transition: transform 0.05s linear, opacity 0.05s linear;
+  }
+  .cd-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 18px;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.22), transparent 60%);
+    pointer-events: none;
+  }
+  .cd-card .ix { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.75; }
+  .cd-card h5 { font-family: var(--font-display); font-weight: 500; font-size: 22px; letter-spacing: -0.02em; line-height: 1.05; }
+  .cd-card p { font-size: 12px; opacity: 0.85; line-height: 1.45; }
+
+  .cd-c1 { background: linear-gradient(135deg, #7C5CFF, #2c1a4a); }
+  .cd-c2 { background: linear-gradient(135deg, #FF6B9D, #6e0080); }
+  .cd-c3 { background: linear-gradient(135deg, #00D9FF, #0a3d4d); color: #fff; }
+  .cd-c4 { background: linear-gradient(135deg, #FFB800, #7a4a00); }
+  .cd-c5 { background: linear-gradient(135deg, #4ECDC4, #1e3a8a); }
+
+  /*
+    Each card has --target-x (its destination X in spread layout) and --base-rotate (decoration rotation in stack).
+    We use a single --p variable (driven by scroll) to interpolate between stacked (p=0) and spread (p=1).
+    Stack offset: translate(-50%,-50%) rotate(base) for top card at z=0; deeper cards get a bit of Y offset and rotate.
+    Spread offset: translate(targetX - 90, -50%) rotate(0). We blend via --p.
+  */
+  .cd-card {
+    transform:
+      translate(
+        calc(-90px + var(--p, 0) * (var(--target-x, 0) - -90px) * 1px),
+        calc(-50% + (1 - var(--p, 0)) * var(--stack-y, 0) * 1px)
+      )
+      rotate(calc((1 - var(--p, 0)) * var(--base-rotate, 0) * 1deg));
+  }
+
+  /* The 5 cards with their target Xs and stack rotations */
+  .cd-card.k1 { --target-x: -380; --base-rotate: -8;  --stack-y: -6;  z-index: 1; }
+  .cd-card.k2 { --target-x: -190; --base-rotate: -4;  --stack-y: -3;  z-index: 2; }
+  .cd-card.k3 { --target-x:    0; --base-rotate:  0;  --stack-y:  0;  z-index: 3; }
+  .cd-card.k4 { --target-x:  190; --base-rotate:  4;  --stack-y: -3;  z-index: 2; }
+  .cd-card.k5 { --target-x:  380; --base-rotate:  8;  --stack-y: -6;  z-index: 1; }
+
+  .cd-label {
+    position: absolute;
+    top: 30px; left: 0; right: 0;
+    text-align: center; z-index: 5;
+  }
+  .cd-label .eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
+  .cd-label h4 { font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 4vw, 40px); letter-spacing: -0.02em; margin-top: 8px; }
+  .cd-label h4 em { font-style: italic; color: var(--accent); }
+  .cd-progress {
+    position: absolute;
+    bottom: 28px; left: 50%; transform: translateX(-50%);
+    width: 200px; height: 2px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 999px; overflow: hidden;
+    z-index: 5;
+  }
+  .cd-progress::after { content: ""; display: block; height: 100%; width: calc(var(--p, 0) * 100%); background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+  .cd-state {
+    position: absolute;
+    bottom: 50px; left: 50%; transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    z-index: 5;
+  }
+  .cd-state b { color: var(--accent); font-weight: 700; }
+
+  @media (max-width: 760px) {
+    .cd-card.k1 { --target-x: -200; }
+    .cd-card.k2 { --target-x: -100; }
+    .cd-card.k4 { --target-x:  100; }
+    .cd-card.k5 { --target-x:  200; }
+    .cd-card { width: 150px; height: 220px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Card Spread</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.28 · Animation</span>
+    <h1 class="title">Stacked Card <em>Spread</em>.</h1>
+    <p class="tagline">A tilted deck of cards starts stacked on top of each other. As you scroll, they fan out into a tidy horizontal row — and collapse back. Dealer-style "hand-of-cards" reveal.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A stack of cards appears overlapped and tilted (like a hand of playing cards), then "fans out" into a clean row of separate cards as you scroll, then back together at the bottom. Good for showing a small set of "all our features at once" or a product family without a static row jumping into view. Lightweight version of the "Apple iPhone color picker" reveal.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Each card has CSS custom properties for its <em>destination</em> X position and its <em>stack rotation</em> (different for each card). A single shared <code>--p</code> progress variable interpolates between the two states: at <code>--p:0</code> all cards transform to <code>translate(-50%, ...) rotate(stack-rotation)</code>; at <code>--p:1</code> each card transforms to its own <code>translate(targetX, -50%) rotate(0deg)</code>. The transform calc() handles the lerp inline. Map the scroll progress with an easing curve like <code>1 - |p - 0.5| * 2</code> so cards stack at start, spread at middle, stack again at end.</p>
+      <div class="term-grid">
+        <div><b>Per-card destination X</b><span>--target-x custom property per card defines fan-out position</span></div>
+        <div><b>Per-card stack rotation</b><span>--base-rotate per card adds character to the stacked state</span></div>
+        <div><b>Single --p interpolates</b><span>One scroll value drives the calc() lerp on all card transforms</span></div>
+        <div><b>Peak-at-middle curve</b><span>1 - |p - 0.5| * 2 maps scroll so cards stack → spread → stack again</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. Cards fan out into a row at the middle, collapse back at the bottom.</p>
+    <div class="demo-shell">
+      <div class="demo cd-demo" id="cdDemo">
+        <span class="demo-badge">Live · scroll inside</span>
+        <div class="cd-spacer">↓ scroll to spread</div>
+        <div style="height: 2200px; position: relative;">
+          <div class="cd-pin" id="cdPin" style="--p: 0">
+            <div class="cd-label">
+              <div class="eyebrow">— Five products, one family</div>
+              <h4>A deck that <em>fans out</em>.</h4>
+            </div>
+            <div class="cd-stage">
+              <div class="cd-card cd-c1 k1"><div class="ix">01 / Aurora</div><h5>The editor.</h5><p>Blank page, infinite canvas, zero ceremony.</p></div>
+              <div class="cd-card cd-c2 k2"><div class="ix">02 / Pulse</div><h5>The dashboard.</h5><p>Operator-grade metrics, calmly delivered.</p></div>
+              <div class="cd-card cd-c3 k3"><div class="ix">03 / Drift</div><h5>The CMS.</h5><p>Headless, fast, version-controlled.</p></div>
+              <div class="cd-card cd-c4 k4"><div class="ix">04 / Margin</div><h5>The finance app.</h5><p>P&amp;L in plain English, monthly.</p></div>
+              <div class="cd-card cd-c5 k5"><div class="ix">05 / Salt</div><h5>The CRM.</h5><p>Relationships, not pipelines.</p></div>
+            </div>
+            <div class="cd-state">State: <b id="cdState">stacked</b></div>
+            <div class="cd-progress"></div>
+          </div>
+        </div>
+        <div class="cd-spacer">— back to stack —</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.28 Stacked Card Spread</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a scroll-driven "deck of cards" fan-out animation. Sticky pin (top:0 height:100vh) inside a 2200px-tall section. Inside the pin: a stage holding 5 absolutely-positioned cards (180×260, rounded 18px corners, deep shadow, white text). Each card has a different gradient background (violet/pink/cyan/amber/teal) and content: ix label + display title + short description. Give each card two CSS custom properties: --target-x (its destination X offset in pixels when spread out — for 5 cards e.g. -380, -190, 0, 190, 380) AND --base-rotate (its rotation when stacked — small angles like -8, -4, 0, 4, 8 degrees) AND --stack-y (slight Y bias for back cards). Every card uses the SAME transform formula: transform: translate(calc(-90px + var(--p) * (var(--target-x) - -90)px), calc(-50% + (1 - var(--p)) * var(--stack-y)px)) rotate(calc((1 - var(--p)) * var(--base-rotate)deg)). When --p:0 all cards collapse to the center stack (overlapped, tilted). When --p:1 each card sits at its target X (fanned out row). Scroll listener: compute scroll progress 0→1, map to a peak-at-middle easing (1 - |p - 0.5| * 2) so cards stack → spread → stack as you scroll through the section. Update a label that toggles between "stacked" and "spread" based on the eased progress.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.apple.com/iphone" target="_blank" rel="noopener">Apple iPhone color picker</a><span class="desc">Phones in different colors fan apart and back together on scroll</span></div></li>
+      <li><div><a href="https://stripe.com" target="_blank" rel="noopener">Stripe — products row</a><span class="desc">Product card row that animates into place from a stack</span></div></li>
+      <li><div><a href="https://www.framer.com" target="_blank" rel="noopener">Framer.com</a><span class="desc">Variant card spread / collapse used heavily on hero sections</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.27-liquid-morph.html" class="prev"><span class="label">← Prev</span><span class="title">2.27 Liquid Morph</span></a>
+      <a href="2.29-camera-dolly.html" class="next"><span class="label">Next →</span><span class="title">2.29 Camera Dolly</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const sc = document.getElementById('cdDemo');
+    const pin = document.getElementById('cdPin');
+    const stateEl = document.getElementById('cdState');
+    const tall = sc.querySelector('[style*="2200"]');
+    function update() {
+      const r = tall.getBoundingClientRect();
+      const sr = sc.getBoundingClientRect();
+      const start = r.top - sr.top;
+      const total = tall.offsetHeight - sr.height;
+      const p = Math.max(0, Math.min(1, -start / total));
+      // peak-at-middle eased progress
+      const eased = 1 - Math.abs(p - 0.5) * 2;
+      pin.style.setProperty('--p', eased.toFixed(4));
+      stateEl.textContent = eased < 0.2 ? 'stacked' : (eased > 0.85 ? 'spread' : 'fanning…');
+    }
+    sc.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.38 Book Open / Page Turn · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+<style>
+  .bk-demo {
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, #2a1d0a 0%, #1a1410 100%);
+    color: #f4ede1;
+    position: relative;
+  }
+  .bk-spacer { height: 200px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(244,237,225,0.5); }
+  .bk-pin {
+    position: sticky; top: 0;
+    height: 720px;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    perspective: 1800px;
+    padding: 40px;
+  }
+
+  /* The book — a 3D spread */
+  .bk-book {
+    position: relative;
+    width: 640px; height: 420px;
+    transform-style: preserve-3d;
+    transform: rotateX(20deg);
+  }
+  .bk-spine {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 50%; transform: translateX(-50%);
+    width: 16px;
+    background: linear-gradient(180deg, #4a3517 0%, #2a1d0a 100%);
+    border-radius: 4px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.4);
+    z-index: 5;
+  }
+
+  /* The COVER closes the book. It rotates open from the left edge based on --p. */
+  .bk-cover {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 50%; right: 0;
+    transform-origin: left center;
+    transform: rotateY(calc(-180deg * min(1, var(--p, 0) * 4)));
+    transform-style: preserve-3d;
+    background:
+      radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.06), transparent 60%),
+      linear-gradient(135deg, #4a2b6a 0%, #2a1d4a 80%);
+    border: 2px solid #6b4f1e;
+    border-left: none;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.4);
+    z-index: 4;
+    backface-visibility: hidden;
+  }
+  .bk-cover .title {
+    position: absolute;
+    inset: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #f4ede1;
+    text-align: center;
+  }
+  .bk-cover .title .top { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: #c4a35d; }
+  .bk-cover .title h4 { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500; font-size: 38px; letter-spacing: -0.01em; line-height: 1.05; }
+  .bk-cover .title h4 em { font-style: italic; color: #ffd084; }
+  .bk-cover .title .bottom { font-family: 'Cormorant Garamond', serif; font-size: 14px; color: #f4ede1; }
+
+  /* Pages of the spread (visible once the cover swings open) */
+  .bk-page {
+    position: absolute;
+    top: 0; bottom: 0;
+    background: linear-gradient(180deg, #fdfaf2, #e8dfca);
+    border: 1px solid rgba(0,0,0,0.1);
+    color: #1a1814;
+    padding: 28px;
+    font-family: 'Cormorant Garamond', serif;
+    overflow: hidden;
+  }
+  .bk-page.left { left: 0; right: 50%; border-right: none; box-shadow: inset -8px 0 12px rgba(0,0,0,0.1); }
+  .bk-page.right { left: 50%; right: 0; border-left: none; box-shadow: inset 8px 0 12px rgba(0,0,0,0.1); }
+  .bk-page h5 { font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 22px; letter-spacing: -0.01em; margin-bottom: 12px; }
+  .bk-page h5 em { font-style: italic; color: #8b1a1a; }
+  .bk-page p { font-size: 14px; line-height: 1.55; color: #2a2722; margin-bottom: 10px; }
+  .bk-page .folio { position: absolute; bottom: 14px; right: 18px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; color: #888; }
+  .bk-page.left .folio { right: auto; left: 18px; }
+  .bk-page .chapter { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #8b1a1a; margin-bottom: 14px; }
+
+  /* A flipping page that turns in mid-scroll (between pages 2-3 and 4-5) */
+  .bk-flip {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 50%; right: 0;
+    transform-origin: left center;
+    transform: rotateY(calc(min(0deg, -180deg * (var(--p, 0) - 0.45) * 3) ));
+    transform-style: preserve-3d;
+    background: linear-gradient(180deg, #fdfaf2, #e8dfca);
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 0 0 20px rgba(0,0,0,0.15);
+    z-index: 3;
+    backface-visibility: hidden;
+    padding: 28px;
+    font-family: 'Cormorant Garamond', serif;
+    color: #1a1814;
+  }
+  .bk-flip h5 { font-size: 20px; margin-bottom: 10px; }
+  .bk-flip h5 em { font-style: italic; color: #8b1a1a; }
+  .bk-flip p { font-size: 14px; line-height: 1.55; color: #2a2722; }
+
+  .bk-label {
+    position: absolute;
+    top: 24px; left: 0; right: 0;
+    text-align: center;
+    z-index: 10;
+    color: #f4ede1;
+  }
+  .bk-label .eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #c4a35d; }
+  .bk-label h4 { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 28px; margin-top: 4px; }
+  .bk-readout {
+    position: absolute;
+    bottom: 24px; left: 0; right: 0;
+    text-align: center;
+    z-index: 10;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(244,237,225,0.6);
+  }
+  .bk-readout b { color: #c4a35d; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Book Open</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.38 · Animation</span>
+    <h1 class="title">Book Open / <em>Page Turn</em>.</h1>
+    <p class="tagline">A closed book opens its cover as you start scrolling — then a page turns in the middle to reveal a new spread. Pure CSS 3D, no library. Editorial / library energy.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A 3D book sits closed at the start of the scroll. As you begin scrolling, the cover rotates open from its left edge in 3D, exposing the first spread. As you continue, a single page turns in the middle, revealing a fresh spread underneath. The pattern: scroll = read. Beautiful for novel sites, recipe books, museum / library projects, and any storytelling page that wants to feel like a physical artifact.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>A book container with <code>perspective</code> and <code>transform-style: preserve-3d</code>. Two static pages (left + right) form the open spread at <code>inset</code> halves of the book. On top of the right half sits the <em>cover</em>, which has <code>transform-origin: left center</code> and rotates <code>rotateY(-180deg)</code> when <code>--p:0.25</code>. As <code>--p</code> grows further (~0.45 onward), a separate <code>.bk-flip</code> page (positioned over the right half) rotates from 0° to -180° — that's the page turn. The math: <code>rotateY(min(0deg, -180deg × (--p - 0.45) × 3))</code> means the flip starts at <code>--p</code> ≥ 0.45.</p>
+      <div class="term-grid">
+        <div><b>3D book container</b><span>perspective + preserve-3d on the parent for true 3D page rotation</span></div>
+        <div><b>Cover rotates left edge</b><span>transform-origin: left center + rotateY(-180deg) opens from the spine</span></div>
+        <div><b>Page flip in mid-scroll</b><span>Separate page element starts at 0°, rotates -180° later in the scroll</span></div>
+        <div><b>backface-visibility hidden</b><span>Hides the back of rotated pages — production books show printed back</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. The cover swings open first, then a page turns mid-scroll revealing a new spread.</p>
+    <div class="demo-shell">
+      <div class="demo bk-demo" id="bkDemo">
+        <span class="demo-badge" style="background:rgba(244,237,225,0.18); color:#c4a35d; border-color:rgba(196,163,93,0.3);">Live · scroll inside</span>
+        <div class="bk-spacer">↓ scroll to open the book</div>
+        <div style="height: 2600px; position: relative;">
+          <div class="bk-pin" id="bkPin" style="--p: 0">
+            <div class="bk-label">
+              <div class="eyebrow">— A small library</div>
+              <h4>The book of <em>quiet things</em></h4>
+            </div>
+            <div class="bk-book">
+              <!-- The static spread visible under the cover -->
+              <div class="bk-page left">
+                <div class="chapter">— Chapter I</div>
+                <h5>On <em>waiting</em>.</h5>
+                <p>It is a small philosophical claim, but a true one: the things you choose to wait for are the things that turn out to matter.</p>
+                <p>This is a book about patience. About waiting for cloth to dye, for bread to rise, for someone to call back. About the gap between hitting send and hearing a reply.</p>
+                <p>The author wrote these pages slowly on purpose. Read them the same way.</p>
+                <div class="folio">— 12 —</div>
+              </div>
+              <div class="bk-page right">
+                <div class="chapter">— Chapter II</div>
+                <h5>The <em>slow</em> page.</h5>
+                <p>There is no rush in print. The page has been here for centuries and it will be here when you put the book down.</p>
+                <p>Scroll a little further and the page will turn.</p>
+                <div class="folio">— 13 —</div>
+              </div>
+              <!-- Page that flips during mid-scroll -->
+              <div class="bk-flip">
+                <div class="chapter">— Chapter II (continued)</div>
+                <h5>The <em>slow</em> page.</h5>
+                <p>This is the back of page 13. As you scroll, you'll rotate it left — and reveal pages 14 and 15 underneath.</p>
+                <div class="folio">— 13 —</div>
+              </div>
+              <!-- Spine and cover above everything -->
+              <div class="bk-spine"></div>
+              <div class="bk-cover">
+                <div class="title">
+                  <div class="top">— Volume 04, batch 12 —</div>
+                  <h4>The book of<br>quiet <em>things</em></h4>
+                  <div class="bottom">By Hannah Kveld<br><small style="opacity:0.7;">— Brooklyn Press, 2026 —</small></div>
+                </div>
+              </div>
+            </div>
+            <div class="bk-readout">State: <b id="bkState">CLOSED</b></div>
+          </div>
+        </div>
+        <div class="bk-spacer">— closed again —</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.38 Book Open / Page Turn</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a 3D scroll-driven book that opens its cover and turns a page. Sticky pin (top:0 height:100vh perspective:1800px) inside a 2600px-tall section. Inside the pin a "book" container (640×420, transform-style:preserve-3d, transform:rotateX(20deg)). Inside the book: a vertical SPINE strip down the middle (16px wide, brown gradient), and two STATIC pages — .bk-page.left (right:50%) and .bk-page.right (left:50%) — each cream paper background with serif (Cormorant Garamond) text including a chapter label, an italic-accented headline, paragraphs, and a folio page number. On top of the right page place a COVER element (right:0, left:50%, transform-origin:left center, transform:rotateY(calc(-180deg * min(1, var(--p) * 4)))) — the cover swings open from the spine as --p crosses ~0.25. The cover has a deep violet gradient + a centered italic title "The book of quiet things" + author + edition info. Below the cover (z-index lower) place a FLIP page element with transform:rotateY(calc(min(0deg, -180deg * (var(--p) - 0.45) * 3))) — this page is the back of the right spread that turns starting around --p:0.45, revealing whatever's printed on the static right page beneath. Add backface-visibility:hidden to cover and flip so their backs don't bleed through. Show a "State: CLOSED / OPENING / OPEN / TURNING" readout. Use peak-at-middle easing so the whole sequence reverses on scroll-up.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://turnjs.com" target="_blank" rel="noopener">Turn.js</a><span class="desc">The classic jQuery library for realistic page turns</span></div></li>
+      <li><div><a href="https://www.are.na" target="_blank" rel="noopener">Are.na zine projects</a><span class="desc">Book / zine layouts used for editorial sites</span></div></li>
+      <li><div><a href="https://www.notlemons.com" target="_blank" rel="noopener">Codepen — CSS 3D book</a><span class="desc">Search "book css 3d" for many CSS-only variations</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.37-mask-wipe.html" class="prev"><span class="label">← Prev</span><span class="title">2.37 Mask Wipe</span></a>
+      <a href="../3-layouts/index.html" class="next"><span class="label">Next chapter →</span><span class="title">Layouts</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const sc = document.getElementById('bkDemo');
+    const pin = document.getElementById('bkPin');
+    const stateEl = document.getElementById('bkState');
+    const tall = sc.querySelector('[style*="2600"]');
+    function update() {
+      const r = tall.getBoundingClientRect();
+      const sr = sc.getBoundingClientRect();
+      const start = r.top - sr.top;
+      const total = tall.offsetHeight - sr.height;
+      const p = Math.max(0, Math.min(1, -start / total));
+      const eased = 1 - Math.abs(p - 0.5) * 2;
+      pin.style.setProperty('--p', eased.toFixed(4));
+      stateEl.textContent = eased < 0.05 ? 'CLOSED' : (eased < 0.4 ? 'OPENING' : (eased < 0.7 ? 'OPEN' : 'TURNING'));
+    }
+    sc.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

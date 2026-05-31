@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.19 3D Rotate on Scroll · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .rs-demo {
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+    background: radial-gradient(60% 60% at 50% 30%, rgba(124,92,255,0.12), transparent 60%), #0E0E14;
+    color: #fff;
+    position: relative;
+  }
+  .rs-spacer { height: 200px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+  .rs-pin {
+    position: sticky; top: 0;
+    height: 720px;
+    display: grid;
+    place-items: center;
+    perspective: 1400px;
+  }
+  /* The 3D cube/box rotates fully on scroll */
+  .rs-cube {
+    position: relative;
+    width: 240px; height: 240px;
+    transform-style: preserve-3d;
+    transform: rotateX(calc(var(--p, 0) * 360deg)) rotateY(calc(var(--p, 0) * 720deg));
+    transition: transform 0.04s linear;
+  }
+  .rs-face {
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(6px);
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    color: rgba(255,255,255,0.9);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .rs-face::after {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border-radius: 12px;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.16), transparent 60%);
+    pointer-events: none;
+  }
+  .rs-face.f1 { background: linear-gradient(135deg, #7C5CFF, #2c1a4a); transform: translateZ(120px); }
+  .rs-face.f2 { background: linear-gradient(135deg, #FF6B9D, #6e0080); transform: rotateY(90deg) translateZ(120px); }
+  .rs-face.f3 { background: linear-gradient(135deg, #00D9FF, #0a3d4d); transform: rotateY(180deg) translateZ(120px); }
+  .rs-face.f4 { background: linear-gradient(135deg, #FFB800, #7a4a00); transform: rotateY(-90deg) translateZ(120px); }
+  .rs-face.f5 { background: linear-gradient(135deg, #4ECDC4, #1e3a8a); transform: rotateX(90deg) translateZ(120px); }
+  .rs-face.f6 { background: linear-gradient(135deg, #1A1814, #4a4742); transform: rotateX(-90deg) translateZ(120px); }
+  .rs-face .num {
+    font-family: var(--font-display);
+    font-weight: 200;
+    font-size: 84px;
+    letter-spacing: -0.05em;
+    color: rgba(255,255,255,0.95);
+    text-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  .rs-face .lbl { position: absolute; bottom: 18px; left: 0; right: 0; text-align: center; }
+
+  .rs-label {
+    position: absolute;
+    top: 28px; left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 5;
+  }
+  .rs-label h4 { font-family: var(--font-display); font-weight: 400; font-size: clamp(26px, 4vw, 38px); letter-spacing: -0.02em; }
+  .rs-label h4 em { font-style: italic; color: var(--accent); }
+  .rs-label p { color: rgba(255,255,255,0.55); font-size: 13px; margin-top: 6px; font-family: var(--font-mono); letter-spacing: 0.16em; text-transform: uppercase; }
+  .rs-progress {
+    position: absolute;
+    bottom: 28px; left: 50%; transform: translateX(-50%);
+    width: 240px; height: 2px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 999px;
+    overflow: hidden;
+    z-index: 5;
+  }
+  .rs-progress::after { content: ""; display: block; height: 100%; width: var(--w, 0%); background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">3D Rotate on Scroll</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.19 · Animation</span>
+    <h1 class="title">3D Rotate on <em>Scroll</em>.</h1>
+    <p class="tagline">A real 3D cube spins fully on both axes as you scroll. Pure CSS preserve-3d — no library required. Different from 2.18's frame scrub: this is live geometry.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Where the image-sequence (2.18) plays back pre-rendered frames, this technique uses CSS's actual 3D rendering engine to rotate a real object — a cube, a card stack, anything you can compose with <code>preserve-3d</code> — tied directly to scroll position. Cheaper bandwidth (no asset loading) and infinitely smooth at any frame rate. Used by product showcases where the geometry can be CSS-built.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Parent container has <code>perspective: 1400px</code>. Inside, a "world" element with <code>transform-style: preserve-3d</code> contains 6 face elements (for a cube), each <code>position: absolute; inset: 0</code> and pre-rotated to their wall via <code>rotateX/Y(...)deg translateZ(120px)</code>. The world element's own transform is <code>rotateX(calc(var(--p) * 360deg)) rotateY(calc(var(--p) * 720deg))</code> — driven by a <code>--p</code> custom property that's updated by a scroll listener. As <code>--p</code> ticks from 0 to 1, the cube rotates a full revolution on X and two on Y.</p>
+      <div class="term-grid">
+        <div><b>perspective on parent</b><span>Controls depth feel — 1400px = camera distance from object</span></div>
+        <div><b>transform-style: preserve-3d</b><span>Lets children render in real 3D space (not flattened)</span></div>
+        <div><b>face positioning</b><span>Each cube face uses rotateX/Y + translateZ(half-cube-size)</span></div>
+        <div><b>scroll → --p → rotate</b><span>One progress value drives the whole rotation calc()</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. The cube does one full X rotation and two full Y rotations across the scroll distance.</p>
+    <div class="demo-shell">
+      <div class="demo rs-demo" id="rsDemo">
+        <span class="demo-badge">Live · scroll inside</span>
+        <div class="rs-spacer">↓ scroll to spin</div>
+        <div style="height: 2000px; position: relative;">
+          <div class="rs-pin">
+            <div class="rs-label">
+              <h4>Six faces, <em>one cube</em>.</h4>
+              <p>— scroll-tied 3D —</p>
+            </div>
+            <div class="rs-cube" id="rsCube" style="--p: 0">
+              <div class="rs-face f1"><div class="num">01</div><span class="lbl">Front</span></div>
+              <div class="rs-face f2"><div class="num">02</div><span class="lbl">Right</span></div>
+              <div class="rs-face f3"><div class="num">03</div><span class="lbl">Back</span></div>
+              <div class="rs-face f4"><div class="num">04</div><span class="lbl">Left</span></div>
+              <div class="rs-face f5"><div class="num">05</div><span class="lbl">Top</span></div>
+              <div class="rs-face f6"><div class="num">06</div><span class="lbl">Bottom</span></div>
+            </div>
+            <div class="rs-progress" id="rsProg"></div>
+          </div>
+        </div>
+        <div class="rs-spacer">— full rotation complete —</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.19 3D Rotate on Scroll</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a CSS-only 3D cube that rotates on scroll. Outer scroll container overflow-y:scroll, contains a tall 2000px section. Inside that section put a sticky pin (position:sticky top:0 height:100vh display:grid place-items:center perspective:1400px). Inside the pin place a 240×240 cube element with transform-style:preserve-3d and transform:rotateX(calc(var(--p, 0) * 360deg)) rotateY(calc(var(--p, 0) * 720deg)). The cube contains 6 face divs each position:absolute inset:0, gradient background per face (violet front, pink right, cyan back, amber left, teal top, charcoal bottom), border-radius:16px, with their own transforms pre-positioning them to a cube wall: f1 translateZ(120px); f2 rotateY(90deg) translateZ(120px); f3 rotateY(180deg) translateZ(120px); f4 rotateY(-90deg) translateZ(120px); f5 rotateX(90deg) translateZ(120px); f6 rotateX(-90deg) translateZ(120px). Each face has a giant display-serif number (01-06) and a small uppercase label. Scroll listener: calculate the tall section's scroll progress 0→1 and set --p as a CSS custom property on the cube. Optional progress bar at the bottom of the pin showing --p. As you scroll past the section the cube does one full X revolution and two full Y revolutions.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://3dtransforms.desandro.com" target="_blank" rel="noopener">3D Transforms — David DeSandro</a><span class="desc">Canonical CSS 3D tutorial including the rotating cube</span></div></li>
+      <li><div><a href="https://stripe.com" target="_blank" rel="noopener">Stripe — rotating-card hero</a><span class="desc">Subtle scroll-driven card rotation across the homepage</span></div></li>
+      <li><div><a href="https://codepen.io/collection/3-d-css" target="_blank" rel="noopener">CodePen — CSS 3D collection</a><span class="desc">Hundreds of preserve-3d demos to study</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.18-image-sequence.html" class="prev"><span class="label">← Prev</span><span class="title">2.18 Image Sequence</span></a>
+      <a href="2.20-cinematic-zoom.html" class="next"><span class="label">Next →</span><span class="title">2.20 Cinematic Zoom</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const sc = document.getElementById('rsDemo');
+    const cube = document.getElementById('rsCube');
+    const prog = document.getElementById('rsProg');
+    const tall = sc.querySelector('[style*="2000"]');
+    if (!sc || !cube) return;
+    function update() {
+      const r = tall.getBoundingClientRect();
+      const sr = sc.getBoundingClientRect();
+      const start = r.top - sr.top;
+      const total = tall.offsetHeight - sr.height;
+      const p = Math.max(0, Math.min(1, -start / total));
+      cube.style.setProperty('--p', p.toFixed(4));
+      prog.style.setProperty('--w', (p * 100) + '%');
+    }
+    sc.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

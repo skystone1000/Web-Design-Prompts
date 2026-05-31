@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.34 Filmstrip Scrub · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .fs-demo {
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+    background: #0a0a14;
+    color: #fff;
+    position: relative;
+  }
+  .fs-spacer { height: 200px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+  .fs-pin {
+    position: sticky; top: 0;
+    height: 720px;
+    overflow: hidden;
+  }
+
+  /* "Projector gate" — the visible frame the filmstrip passes through */
+  .fs-gate {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 460px; height: 280px;
+    border: 6px solid #1a1410;
+    background: #000;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 14px #2a1a10,
+      0 0 0 16px #4a3517,
+      0 40px 80px rgba(0,0,0,0.6);
+  }
+  /* The filmstrip — wide horizontal strip with 8 frames */
+  .fs-strip {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    display: flex;
+    transform: translateX(calc(var(--p, 0) * -2240px + 230px));
+    transition: transform 0.05s linear;
+    will-change: transform;
+  }
+  .fs-frame {
+    width: 320px; height: 100%;
+    flex-shrink: 0;
+    margin-right: 40px;
+    position: relative;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    color: #fff;
+    font-family: var(--font-display);
+  }
+  .fs-frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.18), transparent 60%);
+    pointer-events: none;
+  }
+  .fs-frame .num { position: absolute; top: 12px; left: 14px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; color: rgba(255,255,255,0.75); }
+  .fs-frame h5 { font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.05; max-width: 14ch; }
+  .fs-frame h5 em { font-style: italic; }
+
+  .fs-f1 { background: linear-gradient(135deg, #4a2b6a, #1a0e3a); }
+  .fs-f2 { background: linear-gradient(135deg, #c66b6b, #4a1a2a); }
+  .fs-f3 { background: linear-gradient(135deg, #c4a35d, #6b4f1e); color: #1a1814; }
+  .fs-f4 { background: linear-gradient(135deg, #2c5550, #0e2a26); }
+  .fs-f5 { background: linear-gradient(135deg, #1a1814, #4a4742); }
+  .fs-f6 { background: linear-gradient(135deg, #7C5CFF, #2c1a4a); }
+  .fs-f7 { background: linear-gradient(135deg, #ed6a5e, #4a2b1a); }
+  .fs-f8 { background: linear-gradient(135deg, #00D9FF, #0a3d4d); color: #0a3d4d; }
+
+  /* Sprocket holes — top and bottom decorative strips around the gate */
+  .fs-sprockets {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 460px; height: 280px;
+    pointer-events: none;
+    z-index: 4;
+  }
+  .fs-sprockets::before, .fs-sprockets::after {
+    content: "";
+    position: absolute;
+    left: -50px; right: -50px;
+    height: 28px;
+    background:
+      repeating-linear-gradient(90deg,
+        transparent 0 14px,
+        #0a0a14 14px 22px,
+        transparent 22px 36px);
+  }
+  .fs-sprockets::before { top: -34px; }
+  .fs-sprockets::after { bottom: -34px; }
+
+  .fs-label {
+    position: absolute;
+    top: 28px; left: 0; right: 0;
+    text-align: center;
+    z-index: 6;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+  }
+  .fs-label b { color: var(--accent); }
+  .fs-counter {
+    position: absolute;
+    bottom: 28px; left: 0; right: 0;
+    text-align: center;
+    z-index: 6;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+  }
+  .fs-counter b { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Filmstrip Scrub</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.34 · Animation</span>
+    <h1 class="title">Filmstrip <em>Scrub</em>.</h1>
+    <p class="tagline">A horizontal filmstrip with 8 frames passes through a projector gate as you scroll. Each frame fills the gate, then exits stage-right. Cinema/agency-portfolio vibe.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A horizontal strip of frames (think 35mm film) moves left across a fixed "gate" as you scroll vertically. The strip has sprocket holes above and below; each frame is a small scene or chapter. It's a way to take a horizontal sequence of content and turn vertical scroll into temporal playback — perfect for portfolios that present projects sequentially, conference-day timelines, or a "year in review" format.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>A fixed-position "gate" — a window-shaped div with thick black/bronze borders and <code>overflow: hidden</code>. Inside the gate, an absolutely-positioned filmstrip <code>display: flex</code> with 8 frame divs (320px wide each, 40px margin between). The strip's <code>transform: translateX</code> is driven by scroll progress: <code>translateX(calc(--p × -2240px + 230px))</code> — total travel is exactly (8 frames × 360px) − gate width, so the strip travels precisely through all frames. Decorative sprocket-hole patterns above and below the gate use <code>repeating-linear-gradient</code>.</p>
+      <div class="term-grid">
+        <div><b>Fixed gate</b><span>The viewport-style frame doesn't move — only the strip behind it does</span></div>
+        <div><b>Flex filmstrip</b><span>display:flex with 8 equal-width frames + consistent gap</span></div>
+        <div><b>translateX driven by --p</b><span>Total travel = (strip width − gate width); multiply by --p</span></div>
+        <div><b>Sprocket holes</b><span>repeating-linear-gradient strips above + below the gate sell the film-reel look</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. The filmstrip slides left through the gate — eight frames, each its own scene.</p>
+    <div class="demo-shell">
+      <div class="demo fs-demo" id="fsDemo">
+        <span class="demo-badge">Live · scroll inside</span>
+        <div class="fs-spacer">↓ scroll to advance the reel</div>
+        <div style="height: 2800px; position: relative;">
+          <div class="fs-pin" id="fsPin" style="--p: 0">
+            <div class="fs-label">Reel <b>04</b> · 35 mm · 24 fps</div>
+            <div class="fs-gate">
+              <div class="fs-strip">
+                <div class="fs-frame fs-f1"><div class="num">01 / 08</div><h5>Open on <em>a city</em>.</h5></div>
+                <div class="fs-frame fs-f2"><div class="num">02 / 08</div><h5>Dusk falls <em>quickly</em>.</h5></div>
+                <div class="fs-frame fs-f3"><div class="num">03 / 08</div><h5>A door <em>opens</em>.</h5></div>
+                <div class="fs-frame fs-f4"><div class="num">04 / 08</div><h5>Two people <em>meet</em>.</h5></div>
+                <div class="fs-frame fs-f5"><div class="num">05 / 08</div><h5>They share <em>silence</em>.</h5></div>
+                <div class="fs-frame fs-f6"><div class="num">06 / 08</div><h5>The phone <em>rings</em>.</h5></div>
+                <div class="fs-frame fs-f7"><div class="num">07 / 08</div><h5>One of them <em>leaves</em>.</h5></div>
+                <div class="fs-frame fs-f8"><div class="num">08 / 08</div><h5>Cut to <em>black</em>.</h5></div>
+              </div>
+            </div>
+            <div class="fs-sprockets"></div>
+            <div class="fs-counter">Frame <b id="fsNum">01</b> · ☉ Now playing</div>
+          </div>
+        </div>
+        <div class="fs-spacer">— end of reel —</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.34 Filmstrip Scrub</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a scroll-driven cinema filmstrip. Sticky pin (top:0 height:100vh) inside a 2800px-tall section. Inside the pin, center a "projector gate" — a 460×280 div with thick black inner border, surrounded by chunky 14px brown/bronze outer borders, with overflow:hidden and deep box-shadow. Inside the gate, an absolutely-positioned filmstrip with display:flex containing 8 frame divs (each 320px wide, 40px right-margin), each with a different gradient background and content (number "01 / 08" + serif headline with italic accent — write a short film treatment across the frames). The filmstrip's transform is translateX(calc(var(--p, 0) * -2240px + 230px)) — so as --p goes 0→1, the strip slides left through the gate, presenting each frame in turn. Above and below the gate (extending sideways past the edges) place decorative sprocket-hole strips using repeating-linear-gradient (transparent 0 14px, dark 14px 22px) for the iconic 35mm film perforations. Add a "Reel 04 · 35mm · 24 fps" header label and a "Frame N · Now playing" counter that updates with current visible frame index. JS scroll listener computes 0→1 and assigns --p.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.criterion.com" target="_blank" rel="noopener">Criterion</a><span class="desc">Film distributor with cinematic browsing UI</span></div></li>
+      <li><div><a href="https://www.mubi.com" target="_blank" rel="noopener">MUBI</a><span class="desc">Horizontal browsing with editorial film stills</span></div></li>
+      <li><div><a href="https://stripe.com/sessions" target="_blank" rel="noopener">Stripe Sessions</a><span class="desc">Conference microsite with filmstrip-like horizontal sequence</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.33-clock-gears.html" class="prev"><span class="label">← Prev</span><span class="title">2.33 Clock Gears</span></a>
+      <a href="2.35-door-open.html" class="next"><span class="label">Next →</span><span class="title">2.35 Door Open</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const sc = document.getElementById('fsDemo');
+    const pin = document.getElementById('fsPin');
+    const numEl = document.getElementById('fsNum');
+    const tall = sc.querySelector('[style*="2800"]');
+    function update() {
+      const r = tall.getBoundingClientRect();
+      const sr = sc.getBoundingClientRect();
+      const start = r.top - sr.top;
+      const total = tall.offsetHeight - sr.height;
+      const p = Math.max(0, Math.min(1, -start / total));
+      pin.style.setProperty('--p', p.toFixed(4));
+      const idx = Math.min(8, Math.max(1, Math.floor(p * 8) + 1));
+      numEl.textContent = String(idx).padStart(2, '0');
+    }
+    sc.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

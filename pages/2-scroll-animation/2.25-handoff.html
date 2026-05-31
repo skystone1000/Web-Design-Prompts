@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.25 Hand-off Transition · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .ho-demo {
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+    background: #0E0E14;
+    color: #fff;
+    position: relative;
+  }
+  .ho-spacer { height: 120px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+  .ho-pin {
+    position: sticky; top: 0;
+    height: 720px;
+    overflow: hidden;
+  }
+  /* Stacked stage backgrounds — only the active one shows */
+  .ho-stage {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 60px;
+    transition: opacity 0.5s var(--ease);
+  }
+  .ho-stage:not(.on) { opacity: 0; pointer-events: none; }
+  .ho-s1 { background: linear-gradient(135deg, #1a0e3a, #4a2b6a); }
+  .ho-s2 { background: linear-gradient(135deg, #0a3d4d, #062d40); }
+  .ho-s3 { background: linear-gradient(135deg, #4a2b1a, #6b4f1e); }
+  .ho-stage .copy { position: relative; z-index: 2; }
+  .ho-stage .ix { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+  .ho-stage h3 { font-family: var(--font-display); font-weight: 400; font-size: clamp(36px, 5.5vw, 56px); letter-spacing: -0.03em; line-height: 1.05; }
+  .ho-stage h3 em { font-style: italic; color: var(--accent); }
+  .ho-stage p { color: rgba(255,255,255,0.7); margin-top: 14px; font-size: 16px; max-width: 44ch; margin-left: auto; margin-right: auto; }
+
+  /* The product element that HANDS OFF between stages — it stays mounted, just moves and morphs */
+  .ho-product {
+    position: absolute;
+    z-index: 3;
+    transition: top 0.7s cubic-bezier(0.7,0,0.2,1), left 0.7s cubic-bezier(0.7,0,0.2,1),
+                width 0.7s cubic-bezier(0.7,0,0.2,1), height 0.7s cubic-bezier(0.7,0,0.2,1),
+                border-radius 0.7s var(--ease), transform 0.7s var(--ease),
+                background 0.7s var(--ease), box-shadow 0.7s var(--ease);
+    background: linear-gradient(135deg, #E8B339, #D96F5A);
+    box-shadow: 0 24px 50px rgba(232,179,57,0.4);
+    will-change: top, left, width, height, transform;
+    display: grid;
+    place-items: center;
+    color: rgba(255,255,255,0.95);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    overflow: hidden;
+  }
+  .ho-product::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3), transparent 60%);
+  }
+
+  /* Three positions / shapes for the product */
+  .ho-product.pos-1 { top: 55%; left: 50%; width: 220px; height: 220px; border-radius: 50%; transform: translate(-50%, -50%) rotate(0deg); }
+  .ho-product.pos-2 { top: 50%; left: 75%; width: 320px; height: 200px; border-radius: 20px; transform: translate(-50%, -50%) rotate(-8deg); background: linear-gradient(135deg, #00D9FF, #0a3d4d); box-shadow: 0 24px 50px rgba(0,217,255,0.35); }
+  .ho-product.pos-3 { top: 50%; left: 25%; width: 260px; height: 360px; border-radius: 28px; transform: translate(-50%, -50%) rotate(6deg); background: linear-gradient(135deg, #FF6B9D, #6e0080); box-shadow: 0 24px 50px rgba(255,107,157,0.35); }
+
+  .ho-progress {
+    position: absolute;
+    top: 24px; left: 0; right: 0;
+    margin: 0 auto;
+    width: 200px;
+    height: 4px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 999px;
+    overflow: hidden;
+    z-index: 10;
+    display: flex;
+    gap: 4px;
+    padding: 0;
+  }
+  .ho-progress .seg {
+    flex: 1;
+    height: 100%;
+    background: rgba(255,255,255,0.06);
+    border-radius: 999px;
+    transition: background 0.4s;
+  }
+  .ho-progress .seg.on { background: var(--accent); }
+
+  .ho-stage h3, .ho-stage .ix, .ho-stage p { position: relative; z-index: 2; }
+  .ho-s1 .copy { transform: translateY(-160px); }
+  .ho-s2 .copy { transform: translateY(-160px); }
+  .ho-s3 .copy { transform: translateY(-160px); }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Hand-off Transition</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.25 · Animation</span>
+    <h1 class="title">Hand-off <em>Transition</em>.</h1>
+    <p class="tagline">The same product element travels and morphs between three scenes — circle → screen → portrait card — instead of fading in fresh each time. The "shared element" trick on the web.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Most scroll narratives fade one scene out and the next in, with each scene's visual freshly mounted. Hand-off keeps a single product element mounted across all scenes — it just morphs its size, position, shape, and color as you scroll between scenes. Effect: the eye tracks the same physical object as it transforms through different contexts. The "shared element transition" pattern, popularized by native iOS/Android, now common on Apple product pages and ambitious storytelling sites.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Each scene is an absolutely-positioned full-bleed stage with its own background and copy. ONE product element lives outside any scene — it's a sibling of all stages — and has CSS classes <code>.pos-1</code>, <code>.pos-2</code>, <code>.pos-3</code> each defining different top/left/width/height/border-radius/transform/background values. A transition on ALL of those properties (~0.7s with a smooth cubic-bezier) makes the element morph between positions. IntersectionObserver swaps the active class as each scene scrolls into view, and toggles the matching scene's <code>.on</code> for the background.</p>
+      <div class="term-grid">
+        <div><b>One shared element</b><span>Product lives outside the scenes — never unmounts</span></div>
+        <div><b>Position classes</b><span>.pos-1/.pos-2/.pos-3 each set top, left, width, height, shape, color</span></div>
+        <div><b>Transition all properties</b><span>~0.7s cubic-bezier on top/left/width/height/border-radius/transform/background</span></div>
+        <div><b>IntersectionObserver</b><span>Swaps active scene + active position class as each scene enters view</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. The same product shape morphs between 3 scenes — circle, dashboard card, portrait card — while the scene backgrounds + copy change.</p>
+    <div class="demo-shell">
+      <div class="demo ho-demo" id="hoDemo">
+        <span class="demo-badge">Live · scroll inside</span>
+        <div class="ho-spacer">↓ scroll to hand-off</div>
+        <div style="position: relative;">
+          <div class="ho-pin">
+            <div class="ho-progress"><span class="seg on"></span><span class="seg"></span><span class="seg"></span></div>
+            <div class="ho-stage ho-s1 on" data-stage="1">
+              <div class="copy">
+                <div class="ix">— Scene 01</div>
+                <h3>The seed of an <em>idea</em>.</h3>
+                <p>A single round orb. The starting form before it becomes a product.</p>
+              </div>
+            </div>
+            <div class="ho-stage ho-s2" data-stage="2">
+              <div class="copy">
+                <div class="ix">— Scene 02</div>
+                <h3>Then it becomes a <em>screen</em>.</h3>
+                <p>The same matter, now a dashboard. The shape flattens and stretches.</p>
+              </div>
+            </div>
+            <div class="ho-stage ho-s3" data-stage="3">
+              <div class="copy">
+                <div class="ix">— Scene 03</div>
+                <h3>Finally, an <em>artifact</em>.</h3>
+                <p>A card you can hold. Numbered, signed, ready to ship.</p>
+              </div>
+            </div>
+            <div class="ho-product pos-1" id="hoProduct">SHARED ELEMENT</div>
+          </div>
+          <!-- Anchors to trigger scene swaps -->
+          <div data-anchor="1" style="height: 720px;"></div>
+          <div data-anchor="2" style="height: 720px;"></div>
+          <div data-anchor="3" style="height: 720px;"></div>
+        </div>
+        <div class="ho-spacer">— end —</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.25 Hand-off Transition</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a shared-element scroll narrative. Inside an overflow-y:scroll container, place a sticky pin (top:0 height:100vh). Inside the pin: 3 absolutely-positioned full-bleed stage divs (each with its own gradient bg + copy + ix label + display headline). Default all stages opacity:0 — only the active stage has .on which opacity:1. Below the pin in the DOM, place 3 invisible spacer divs (height:100vh each) with data-anchor="1|2|3" — these are the scroll triggers. The KEY element: a SINGLE .ho-product div, also absolutely positioned inside the pin (as a SIBLING of the stage divs), with classes .pos-1 / .pos-2 / .pos-3 — each defines a different top/left/width/height/border-radius/transform/background/box-shadow. Apply transition:top 0.7s cubic-bezier(0.7,0,0.2,1), left 0.7s, width 0.7s, height 0.7s, border-radius 0.7s, transform 0.7s, background 0.7s, box-shadow 0.7s on the product so it morphs between positions instead of teleporting. IntersectionObserver on the anchor divs swaps both the active stage's .on AND the product's .pos-N class. Result: as the user scrolls, scenes crossfade but the product element visibly travels and morphs between them — circle in scene 1, wide rounded screen in scene 2, tall portrait card in scene 3. Add a 3-segment progress bar at the top showing which scene is active.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.apple.com/iphone" target="_blank" rel="noopener">Apple iPhone</a><span class="desc">The phone element handed off between scenes is the hallmark of every iPhone page</span></div></li>
+      <li><div><a href="https://www.framer.com" target="_blank" rel="noopener">Framer.com</a><span class="desc">Shared-element transitions in their hero storytelling</span></div></li>
+      <li><div><a href="https://developer.android.com/develop/ui/views/animations/transitions" target="_blank" rel="noopener">Android — shared element transitions</a><span class="desc">Native spec for the pattern this borrows from</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.24-globe-rotate.html" class="prev"><span class="label">← Prev</span><span class="title">2.24 Globe Rotation</span></a>
+      <a href="2.26-phone-sync.html" class="next"><span class="label">Next →</span><span class="title">2.26 Phone Screen Sync</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const sc = document.getElementById('hoDemo');
+    const product = document.getElementById('hoProduct');
+    const stages = sc.querySelectorAll('.ho-stage');
+    const anchors = sc.querySelectorAll('[data-anchor]');
+    const segs = sc.querySelectorAll('.ho-progress .seg');
+
+    function setActive(n) {
+      stages.forEach(s => s.classList.toggle('on', +s.dataset.stage === n));
+      product.classList.remove('pos-1', 'pos-2', 'pos-3');
+      product.classList.add('pos-' + n);
+      segs.forEach((s, i) => s.classList.toggle('on', i < n));
+    }
+    const io = new IntersectionObserver((entries) => {
+      let best = null;
+      entries.forEach(e => { if (!best || e.intersectionRatio > best.intersectionRatio) best = e; });
+      if (best && best.intersectionRatio > 0.45) {
+        setActive(+best.target.dataset.anchor);
+      }
+    }, { root: sc, threshold: [0.45, 0.6, 0.8] });
+    anchors.forEach(a => io.observe(a));
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.17 Exploded Assembly · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .ea-demo {
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, #060611 0%, #14141B 50%, #060611 100%);
+    color: #fff;
+    position: relative;
+  }
+  .ea-spacer { height: 200px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+  .ea-spacer.start { color: var(--accent); }
+
+  /* The pinned stage */
+  .ea-pin {
+    position: sticky;
+    top: 0;
+    height: 720px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+  .ea-progress-bar {
+    position: absolute;
+    top: 14px; left: 14px; right: 14px;
+    height: 2px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 999px;
+    overflow: hidden;
+    z-index: 10;
+  }
+  .ea-progress-bar::after {
+    content: "";
+    display: block;
+    height: 100%;
+    width: calc(var(--p, 0) * 100%);
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width 0.05s linear;
+  }
+  .ea-label {
+    position: absolute;
+    bottom: 24px; left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 10;
+  }
+  .ea-label .eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
+  .ea-label h4 { font-family: var(--font-display); font-size: clamp(28px, 4vw, 40px); font-weight: 400; letter-spacing: -0.02em; line-height: 1.1; margin-top: 4px; }
+  .ea-label h4 em { font-style: italic; color: var(--accent); }
+
+  /* The exploded device */
+  .ea-device {
+    position: relative;
+    width: 280px;
+    height: 380px;
+    perspective: 1200px;
+    transform: rotateX(calc(-20deg + var(--p, 0) * 40deg)) rotateY(calc(-15deg + var(--p, 0) * 30deg));
+    transition: transform 0.05s linear;
+  }
+  .ea-layer {
+    position: absolute;
+    inset: 0;
+    border-radius: 28px;
+    transform-origin: center;
+    transform-style: preserve-3d;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transition: transform 0.05s linear;
+    backface-visibility: hidden;
+  }
+  /* Each layer translates further apart as p approaches 0 OR 1, closes together at 0.5 */
+  /* Use --d distance, --o offset (Z-depth) */
+  .ea-layer.glass {
+    background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));
+    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    transform: translate3d(0, calc((var(--p, 0) - 0.5) * -180px), calc(80px + (1 - var(--p, 0)) * 120px));
+  }
+  .ea-layer.screen {
+    background: linear-gradient(180deg, #1a1a4a, #0a0a1f);
+    border: 1px solid rgba(124,92,255,0.4);
+    transform: translate3d(0, calc((var(--p, 0) - 0.5) * -90px), calc(40px + (1 - var(--p, 0)) * 80px));
+    display: grid;
+    place-items: center;
+  }
+  .ea-layer.screen::after {
+    content: "";
+    width: 60%; height: 60%;
+    background: radial-gradient(circle at 30% 30%, var(--accent), transparent 60%), linear-gradient(135deg, #7C5CFF, transparent);
+    border-radius: 50%;
+    filter: blur(20px);
+    opacity: calc(var(--p, 0));
+  }
+  .ea-layer.board {
+    background:
+      repeating-linear-gradient(0deg, transparent 0 6px, rgba(0,229,255,0.08) 6px 7px),
+      repeating-linear-gradient(90deg, transparent 0 6px, rgba(0,229,255,0.08) 6px 7px),
+      linear-gradient(135deg, #0d2c1a, #0a1f12);
+    border: 1px solid rgba(0,255,170,0.3);
+    transform: translate3d(0, 0, 0);
+  }
+  .ea-layer.board::before {
+    content: "";
+    position: absolute;
+    top: 30%; left: 25%;
+    width: 50%; height: 30%;
+    background: #1a3a2a;
+    border-radius: 4px;
+    box-shadow: inset 0 0 0 2px rgba(0,255,170,0.4);
+  }
+  .ea-layer.board::after {
+    content: "";
+    position: absolute;
+    bottom: 20%; right: 25%;
+    width: 30%; height: 15%;
+    background: rgba(232,179,57,0.5);
+    border-radius: 4px;
+  }
+  .ea-layer.battery {
+    background: linear-gradient(135deg, #4a3018, #2a1a0a);
+    border: 1px solid rgba(232,179,57,0.4);
+    transform: translate3d(0, calc((0.5 - var(--p, 0)) * 90px), calc(-40px - (1 - var(--p, 0)) * 80px));
+  }
+  .ea-layer.battery::after {
+    content: "BATT — 4280 mAh";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: rgba(232,179,57,0.7);
+  }
+  .ea-layer.frame {
+    background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+    border: 2px solid rgba(255,255,255,0.18);
+    transform: translate3d(0, calc((0.5 - var(--p, 0)) * 180px), calc(-80px - (1 - var(--p, 0)) * 120px));
+  }
+  .ea-layer.frame::after {
+    content: "ALUMINIUM FRAME";
+    position: absolute;
+    bottom: 14px;
+    left: 0; right: 0;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* Labels pointing at each layer when exploded */
+  .ea-callout {
+    position: absolute;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    opacity: calc(1 - var(--p, 0));
+    pointer-events: none;
+    transition: opacity 0.1s linear;
+    z-index: 5;
+  }
+  .ea-callout::before {
+    content: "—";
+    margin-right: 8px;
+    color: var(--accent);
+  }
+  .ea-callout.c1 { top: 14%; right: 14%; }
+  .ea-callout.c2 { top: 30%; left: 12%; }
+  .ea-callout.c3 { bottom: 36%; right: 12%; }
+  .ea-callout.c4 { bottom: 22%; left: 14%; }
+  .ea-callout.c5 { bottom: 12%; right: 18%; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Exploded Assembly</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.17 · Animation</span>
+    <h1 class="title">Exploded <em>Assembly</em>.</h1>
+    <p class="tagline">A device pulls itself apart layer by layer as you scroll, then clicks back together. Apple Mac Studio / Vision Pro page energy.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>The signature "engineering reveal" animation: a product (phone, watch, headphones, laptop) appears assembled, then as you scroll its layers separate vertically in 3D space — glass on top, screen, motherboard, battery, frame — each labeled. The device rotates slightly as it explodes, then reassembles on scroll. Used by Apple on Mac Studio, Vision Pro, iPhone product pages; by Rolex, Tesla, every "we engineered this" page.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>A pinned (<code>position: sticky</code>) stage holds an absolutely-positioned device, made of stacked layers each on its own Z-plane (<code>translateZ</code>). A scroll listener calculates a 0→1 progress through the parent's height and stores it in a CSS custom property <code>--p</code>. Each layer's transform interpolates from "assembled" (Z=0) to "exploded" (Z=±150px and translated up/down). The whole device also rotates X/Y based on progress for a "show me from a slight angle" feel. Callout labels fade in only when exploded.</p>
+      <div class="term-grid">
+        <div><b>perspective + preserve-3d</b><span>Container has perspective, layers preserve-3d so Z-depth renders</span></div>
+        <div><b>--p custom property</b><span>One scroll-driven variable drives every layer's transform</span></div>
+        <div><b>translateZ for depth</b><span>Each layer separates along Z, not just Y — looks like real physical layers</span></div>
+        <div><b>Sticky pin during reveal</b><span>The device pins on screen while you scroll past extra height</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. The device explodes outward as you go down, then comes back together at the bottom.</p>
+    <div class="demo-shell">
+      <div class="demo ea-demo" id="eaDemo">
+        <span class="demo-badge">Live · scroll inside</span>
+        <div class="ea-spacer start">↓ scroll to disassemble</div>
+        <div style="height: 1800px; position: relative;">
+          <div class="ea-pin" id="eaPin" style="--p: 0">
+            <div class="ea-progress-bar"></div>
+            <span class="ea-callout c1">Cover glass · sapphire</span>
+            <span class="ea-callout c2">OLED display · 120Hz</span>
+            <span class="ea-callout c3">A20 Bionic SoC</span>
+            <span class="ea-callout c4">4280 mAh battery</span>
+            <span class="ea-callout c5">Aluminium frame</span>
+            <div class="ea-device" id="eaDevice">
+              <div class="ea-layer frame"></div>
+              <div class="ea-layer battery"></div>
+              <div class="ea-layer board"></div>
+              <div class="ea-layer screen"></div>
+              <div class="ea-layer glass"></div>
+            </div>
+            <div class="ea-label">
+              <div class="eyebrow">— Cross-section</div>
+              <h4>Five layers, <em>one device</em>.</h4>
+            </div>
+          </div>
+        </div>
+        <div class="ea-spacer">— reassembled —</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.17 Exploded Assembly</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build an Apple-style exploded-device scroll animation. Outer container has overflow-y:scroll and a tall inner div (1800px). Inside the tall div, place a sticky stage (position:sticky, top:0, height:100vh) that pins while you scroll past. Inside the stage, a 280×380 device container with perspective:1200px holds 5 absolutely-positioned layers (frame, battery, motherboard, OLED screen, cover glass). Each layer styled with transform-style:preserve-3d and a different look — frame: dark aluminium gradient; battery: amber tones with "BATT 4280mAh" text; motherboard: green circuit pattern using repeating-linear-gradient + colored squares for chips; screen: dark navy with a glowing accent blob; glass: frosted backdrop-filter:blur(10px). Scroll listener: calculate the stage's scroll progress 0→1 and set it as a CSS custom property --p on the device. Each layer's transform interpolates using --p — example: glass: translateY(-180px * (--p - 0.5)) translateZ(80 + 120*(1 - --p))px so it pulls forward AND up as --p approaches 0 or 1, snaps together at --p = 0.5. The whole device also rotateX(-20 + --p*40)deg rotateY(-15 + --p*30)deg so it tilts as it explodes. Absolutely-positioned callout labels (—Cover glass — OLED — SoC — Battery — Frame) appear around the exploded device with opacity:calc(1 - --p) so they fade out when re-assembled. Add a top progress bar tied to --p. Hero label at the bottom of the stage. The result feels like Apple's Vision Pro internals reveal.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.apple.com/apple-vision-pro" target="_blank" rel="noopener">Apple Vision Pro</a><span class="desc">Headset exploded into 7 layers with scroll-driven labels</span></div></li>
+      <li><div><a href="https://www.apple.com/mac-studio" target="_blank" rel="noopener">Apple Mac Studio</a><span class="desc">Internals reveal sequence pinned across multiple scrolls</span></div></li>
+      <li><div><a href="https://www.rolex.com" target="_blank" rel="noopener">Rolex</a><span class="desc">Watch movement diagrams revealed component-by-component</span></div></li>
+      <li><div><a href="https://www.tesla.com" target="_blank" rel="noopener">Tesla — engineering pages</a><span class="desc">Exploded vehicle / battery / motor cutaway sequences</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.16-page-loader.html" class="prev"><span class="label">← Prev</span><span class="title">2.16 Page Loader</span></a>
+      <a href="2.18-image-sequence.html" class="next"><span class="label">Next →</span><span class="title">2.18 Image Sequence</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const scroller = document.getElementById('eaDemo');
+    const pin = document.getElementById('eaPin');
+    const tall = pin.parentElement;
+    if (!scroller || !pin) return;
+
+    function update() {
+      const tallRect = tall.getBoundingClientRect();
+      const scRect = scroller.getBoundingClientRect();
+      // Progress: 0 when the tall section top is at the top of the scroller, 1 when bottom
+      const start = tallRect.top - scRect.top;
+      const total = tall.offsetHeight - scRect.height;
+      const p = Math.max(0, Math.min(1, -start / total));
+      // Make a nice "explode-then-assemble" by mapping p: 0→0, 0.5→1, 1→0
+      const eased = 1 - Math.abs(p - 0.5) * 2;
+      pin.style.setProperty('--p', eased.toFixed(3));
+    }
+    scroller.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

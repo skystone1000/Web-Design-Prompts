@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.27 Liquid Morph on Scroll · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .lm-demo {
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+    background: radial-gradient(60% 80% at 50% 0%, rgba(124,92,255,0.16), transparent 60%), #060611;
+    color: #fff;
+    position: relative;
+  }
+  .lm-spacer { height: 200px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+  .lm-pin {
+    position: sticky; top: 0;
+    height: 720px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    position: sticky;
+  }
+  .lm-blob {
+    width: min(420px, 70vw);
+    height: min(420px, 70vw);
+    filter: drop-shadow(0 18px 50px rgba(124,92,255,0.4));
+    transition: filter 0.4s;
+  }
+  .lm-blob path { transition: fill 0.45s var(--ease); }
+
+  .lm-label {
+    position: absolute;
+    top: 40px; left: 0; right: 0;
+    text-align: center;
+    z-index: 5;
+  }
+  .lm-label .eyebrow {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 6px;
+  }
+  .lm-label h4 {
+    font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 4vw, 40px);
+    letter-spacing: -0.02em;
+  }
+  .lm-label h4 em { font-style: italic; color: var(--accent); }
+  .lm-progress {
+    position: absolute;
+    bottom: 28px; left: 50%; transform: translateX(-50%);
+    width: 200px; height: 2px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 999px;
+    overflow: hidden;
+    z-index: 5;
+  }
+  .lm-progress::after {
+    content: ""; display: block; height: 100%;
+    width: calc(var(--p, 0) * 100%);
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  }
+  .lm-shape-name {
+    position: absolute;
+    bottom: 60px; left: 50%; transform: translateX(-50%);
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(255,255,255,0.7); z-index: 5;
+  }
+  .lm-shape-name b { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Liquid Morph</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.27 · Animation</span>
+    <h1 class="title">Liquid Morph on <em>Scroll</em>.</h1>
+    <p class="tagline">A single SVG path interpolates between four organic blob shapes as you scroll. Pure JS — no library — using cubic-bezier control-point lerp.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>An SVG shape continuously morphs between several pre-designed forms as the user scrolls. The blob is always recognizable but never quite the same — it pulses, stretches, leans. Used as a hero ornament that signals "something organic and intelligent lives here", typical of AI product pages, music apps, and brand sites that lean into a "design system has a soul" vibe.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Define multiple SVG path data strings with the SAME number of commands and the same command types — that's the key constraint for morphing (otherwise you'd need <code>flubber.js</code>). Parse each path's number coordinates into arrays. On scroll, compute progress 0→1 across N shapes — which two shapes we're between (<code>i</code>, <code>i+1</code>) and the local lerp value (0→1 within that segment). Linearly interpolate each coordinate from shape[i] to shape[i+1] and set the resulting <code>d</code> attribute on the path. Smooth, library-free morphing.</p>
+      <div class="term-grid">
+        <div><b>Same path structure</b><span>All shapes must share command types and count for naive interpolation</span></div>
+        <div><b>Parse to coordinate arrays</b><span>Extract just the numbers; the command letters stay the same</span></div>
+        <div><b>Linear interpolation</b><span>For each coord: lerp(a, b, t) = a + (b - a) * t</span></div>
+        <div><b>flubber.js for harder cases</b><span>Library that handles different command counts — use it for production morphs</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. The blob morphs through four shapes: pebble → wave → crystal → flame.</p>
+    <div class="demo-shell">
+      <div class="demo lm-demo" id="lmDemo">
+        <span class="demo-badge">Live · scroll inside</span>
+        <div class="lm-spacer">↓ scroll to morph</div>
+        <div style="height: 2400px; position: relative;">
+          <div class="lm-pin" id="lmPin" style="--p: 0">
+            <div class="lm-label">
+              <div class="eyebrow">— Living shape</div>
+              <h4>One path, <em>four moods</em>.</h4>
+            </div>
+            <svg class="lm-blob" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="lmGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#FF6B9D"/>
+                  <stop offset="50%" stop-color="#7C5CFF"/>
+                  <stop offset="100%" stop-color="#00D9FF"/>
+                </linearGradient>
+              </defs>
+              <path id="lmPath" fill="url(#lmGrad)" />
+            </svg>
+            <div class="lm-shape-name">Shape <b id="lmShapeName">Pebble</b></div>
+            <div class="lm-progress"></div>
+          </div>
+        </div>
+        <div class="lm-spacer">— morph complete —</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.27 Liquid Morph</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a scroll-driven liquid blob morph. Sticky pin (top:0 height:100vh) inside a 2400px-tall section. Inside the pin, an SVG (viewBox 400 400) containing one &lt;path&gt; element filled with a linear gradient (hot pink → violet → cyan). Define an array of 4 path "d" strings — each must use the SAME command types and counts (so we can interpolate numerically): start each with M, then 7 C cubic-bezier curves, then Z. Examples: Pebble (rounded irregular blob), Wave (horizontal undulation), Crystal (sharper angles), Flame (vertical pull upward). Pre-parse each "d" string into an array of numbers (extract everything between command letters, keep the letters in a parallel array). On scroll: compute progress 0→1, multiply by (shapes.length - 1) to get a float index; floor it for "i" (current shape) and use the fractional part for "t" (lerp within segment 0→1). For each coordinate, lerp(shapes[i][k], shapes[i+1][k], t). Reassemble the "d" string with the original command letters and the new coords, and set it on the path attribute. Also update a "Shape N" label below the blob to the closest named shape. Add a drop-shadow filter and progress bar.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://github.com/veltman/flubber" target="_blank" rel="noopener">flubber.js</a><span class="desc">The library to use when shapes have different command counts</span></div></li>
+      <li><div><a href="https://blobs.app" target="_blank" rel="noopener">blobs.app</a><span class="desc">Generator for organic blob SVG paths to use as morph targets</span></div></li>
+      <li><div><a href="https://stripe.com" target="_blank" rel="noopener">Stripe</a><span class="desc">Subtle morphing organic shapes throughout the homepage</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.26-phone-sync.html" class="prev"><span class="label">← Prev</span><span class="title">2.26 Phone Sync</span></a>
+      <a href="2.28-card-spread.html" class="next"><span class="label">Next →</span><span class="title">2.28 Card Spread</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const sc = document.getElementById('lmDemo');
+    const pin = document.getElementById('lmPin');
+    const path = document.getElementById('lmPath');
+    const nameEl = document.getElementById('lmShapeName');
+    const tall = sc.querySelector('[style*="2400"]');
+
+    // 4 shapes — all using same M + 7 C + Z structure for naive lerp
+    const shapes = [
+      { name: 'Pebble',  d: 'M 200 60 C 290 50 360 130 360 220 C 360 310 290 370 200 360 C 110 350 40 290 40 200 C 40 110 110 70 200 60 Z' },
+      { name: 'Wave',    d: 'M 200 80 C 320 40 380 150 350 240 C 320 330 260 310 200 340 C 140 370 60 320 60 220 C 60 120 100 110 200 80 Z' },
+      { name: 'Crystal', d: 'M 200 40 C 320 80 380 100 370 220 C 360 340 280 380 200 360 C 120 340 50 320 30 220 C 10 120 80 0 200 40 Z' },
+      { name: 'Flame',   d: 'M 200 20 C 280 80 360 80 320 200 C 280 320 280 380 200 380 C 120 380 120 340 80 220 C 40 100 120 -40 200 20 Z' },
+    ];
+
+    // Parse each d into letters[] and numbers[]
+    function parse(d) {
+      const tokens = d.match(/[a-zA-Z]|-?\d+(?:\.\d+)?/g);
+      const letters = [];
+      const nums = [];
+      tokens.forEach(t => {
+        if (/[a-zA-Z]/.test(t)) letters.push({ at: nums.length, l: t });
+        else nums.push(parseFloat(t));
+      });
+      return { letters, nums };
+    }
+    const parsed = shapes.map(s => parse(s.d));
+
+    function buildD(nums, letters) {
+      // Rebuild the d string by walking nums + inserting letters at the right positions
+      let out = '';
+      let ni = 0;
+      const sortedL = letters.slice().sort((a, b) => a.at - b.at);
+      let li = 0;
+      const total = nums.length;
+      // Walk: at each position, if a letter starts here, emit it
+      while (ni <= total) {
+        while (li < sortedL.length && sortedL[li].at === ni) {
+          out += (out && !out.endsWith(' ') ? ' ' : '') + sortedL[li].l + ' ';
+          li++;
+        }
+        if (ni < total) {
+          out += nums[ni].toFixed(2) + ' ';
+          ni++;
+        } else break;
+      }
+      return out.trim();
+    }
+
+    function update() {
+      const r = tall.getBoundingClientRect();
+      const sr = sc.getBoundingClientRect();
+      const start = r.top - sr.top;
+      const total = tall.offsetHeight - sr.height;
+      const p = Math.max(0, Math.min(1, -start / total));
+      pin.style.setProperty('--p', p.toFixed(4));
+
+      const f = p * (shapes.length - 1);
+      const i = Math.min(shapes.length - 2, Math.floor(f));
+      const t = f - i;
+      const A = parsed[i].nums;
+      const B = parsed[i + 1].nums;
+      const blend = A.map((a, k) => a + (B[k] - a) * t);
+      path.setAttribute('d', buildD(blend, parsed[i].letters));
+
+      const nameIdx = Math.round(f);
+      nameEl.textContent = shapes[Math.min(shapes.length - 1, nameIdx)].name;
+    }
+    sc.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

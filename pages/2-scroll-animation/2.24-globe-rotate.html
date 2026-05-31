@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.24 Globe / Planet Rotation · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .gl-demo {
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+    background: radial-gradient(70% 60% at 50% 40%, #15183d 0%, #060611 60%, #000 100%);
+    color: #fff;
+    position: relative;
+  }
+  /* Tiny starfield */
+  .gl-demo::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, #fff, transparent),
+      radial-gradient(1px 1px at 60% 20%, #fff, transparent),
+      radial-gradient(1.4px 1.4px at 80% 40%, #fff, transparent),
+      radial-gradient(1px 1px at 35% 70%, #fff, transparent),
+      radial-gradient(1.2px 1.2px at 90% 65%, #fff, transparent),
+      radial-gradient(1px 1px at 12% 85%, #fff, transparent),
+      radial-gradient(1px 1px at 70% 90%, #fff, transparent);
+    opacity: 0.5;
+  }
+
+  .gl-spacer { height: 200px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+  .gl-pin {
+    position: sticky; top: 0;
+    height: 720px;
+    display: grid;
+    place-items: center;
+  }
+
+  /* Globe */
+  .gl-globe-wrap {
+    position: relative;
+    width: 360px; height: 360px;
+    transform: scale(calc(0.7 + var(--p, 0) * 0.5));
+    transition: transform 0.05s linear;
+  }
+  .gl-globe {
+    position: relative;
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow:
+      inset -30px -40px 60px rgba(0,0,0,0.7),
+      inset 20px 20px 40px rgba(80,140,255,0.18),
+      0 0 60px rgba(96,165,250,0.3),
+      0 30px 60px rgba(0,0,0,0.4);
+    background:
+      radial-gradient(circle at 30% 30%, #6fb5ff 0%, #2b6cb0 35%, #112a55 75%, #050a15 100%);
+  }
+  /* Continents — fake map of repeating arcs */
+  .gl-map {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(ellipse 80px 50px at 30% 35%, #1d4a25, transparent 60%),
+      radial-gradient(ellipse 110px 60px at 65% 50%, #1d4a25, transparent 65%),
+      radial-gradient(ellipse 70px 40px at 50% 75%, #1d4a25, transparent 60%),
+      radial-gradient(ellipse 50px 30px at 18% 70%, #1d4a25, transparent 60%);
+    background-size: 200% 100%;
+    background-position: calc(var(--p, 0) * -100%) 0;
+    transition: background-position 0.05s linear;
+    filter: brightness(1.1);
+  }
+  /* Equator + meridian grid */
+  .gl-grid {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background-image:
+      repeating-linear-gradient(0deg, transparent 0 19px, rgba(255,255,255,0.06) 19px 20px),
+      repeating-linear-gradient(90deg, transparent 0 19px, rgba(255,255,255,0.06) 19px 20px);
+    background-position: calc(var(--p, 0) * -100%) 0, 0 0;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+  /* Highlight terminator */
+  .gl-globe::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.22) 0%, transparent 35%);
+    pointer-events: none;
+  }
+
+  /* Orbiting content labels */
+  .gl-orbit {
+    position: absolute;
+    inset: -60px;
+    border-radius: 50%;
+    pointer-events: none;
+    transform: rotate(calc(var(--p, 0) * -360deg));
+    transition: transform 0.05s linear;
+  }
+  .gl-label {
+    position: absolute;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.85);
+    padding: 5px 10px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 999px;
+    backdrop-filter: blur(8px);
+    white-space: nowrap;
+    transform: rotate(calc(var(--p, 0) * 360deg)); /* counter-rotate to stay upright */
+  }
+  .gl-label::before { content: "●"; color: var(--accent); margin-right: 6px; font-size: 8px; vertical-align: middle; }
+  .gl-label.l1 { top: -8px; left: 50%; transform-origin: -50% 50%; }
+  .gl-label.l2 { top: 25%; right: -90px; }
+  .gl-label.l3 { bottom: 25%; right: -100px; }
+  .gl-label.l4 { bottom: -8px; left: 50%; }
+  .gl-label.l5 { bottom: 25%; left: -110px; }
+  .gl-label.l6 { top: 25%; left: -90px; }
+
+  /* Hero copy */
+  .gl-hero {
+    position: absolute;
+    top: 28px; left: 28px; right: 28px;
+    z-index: 5;
+    text-align: center;
+  }
+  .gl-hero .eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+  .gl-hero h3 { font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 4vw, 42px); letter-spacing: -0.02em; line-height: 1.05; }
+  .gl-hero h3 em { font-style: italic; color: var(--accent); }
+  .gl-stats {
+    position: absolute;
+    bottom: 28px; left: 28px; right: 28px;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    z-index: 5;
+  }
+  .gl-stats b { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Globe Rotation</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.24 · Animation</span>
+    <h1 class="title">Globe / Planet <em>Rotation</em>.</h1>
+    <p class="tagline">A CSS-built planet rotates and zooms in as you scroll. City pins orbit around it. Used on Stripe Atlas, infrastructure pages, "global presence" sections.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A spherical globe rotates on its axis tied to scroll progress. Surrounding it, a ring of city or office labels orbit the planet — they rotate around the globe while staying upright (counter-rotating their own text). The globe usually scales up as you scroll to give a "the planet comes into focus" feel. Used by Stripe Atlas, Vercel edge network, Cloudflare data-center maps.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>The globe is a circular div with a layered background — a base radial-gradient for the ocean + inset shadows for the rounded shape, a continents layer using <code>radial-gradient ellipses</code> for fake landmasses, and a grid overlay using <code>repeating-linear-gradient</code>. Scrolling shifts the continents layer's <code>background-position-x</code> to fake the rotation. The orbit ring is a sibling div whose <code>transform: rotate</code> is tied to scroll; each label inside it counter-rotates by the same angle so it stays readable.</p>
+      <div class="term-grid">
+        <div><b>Fake sphere with shadows</b><span>Inset box-shadow on a circle creates the 3D sphere illusion</span></div>
+        <div><b>Continents as gradients</b><span>radial-gradient ellipses simulate landmasses; shift position-x for rotation</span></div>
+        <div><b>Orbit + counter-rotate</b><span>Outer ring rotates with scroll; labels counter-rotate to stay upright</span></div>
+        <div><b>Scroll-driven scale</b><span>Globe scales up slightly as scroll progresses — "comes into focus"</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. The planet rotates AND grows; the city labels orbit while staying readable.</p>
+    <div class="demo-shell">
+      <div class="demo gl-demo" id="glDemo">
+        <span class="demo-badge">Live · scroll inside</span>
+        <div class="gl-spacer">↓ scroll to orbit</div>
+        <div style="height: 2000px; position: relative;">
+          <div class="gl-pin" id="glPin" style="--p: 0">
+            <div class="gl-hero">
+              <div class="eyebrow">— Global infrastructure</div>
+              <h3>Every city, <em>under 80ms</em>.</h3>
+            </div>
+            <div class="gl-globe-wrap">
+              <div class="gl-globe">
+                <div class="gl-map"></div>
+                <div class="gl-grid"></div>
+              </div>
+              <div class="gl-orbit">
+                <span class="gl-label l1">Reykjavík · 9ms</span>
+                <span class="gl-label l2">Tokyo · 42ms</span>
+                <span class="gl-label l3">Sydney · 58ms</span>
+                <span class="gl-label l4">São Paulo · 47ms</span>
+                <span class="gl-label l5">Lagos · 38ms</span>
+                <span class="gl-label l6">Mumbai · 51ms</span>
+              </div>
+            </div>
+            <div class="gl-stats">
+              <div>32 <b>regions</b></div>
+              <div>134 <b>edge nodes</b></div>
+              <div>99.96% <b>uptime</b></div>
+            </div>
+          </div>
+        </div>
+        <div class="gl-spacer">— end —</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.24 Globe Rotation</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a CSS-only rotating globe with orbiting city labels. Sticky pin (top:0 height:100vh) inside a tall 2000px section, on a starry deep-space background (radial gradient + scattered tiny star dots via radial-gradient pattern). Inside the pin, a 360px globe wrapper that transform:scale(0.7 + --p * 0.5) — grows as you scroll. The globe itself is a circular div with: (1) base background of radial-gradient(circle at 30% 30%, light-blue, mid-blue, dark navy, near-black) for ocean depth; (2) inset box-shadow(-30px -40px 60px rgba(0,0,0,0.7) inset) for the spherical rim shadow; (3) outer drop shadow + blue glow. Inside the globe place TWO overlay layers: a "continents" layer with 4 dark-green radial-gradient ellipses simulating landmasses (background-size:200% so we can scroll-shift their X position) and a "grid" layer with two repeating-linear-gradient stripes (vertical + horizontal at 20px) for the meridian/equator lines, mix-blend-mode:overlay. As scroll progress --p grows, set background-position-x on the continents to (--p * -100%) so it visually rotates. Wrap the globe in an orbit container (inset:-60px) that rotates by transform:rotate(--p * -360deg). Place 6 city labels (Reykjavík, Tokyo, Sydney etc.) absolutely inside the orbit at the 6 cardinal/inter-cardinal positions — each label counter-rotates transform:rotate(--p * 360deg) so the text stays upright as it orbits. Above the globe: a small uppercase eyebrow + display headline. Below: stats row (regions / edge nodes / uptime).</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://stripe.com/atlas" target="_blank" rel="noopener">Stripe Atlas</a><span class="desc">Global network shown as a rotating sphere</span></div></li>
+      <li><div><a href="https://vercel.com" target="_blank" rel="noopener">Vercel Edge Network</a><span class="desc">Edge-node globe pinned with city markers</span></div></li>
+      <li><div><a href="https://github.com" target="_blank" rel="noopener">GitHub homepage globe</a><span class="desc">Real WebGL globe with live event arcs — different tech, same vibe</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.23-svg-path-follow.html" class="prev"><span class="label">← Prev</span><span class="title">2.23 SVG Path Follow</span></a>
+      <a href="2.25-handoff.html" class="next"><span class="label">Next →</span><span class="title">2.25 Hand-off Transition</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const sc = document.getElementById('glDemo');
+    const pin = document.getElementById('glPin');
+    const tall = sc.querySelector('[style*="2000"]');
+    function update() {
+      const r = tall.getBoundingClientRect();
+      const sr = sc.getBoundingClientRect();
+      const start = r.top - sr.top;
+      const total = tall.offsetHeight - sr.height;
+      const p = Math.max(0, Math.min(1, -start / total));
+      pin.style.setProperty('--p', p.toFixed(4));
+    }
+    sc.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

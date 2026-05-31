@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.18 Image Sequence Scrub · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .is-demo {
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+    background: #0E0E14;
+    color: #fff;
+    position: relative;
+  }
+  .is-spacer { height: 200px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+  .is-pin {
+    position: sticky; top: 0;
+    height: 720px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+
+  /* Frame stage */
+  .is-stage {
+    position: relative;
+    width: 320px; height: 320px;
+  }
+  .is-frame {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.04s linear;
+    background-size: cover;
+    background-position: center;
+  }
+  .is-frame.on { opacity: 1; }
+  /* Each frame = a different rotated linear-gradient + radial highlight = simulates a 3D object rotating
+     We'll generate 24 frames programmatically. */
+
+  .is-shadow {
+    position: absolute;
+    bottom: -28px; left: 50%;
+    transform: translateX(-50%);
+    width: 220px; height: 24px;
+    background: radial-gradient(ellipse, rgba(0,0,0,0.6), transparent 70%);
+    border-radius: 50%;
+    filter: blur(8px);
+  }
+  .is-counter {
+    position: absolute;
+    top: 20px; right: 24px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(0,0,0,0.4);
+    padding: 6px 12px;
+    border-radius: 999px;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(232,179,57,0.4);
+    z-index: 5;
+  }
+  .is-counter b { color: var(--accent-soft); font-weight: 700; }
+
+  .is-label {
+    position: absolute;
+    bottom: 60px;
+    left: 0; right: 0;
+    text-align: center;
+    z-index: 5;
+  }
+  .is-label h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(32px, 4.5vw, 48px);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    color: #fff;
+  }
+  .is-label h4 em { font-style: italic; color: var(--accent); }
+  .is-label p { color: rgba(255,255,255,0.6); font-size: 14px; margin-top: 8px; }
+
+  .is-progress {
+    position: absolute;
+    top: 20px; left: 24px;
+    z-index: 5;
+    width: 180px; height: 2px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .is-progress::after {
+    content: "";
+    display: block;
+    height: 100%;
+    width: var(--w, 0%);
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width 0.05s linear;
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Image Sequence</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.18 · Animation</span>
+    <h1 class="title">Image Sequence <em>Scrub</em>.</h1>
+    <p class="tagline">Pre-rendered frames of a 3D object played back frame-by-frame as you scroll. Apple AirPods Pro silicone tip rotation, every car configurator, every "explore the inside" page.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Instead of doing real-time 3D in WebGL, designers pre-render an object as 30–120 image frames (one per few degrees of rotation, or one per phase of an animation), then scrub through them as the user scrolls. The result feels like buttery-smooth 3D but is just images. It's how Apple's product pages play those "rotate the AirPods Pro" or "watch the iPhone unfold" sequences — and how every car configurator lets you spin the car.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Two implementations: (1) Stack all frames as <code>position: absolute</code> divs with <code>opacity: 0</code>, then on scroll set only the active frame's opacity to 1. Cheap, works for ~30 frames. (2) Production-grade: a <code>&lt;canvas&gt;</code> + JS that calculates which frame index matches the current scroll progress and calls <code>ctx.drawImage(frames[i], 0, 0)</code>. Preload all frames before the section enters view. Apple's AirPods Pro page uses ~150 JPG frames totaling ~5MB.</p>
+      <div class="term-grid">
+        <div><b>Pre-rendered frames</b><span>Each frame = one moment in the animation (rotation, zoom, fold, etc.)</span></div>
+        <div><b>scroll progress → frame index</b><span>floor(progress * frameCount) selects which frame to show</span></div>
+        <div><b>canvas vs stacked img</b><span>Canvas scales better for 60+ frames; stacked img is easier for prototypes</span></div>
+        <div><b>Preload everything</b><span>Frames must be loaded before the section enters view or playback stutters</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. The orb rotates 360° — each scroll frame swaps to a different rendered angle. (24 simulated frames using CSS gradients.)</p>
+    <div class="demo-shell">
+      <div class="demo is-demo" id="isDemo">
+        <span class="demo-badge">Live · scroll inside</span>
+        <div class="is-spacer">↓ scroll to rotate</div>
+        <div style="height: 1800px; position: relative;">
+          <div class="is-pin">
+            <div class="is-counter">Frame <b id="isCount">01</b> / 24</div>
+            <div class="is-progress" id="isProg"></div>
+            <div class="is-stage" id="isStage"></div>
+            <div class="is-shadow"></div>
+            <div class="is-label">
+              <h4>Rotate it <em>360°</em>.</h4>
+              <p>24 frames · scroll-scrubbed playback</p>
+            </div>
+          </div>
+        </div>
+        <div class="is-spacer">— end —</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.18 Image Sequence</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a scroll-driven image sequence "scrubber" that plays back a 3D rotation frame-by-frame. Tall outer container with overflow-y:scroll containing a sticky pin (position:sticky top:0 height:100vh) inside an 1800px-tall section. Inside the pin: a 320×320 stage holding 24 absolutely-positioned circular frames stacked on top of each other (all inset:0, border-radius:50%, opacity:0 default, opacity:1 when .on). Each frame represents an angular step of a rotating 3D object — for the demo, generate them via CSS background gradient strings parameterized by angle (use document.createElement in JS), each frame's background is a radial-gradient highlight at a position based on cos/sin of the angle + a linear-gradient body — together they simulate a sphere rotating. JavaScript: on scroll, calculate the section's scroll progress (0 to 1) and pick frame index = floor(progress * 24). Toggle .on between frames. Update a "Frame N / 24" counter and a 180px progress bar. Add a soft shadow ellipse below the stage. Production version: replace generated frames with &lt;img&gt; tags preloaded from your rendered sequence (or use canvas + ctx.drawImage for &gt;30 frames).</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.apple.com/airpods-pro" target="_blank" rel="noopener">Apple AirPods Pro</a><span class="desc">The reference: silicone tip 360° rotation on scroll</span></div></li>
+      <li><div><a href="https://www.tesla.com/model3/design" target="_blank" rel="noopener">Tesla Model 3 configurator</a><span class="desc">Spin the car using your scroll wheel</span></div></li>
+      <li><div><a href="https://www.bose.com" target="_blank" rel="noopener">Bose product pages</a><span class="desc">Headphone rotation scrubbed by scroll</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.17-exploded-assembly.html" class="prev"><span class="label">← Prev</span><span class="title">2.17 Exploded Assembly</span></a>
+      <a href="2.19-3d-rotate-scroll.html" class="next"><span class="label">Next →</span><span class="title">2.19 3D Rotate on Scroll</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const scroller = document.getElementById('isDemo');
+    const stage = document.getElementById('isStage');
+    const count = document.getElementById('isCount');
+    const prog = document.getElementById('isProg');
+    if (!scroller || !stage) return;
+
+    // Generate 24 simulated frames — a "metal orb" rotating
+    const FRAMES = 24;
+    const frames = [];
+    for (let i = 0; i < FRAMES; i++) {
+      const angle = (i / FRAMES) * Math.PI * 2;
+      const hx = 50 + Math.cos(angle) * 30; // highlight x %
+      const hy = 30 + Math.sin(angle) * 15; // highlight y %
+      const div = document.createElement('div');
+      div.className = 'is-frame' + (i === 0 ? ' on' : '');
+      div.style.background = `
+        radial-gradient(circle at ${hx}% ${hy}%, rgba(255,255,255,0.95) 0%, rgba(232,179,57,0.6) 18%, rgba(217,111,90,0.4) 45%, rgba(20,20,30,0.95) 80%),
+        radial-gradient(circle at ${100 - hx}% ${100 - hy}%, rgba(0,229,255,0.3) 0%, transparent 50%),
+        linear-gradient(${i * 15}deg, #1a1a2e, #0a0a14)
+      `;
+      stage.appendChild(div);
+      frames.push(div);
+    }
+
+    const tall = scroller.querySelector('[style*="1800"]');
+    function update() {
+      const tallRect = tall.getBoundingClientRect();
+      const scRect = scroller.getBoundingClientRect();
+      const start = tallRect.top - scRect.top;
+      const total = tall.offsetHeight - scRect.height;
+      const p = Math.max(0, Math.min(1, -start / total));
+      const idx = Math.min(FRAMES - 1, Math.floor(p * FRAMES));
+      frames.forEach((f, i) => f.classList.toggle('on', i === idx));
+      count.textContent = String(idx + 1).padStart(2, '0');
+      prog.style.setProperty('--w', (p * 100) + '%');
+    }
+    scroller.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

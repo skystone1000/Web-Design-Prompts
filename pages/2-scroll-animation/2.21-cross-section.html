@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.21 Cross-section Layer Reveal · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .cs-demo {
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+    background: #FAFAF7;
+    color: #1A1814;
+    position: relative;
+  }
+  .cs-spacer { height: 200px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #888; }
+  .cs-pin {
+    position: sticky; top: 0; height: 720px;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    align-items: center;
+    perspective: 1500px;
+    padding: 40px;
+    gap: 40px;
+  }
+  /* Stack of horizontal layers (a building cross-section) */
+  .cs-stack {
+    position: relative;
+    width: 280px;
+    height: 360px;
+    margin: 0 auto;
+    transform-style: preserve-3d;
+    transform: rotateX(calc(60deg - var(--p, 0) * 5deg)) rotateZ(-10deg);
+  }
+  .cs-slab {
+    position: absolute;
+    inset: 0;
+    height: 56px;
+    border-radius: 6px;
+    transform-origin: center;
+    transition: transform 0.04s linear;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.9);
+  }
+  .cs-slab .num { opacity: 0.6; margin-right: 12px; }
+  /* Each slab is offset Y and Z based on layer index AND scroll progress */
+  .cs-slab:nth-child(1) { background: linear-gradient(90deg, #8b1a1a, #5c1010); transform: translateY(calc(-130px - var(--p, 0) * 60px)) translateZ(0); }
+  .cs-slab:nth-child(2) { background: linear-gradient(90deg, #c4a35d, #8b6e29); transform: translateY(calc(-70px - var(--p, 0) * 30px)) translateZ(0); }
+  .cs-slab:nth-child(3) { background: linear-gradient(90deg, #6FB5A8, #2c5550); transform: translateY(0) translateZ(0); }
+  .cs-slab:nth-child(4) { background: linear-gradient(90deg, #1A1814, #4a4742); transform: translateY(calc(70px + var(--p, 0) * 30px)) translateZ(0); }
+  .cs-slab:nth-child(5) { background: linear-gradient(90deg, #ed6a5e, #8b2c25); transform: translateY(calc(130px + var(--p, 0) * 60px)) translateZ(0); }
+
+  /* Labels next to each slab, fading in based on progress */
+  .cs-info {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .cs-info .head {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(28px, 4vw, 40px);
+    letter-spacing: -0.02em;
+    color: #1A1814;
+    margin-bottom: 8px;
+  }
+  .cs-info .head em { font-style: italic; color: #8b1a1a; }
+  .cs-info .lead { font-size: 14px; color: #555; line-height: 1.5; margin-bottom: 12px; }
+  .cs-row {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    gap: 12px;
+    padding: 10px 0;
+    border-top: 1px solid rgba(0,0,0,0.12);
+    opacity: calc(0.3 + var(--row-p, 0) * 0.7);
+    transform: translateX(calc((1 - var(--row-p, 0)) * -8px));
+    transition: opacity 0.1s, transform 0.1s;
+  }
+  .cs-row .ix { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; color: #888; }
+  .cs-row .ttl { font-family: var(--font-display); font-size: 17px; font-weight: 500; color: #1A1814; letter-spacing: -0.01em; }
+  .cs-row .desc { font-size: 12.5px; color: #666; margin-top: 2px; }
+
+  .cs-progress { position: absolute; bottom: 24px; left: 40px; right: 40px; height: 2px; background: rgba(0,0,0,0.1); border-radius: 999px; overflow: hidden; }
+  .cs-progress::after { content: ""; display: block; height: 100%; width: calc(var(--p, 0) * 100%); background: linear-gradient(90deg, #8b1a1a, #c4a35d); }
+
+  @media (max-width: 720px) {
+    .cs-pin { grid-template-columns: 1fr; }
+    .cs-stack { height: 280px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Cross-section</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.21 · Animation</span>
+    <h1 class="title">Cross-section <em>Layer Reveal</em>.</h1>
+    <p class="tagline">A building cake-slice: tilted stack of horizontal layers that separate vertically as you scroll, with labels fading in next to each one. The materials / architecture / fabric pattern.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>An object cut open like a piece of cake — multiple horizontal layers stacked at a tilted-isometric angle. As you scroll, the layers separate vertically and their labels appear on the side, naming the material or layer of each. Used on building / architecture sites, fabric and materials brands, food / packaging sites, anywhere you want to communicate "here's what's inside, layer by layer."</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>The stack uses a tilted container (<code>transform: rotateX(60deg) rotateZ(-10deg)</code>) with <code>transform-style: preserve-3d</code>. Inside, several layer divs stack with different vertical offsets. As scroll progress <code>--p</code> grows, each layer's <code>translateY</code> is biased away from center — top layers go further up, bottom layers further down — exposing the gap between them. A row of labels next to the stack has a staggered fade-in tied to <code>--row-p</code> values that activate one at a time as <code>--p</code> crosses thresholds.</p>
+      <div class="term-grid">
+        <div><b>Isometric tilt</b><span>rotateX(60deg) + rotateZ(-10deg) gives the cake-slice angle</span></div>
+        <div><b>Per-layer translateY</b><span>Each slab translates away from center proportional to its index AND --p</span></div>
+        <div><b>Staggered label fade</b><span>Each info row uses its own --row-p that comes alive at a different scroll threshold</span></div>
+        <div><b>preserve-3d on stack</b><span>Layers retain 3D positioning when stack is tilted</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. The 5-layer building separates vertically and the materials list fades in row-by-row.</p>
+    <div class="demo-shell">
+      <div class="demo cs-demo" id="csDemo">
+        <span class="demo-badge" style="background:rgba(0,0,0,0.18); color:#1A1814; border-color:rgba(0,0,0,0.1);">Live · scroll inside</span>
+        <div class="cs-spacer">↓ scroll to separate layers</div>
+        <div style="height: 1800px; position: relative;">
+          <div class="cs-pin" id="csPin" style="--p: 0">
+            <div class="cs-info" id="csInfo">
+              <div class="head">A building, <em>cut open</em>.</div>
+              <p class="lead">Five layers, top to bottom — the entire materials story.</p>
+              <div class="cs-row" data-row="0"><span class="ix">01</span><div><div class="ttl">Slate roof</div><div class="desc">Welsh slate, 32mm, hand-cut.</div></div></div>
+              <div class="cs-row" data-row="1"><span class="ix">02</span><div><div class="ttl">Insulated ceiling</div><div class="desc">Sheep-wool batt + reclaimed timber joists.</div></div></div>
+              <div class="cs-row" data-row="2"><span class="ix">03</span><div><div class="ttl">Living floor</div><div class="desc">Hardwood planks over radiant heat coils.</div></div></div>
+              <div class="cs-row" data-row="3"><span class="ix">04</span><div><div class="ttl">Cellar / mechanical</div><div class="desc">Stone foundation walls; storage and HVAC.</div></div></div>
+              <div class="cs-row" data-row="4"><span class="ix">05</span><div><div class="ttl">Foundation slab</div><div class="desc">Reinforced concrete, embedded into bedrock.</div></div></div>
+            </div>
+            <div class="cs-stack" id="csStack">
+              <div class="cs-slab"><span class="num">01</span>Roof</div>
+              <div class="cs-slab"><span class="num">02</span>Ceiling</div>
+              <div class="cs-slab"><span class="num">03</span>Floor</div>
+              <div class="cs-slab"><span class="num">04</span>Cellar</div>
+              <div class="cs-slab"><span class="num">05</span>Foundation</div>
+            </div>
+            <div class="cs-progress"></div>
+          </div>
+        </div>
+        <div class="cs-spacer">— end —</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.21 Cross-section Reveal</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a cross-section / materials-stack scroll reveal. Sticky pin (position:sticky top:0 height:100vh) inside a tall 1800px parent. Two-column layout inside the pin: info column on the LEFT (display-serif headline + materials list with 5 rows), the cake-slice STACK on the RIGHT. The stack: 280×360 container with transform-style:preserve-3d and transform:rotateX(60deg) rotateZ(-10deg) (the isometric tilt). Inside, 5 absolutely-positioned slab divs, each height:56px, different earth-tone gradient (slate red, hay gold, slate teal, dark charcoal, terracotta). Each slab's transform is translateY based on its index AND a scroll-driven --p custom property — top slab translates further negative as --p grows, bottom further positive, middle stays put. This creates a vertical separation that "opens up" the structure as you scroll. Each info row has a data-row attribute (0-4) and a --row-p variable activated when scroll progress crosses thresholds 0.1, 0.3, 0.5, 0.7, 0.85 — opacity:calc(0.3 + --row-p * 0.7) and translateX(-8px → 0) for a staggered fade-in. Bottom progress bar tied to --p.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.bjarkeingels.com" target="_blank" rel="noopener">BIG — Bjarke Ingels Group</a><span class="desc">Architecture portfolio with layered building diagrams</span></div></li>
+      <li><div><a href="https://www.patagonia.com" target="_blank" rel="noopener">Patagonia — fabric tech pages</a><span class="desc">Cross-section materials reveals for jackets</span></div></li>
+      <li><div><a href="https://www.nike.com/innovation" target="_blank" rel="noopener">Nike Innovation</a><span class="desc">Shoe cross-sections opening to reveal foams and plates</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.20-cinematic-zoom.html" class="prev"><span class="label">← Prev</span><span class="title">2.20 Cinematic Zoom</span></a>
+      <a href="2.22-color-morph.html" class="next"><span class="label">Next →</span><span class="title">2.22 Section Color Morph</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const sc = document.getElementById('csDemo');
+    const pin = document.getElementById('csPin');
+    const info = document.getElementById('csInfo');
+    const tall = sc.querySelector('[style*="1800"]');
+    if (!sc || !pin) return;
+    const thresholds = [0.1, 0.3, 0.5, 0.7, 0.85];
+    const rows = info.querySelectorAll('.cs-row');
+    function update() {
+      const r = tall.getBoundingClientRect();
+      const sr = sc.getBoundingClientRect();
+      const start = r.top - sr.top;
+      const total = tall.offsetHeight - sr.height;
+      const p = Math.max(0, Math.min(1, -start / total));
+      pin.style.setProperty('--p', p.toFixed(4));
+      rows.forEach((row, i) => {
+        const t = thresholds[i];
+        const span = 0.15;
+        const rp = Math.max(0, Math.min(1, (p - t) / span));
+        row.style.setProperty('--row-p', rp.toFixed(3));
+      });
+    }
+    sc.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

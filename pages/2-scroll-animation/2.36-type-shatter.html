@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.36 Type Shatter &amp; Reform · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .ts-demo {
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+    background: radial-gradient(60% 60% at 50% 50%, rgba(124,92,255,0.16), transparent 60%), #060611;
+    color: #fff;
+    position: relative;
+  }
+  .ts-spacer { height: 200px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+  .ts-pin {
+    position: sticky; top: 0;
+    height: 720px;
+    overflow: hidden;
+    perspective: 900px;
+    display: grid;
+    place-items: center;
+  }
+  .ts-stage {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(64px, 12vw, 152px);
+    letter-spacing: -0.06em;
+    line-height: 1;
+    transform-style: preserve-3d;
+    text-align: center;
+    color: #fff;
+  }
+  .ts-letter {
+    display: inline-block;
+    transform-style: preserve-3d;
+    will-change: transform, opacity;
+    transition: transform 0.06s linear, opacity 0.06s linear, filter 0.06s linear;
+    /* Per-letter scatter values set inline via --tx, --ty, --tz, --rot */
+    transform:
+      translate3d(
+        calc((1 - var(--p, 1)) * var(--tx, 0) * 1px),
+        calc((1 - var(--p, 1)) * var(--ty, 0) * 1px),
+        calc((1 - var(--p, 1)) * var(--tz, 0) * 1px))
+      rotateX(calc((1 - var(--p, 1)) * var(--rotx, 0) * 1deg))
+      rotateY(calc((1 - var(--p, 1)) * var(--roty, 0) * 1deg))
+      rotateZ(calc((1 - var(--p, 1)) * var(--rotz, 0) * 1deg));
+    opacity: calc(0.2 + var(--p, 1) * 0.8);
+    filter: blur(calc((1 - var(--p, 1)) * 4px));
+  }
+  .ts-letter em { font-style: italic; color: var(--accent); }
+  .ts-space { display: inline-block; width: 0.3em; }
+
+  .ts-label {
+    position: absolute;
+    top: 30px; left: 0; right: 0;
+    text-align: center;
+    z-index: 5;
+  }
+  .ts-label .eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent); }
+  .ts-label p { color: rgba(255,255,255,0.5); margin-top: 4px; font-family: var(--font-mono); font-size: 12px; }
+
+  .ts-readout {
+    position: absolute;
+    bottom: 28px; left: 0; right: 0;
+    text-align: center;
+    z-index: 5;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+  }
+  .ts-readout b { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Type Shatter</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.36 · Animation</span>
+    <h1 class="title">Type Shatter &amp; <em>Reform</em>.</h1>
+    <p class="tagline">Letters of a giant headline fly apart in 3D, drift through space, then snap back into formation. Per-letter translate3d / rotate3d driven by scroll.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Take a hero headline, split it into individual letter spans, give each letter a random "scatter" vector in 3D space (x, y, z offset + rotation), then interpolate between the scattered state and the assembled state on scroll. The letters look like they explode outward, hover for a moment, then reassemble — as if reality is reforming around the word. Used by music album sites, fashion brands, AI launch reveals, conference openers.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>(1) Split the headline into letter spans (you can do this manually or with SplitType.js). (2) For each letter, set 6 random CSS custom properties: <code>--tx</code>, <code>--ty</code>, <code>--tz</code>, <code>--rotx</code>, <code>--roty</code>, <code>--rotz</code> — the per-letter scatter targets. (3) Every letter shares the same transform formula: <code>translate3d(calc((1 - --p) × --tx × 1px), ...)</code> — when <code>--p:1</code> the letter sits at its natural position; when <code>--p:0</code> it's blown out to its scatter target. (4) Add a per-letter blur that's stronger when scattered, to sell the "out of focus" feel. (5) Scroll listener computes <code>--p</code> with peak-at-middle easing so the word forms in the middle of the scroll and shatters at both ends.</p>
+      <div class="term-grid">
+        <div><b>Per-letter random vectors</b><span>6 random custom properties per letter: tx/ty/tz/rotx/roty/rotz</span></div>
+        <div><b>One shared transform formula</b><span>Every letter interpolates with the same calc() — only the values differ</span></div>
+        <div><b>preserve-3d + perspective</b><span>Parent needs both so per-letter 3D rotations render correctly</span></div>
+        <div><b>Blur on scatter</b><span>filter:blur((1 - --p) × 4px) sells the "out of focus" depth-of-field</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. The headline scatters into 3D space, holds, reassembles — twice.</p>
+    <div class="demo-shell">
+      <div class="demo ts-demo" id="tsDemo">
+        <span class="demo-badge">Live · scroll inside</span>
+        <div class="ts-spacer">↓ scroll to shatter</div>
+        <div style="height: 2400px; position: relative;">
+          <div class="ts-pin" id="tsPin" style="--p: 1">
+            <div class="ts-label">
+              <div class="eyebrow">— Word from chaos</div>
+              <p>Each letter has its own scatter vector</p>
+            </div>
+            <div class="ts-stage" id="tsStage"
+                 data-text="Out of <em>chaos</em>, order."></div>
+            <div class="ts-readout">Assembly: <b id="tsPct">100%</b> · <b id="tsState">FORMED</b></div>
+          </div>
+        </div>
+        <div class="ts-spacer">— scattered again —</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.36 Type Shatter &amp; Reform</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a 3D scroll-driven type-shatter animation. Sticky pin (top:0 height:100vh perspective:900px) inside a 2400px-tall section. Inside the pin, a stage element with font-size clamp(64,12vw,152px), font-weight 800, transform-style:preserve-3d. JavaScript: take a headline string (like "Out of &lt;em&gt;chaos&lt;/em&gt;, order.") and split it into individual letter spans (.ts-letter) — preserve any inline em tags. For EACH letter, set 6 inline CSS custom properties to random values: --tx (random -300 to 300px), --ty (-200 to 200px), --tz (-400 to 400px depth), --rotx (-80 to 80deg), --roty (-80 to 80deg), --rotz (-30 to 30deg). Every .ts-letter shares the same transform formula: translate3d(calc((1 - var(--p)) * var(--tx) * 1px), calc((1 - var(--p)) * var(--ty) * 1px), calc((1 - var(--p)) * var(--tz) * 1px)) rotateX/Y/Z(calc((1 - var(--p)) * var(--rot*) * 1deg)). Also filter:blur(calc((1 - var(--p)) * 4px)) and opacity:calc(0.2 + var(--p) * 0.8). When --p:1 the word is fully assembled; when --p:0 it's scattered into 3D space. Scroll listener computes scroll progress and maps to peak-at-middle so the word forms at the middle of the scroll and shatters at both ends. Show "Assembly: NN%" + "FORMED / SHATTERING / SCATTERED" readout.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.resn.co.nz" target="_blank" rel="noopener">Resn</a><span class="desc">Per-letter type chaos as the agency signature</span></div></li>
+      <li><div><a href="https://www.split-type.vercel.app" target="_blank" rel="noopener">SplitType.js</a><span class="desc">The library to split a string into letter spans for animation</span></div></li>
+      <li><div><a href="https://www.awwwards.com/websites/typography" target="_blank" rel="noopener">Awwwards — Typography</a><span class="desc">Sites recognized for per-letter type animation</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.35-door-open.html" class="prev"><span class="label">← Prev</span><span class="title">2.35 Door Open</span></a>
+      <a href="2.37-mask-wipe.html" class="next"><span class="label">Next →</span><span class="title">2.37 Mask Wipe</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const sc = document.getElementById('tsDemo');
+    const pin = document.getElementById('tsPin');
+    const stage = document.getElementById('tsStage');
+    const pct = document.getElementById('tsPct');
+    const state = document.getElementById('tsState');
+    const tall = sc.querySelector('[style*="2400"]');
+    if (!stage) return;
+
+    // Split text — preserve em tags
+    function splitText(htmlString) {
+      const wrap = document.createElement('div');
+      wrap.innerHTML = htmlString;
+      const out = [];
+      function walk(node, italic) {
+        if (node.nodeType === 3) {
+          for (const ch of node.nodeValue) {
+            if (ch === ' ') out.push({ ch: ' ', italic: false, space: true });
+            else out.push({ ch, italic });
+          }
+        } else if (node.nodeName === 'EM') {
+          for (const c of node.childNodes) walk(c, true);
+        } else {
+          for (const c of node.childNodes) walk(c, italic);
+        }
+      }
+      for (const c of wrap.childNodes) walk(c, false);
+      return out;
+    }
+    function rnd(min, max) { return Math.random() * (max - min) + min; }
+    const letters = splitText(stage.dataset.text);
+    stage.innerHTML = letters.map(L => {
+      if (L.space) return '<span class="ts-space"> </span>';
+      const tx = rnd(-300, 300).toFixed(0);
+      const ty = rnd(-200, 200).toFixed(0);
+      const tz = rnd(-400, 400).toFixed(0);
+      const rotx = rnd(-80, 80).toFixed(0);
+      const roty = rnd(-80, 80).toFixed(0);
+      const rotz = rnd(-30, 30).toFixed(0);
+      const inner = L.italic ? `<em>${L.ch === '<' ? '&lt;' : L.ch === '>' ? '&gt;' : L.ch}</em>` : L.ch;
+      return `<span class="ts-letter" style="--tx:${tx};--ty:${ty};--tz:${tz};--rotx:${rotx};--roty:${roty};--rotz:${rotz}">${inner}</span>`;
+    }).join('');
+
+    function update() {
+      const r = tall.getBoundingClientRect();
+      const sr = sc.getBoundingClientRect();
+      const start = r.top - sr.top;
+      const total = tall.offsetHeight - sr.height;
+      const sp = Math.max(0, Math.min(1, -start / total));
+      const eased = 1 - Math.abs(sp - 0.5) * 2; // formed at middle
+      pin.style.setProperty('--p', eased.toFixed(4));
+      pct.textContent = Math.round(eased * 100) + '%';
+      state.textContent = eased < 0.1 ? 'SCATTERED' : (eased > 0.9 ? 'FORMED' : (sp < 0.5 ? 'ASSEMBLING' : 'SHATTERING'));
+    }
+    sc.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

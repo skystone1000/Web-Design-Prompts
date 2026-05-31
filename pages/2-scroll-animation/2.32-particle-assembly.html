@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.32 Particle Assembly · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .pa-demo {
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+    background: radial-gradient(60% 60% at 50% 50%, #1a0e3a 0%, #060611 70%);
+    color: #fff;
+    position: relative;
+  }
+  .pa-spacer { height: 200px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+  .pa-pin {
+    position: sticky; top: 0;
+    height: 720px;
+    overflow: hidden;
+  }
+  .pa-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    display: block;
+  }
+  .pa-label {
+    position: absolute;
+    top: 32px; left: 0; right: 0;
+    text-align: center;
+    z-index: 5;
+  }
+  .pa-label .eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+  .pa-label h4 { font-family: var(--font-display); font-weight: 400; font-size: clamp(24px, 4vw, 36px); letter-spacing: -0.02em; }
+  .pa-label h4 em { font-style: italic; color: var(--accent); }
+  .pa-readout {
+    position: absolute;
+    bottom: 30px; left: 30px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    z-index: 5;
+  }
+  .pa-readout b { color: var(--accent); }
+  .pa-progress {
+    position: absolute;
+    bottom: 30px; right: 30px;
+    width: 180px; height: 2px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 999px;
+    overflow: hidden;
+    z-index: 5;
+  }
+  .pa-progress::after { content: ""; display: block; height: 100%; width: calc(var(--p, 0) * 100%); background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Particle Assembly</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.32 · Animation</span>
+    <h1 class="title">Particle <em>Assembly</em>.</h1>
+    <p class="tagline">Hundreds of dots scattered across space converge to spell a word as you scroll, then disperse back into chaos. Canvas2D + a target-position interpolation.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>A field of particles (dots, sparks, fireflies) starts randomly scattered. As you scroll, each particle interpolates toward a <em>target</em> position that together spell out a word, a logo, or a shape. At the bottom of the scroll, they scatter again. The visual moment when randomness becomes order (and back) is hypnotic — used by brand launches, AI product reveals, music album sites, conference openers.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>(1) Pre-compute target positions: render the target word onto an offscreen canvas, sample every Nth opaque pixel — that gives you an array of (x, y) points that form the word's shape. (2) Create a particle for each target point: assign it a random start position. (3) On scroll: for each particle, lerp its current x/y between its random position and its target position by <code>--p</code> (with a tiny per-particle jitter so they don't move in perfect sync). (4) Draw every particle on a main canvas every frame. The whole word "assembles" out of chaos as you scroll.</p>
+      <div class="term-grid">
+        <div><b>Sample text canvas pixels</b><span>Render word to offscreen canvas, walk every 4th opaque pixel to get target points</span></div>
+        <div><b>Per-particle random start</b><span>Each particle gets a random off-screen position to lerp from</span></div>
+        <div><b>Lerp by --p with jitter</b><span>x = start + (target - start) × p × (0.9 + Math.random() × 0.2)</span></div>
+        <div><b>requestAnimationFrame draw</b><span>Redraw the entire particle field every frame on canvas</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. Watch ~800 sparks coalesce into "AURORA", hold, then scatter back.</p>
+    <div class="demo-shell">
+      <div class="demo pa-demo" id="paDemo">
+        <span class="demo-badge">Live · scroll inside</span>
+        <div class="pa-spacer">↓ scroll to coalesce</div>
+        <div style="height: 2400px; position: relative;">
+          <div class="pa-pin" id="paPin" style="--p: 0">
+            <div class="pa-label">
+              <div class="eyebrow">— Conjuring AURORA</div>
+              <h4>From chaos, <em>a name</em>.</h4>
+            </div>
+            <canvas class="pa-canvas" id="paCanvas" width="900" height="600"></canvas>
+            <div class="pa-readout">Particles: <b id="paCount">0</b> · Assembly: <b id="paPct">0%</b></div>
+            <div class="pa-progress"></div>
+          </div>
+        </div>
+        <div class="pa-spacer">— scattered again —</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.32 Particle Assembly</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a canvas particle-assembly scroll animation. Sticky pin (top:0 height:100vh) inside a 2400px-tall section. Inside the pin, a full-bleed &lt;canvas&gt; element (900×600 logical size; CSS makes it 100%/100%). On load: (1) create an OFFSCREEN canvas, draw your target word ("AURORA") at large display-serif font in white; (2) walk the pixel data and every 4th opaque pixel adds an {x, y} target to an array; (3) create a Particle object for each target with random startX/Y (off-screen), targetX/Y, jitter factor, color, size, and an alpha fade. JS scroll listener computes scroll progress 0→1 and maps to a peak-at-middle curve (1 - |p - 0.5| × 2) — that's the "assembly progress" --p. Then each animation frame: clear the main canvas; for each particle compute x = startX + (targetX - startX) * --p * particle.jitter; y similar; draw a small accent-colored circle at that position with arc(). Optionally connect nearby particles with thin lines when close together for a constellation feel. Show "Particles: NNN · Assembly: NN%" readout and a progress bar. Result: hundreds of sparks coalesce into the word, hold at middle scroll, then disperse back into chaos.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.openai.com" target="_blank" rel="noopener">OpenAI launches</a><span class="desc">Particle morph effects on hero brand reveals</span></div></li>
+      <li><div><a href="https://threejs.org/examples/?q=particles" target="_blank" rel="noopener">three.js — particle examples</a><span class="desc">Production scale uses WebGL but the principle is identical</span></div></li>
+      <li><div><a href="https://particles.js.org" target="_blank" rel="noopener">particles.js</a><span class="desc">Library that handles particle systems out of the box</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.31-origami-fold.html" class="prev"><span class="label">← Prev</span><span class="title">2.31 Origami Fold</span></a>
+      <a href="2.33-clock-gears.html" class="next"><span class="label">Next →</span><span class="title">2.33 Clock Gears</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const sc = document.getElementById('paDemo');
+    const pin = document.getElementById('paPin');
+    const canvas = document.getElementById('paCanvas');
+    const ctx = canvas.getContext('2d');
+    const countEl = document.getElementById('paCount');
+    const pctEl = document.getElementById('paPct');
+    const tall = sc.querySelector('[style*="2400"]');
+    if (!canvas) return;
+
+    // Resize canvas to its CSS size with devicePixelRatio
+    function fitCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    fitCanvas();
+    let W = canvas.getBoundingClientRect().width;
+    let H = canvas.getBoundingClientRect().height;
+
+    // Build target points from a text canvas
+    function buildTargets(text) {
+      const off = document.createElement('canvas');
+      off.width = W; off.height = H;
+      const o = off.getContext('2d');
+      o.fillStyle = '#fff';
+      o.textAlign = 'center';
+      o.textBaseline = 'middle';
+      o.font = '800 ' + Math.round(W * 0.22) + 'px "Fraunces", serif';
+      o.fillText(text, W / 2, H / 2);
+      const data = o.getImageData(0, 0, W, H).data;
+      const step = 5;
+      const pts = [];
+      for (let y = 0; y < H; y += step) {
+        for (let x = 0; x < W; x += step) {
+          const i = (y * W + x) * 4;
+          if (data[i + 3] > 128) pts.push({ x, y });
+        }
+      }
+      return pts;
+    }
+
+    const targets = buildTargets('AURORA');
+    const particles = targets.map(t => ({
+      tx: t.x, ty: t.y,
+      sx: Math.random() * W * 2 - W * 0.5,
+      sy: Math.random() * H * 2 - H * 0.5,
+      jitter: 0.9 + Math.random() * 0.2,
+      size: 1.3 + Math.random() * 1.5,
+      hue: 30 + Math.random() * 60, // accent gold range
+    }));
+    countEl.textContent = particles.length;
+
+    let p = 0;
+    function update() {
+      const r = tall.getBoundingClientRect();
+      const sr = sc.getBoundingClientRect();
+      const start = r.top - sr.top;
+      const total = tall.offsetHeight - sr.height;
+      const sp = Math.max(0, Math.min(1, -start / total));
+      p = 1 - Math.abs(sp - 0.5) * 2;
+      pin.style.setProperty('--p', sp.toFixed(4));
+      pctEl.textContent = Math.round(p * 100) + '%';
+    }
+    sc.addEventListener('scroll', update, { passive: true });
+    update();
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      for (let i = 0; i < particles.length; i++) {
+        const a = particles[i];
+        const lp = Math.min(1, p * a.jitter);
+        const x = a.sx + (a.tx - a.sx) * lp;
+        const y = a.sy + (a.ty - a.sy) * lp;
+        const alpha = 0.35 + p * 0.55;
+        ctx.fillStyle = `hsla(${a.hue}, 92%, 65%, ${alpha})`;
+        ctx.beginPath();
+        ctx.arc(x, y, a.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+    window.addEventListener('resize', () => {
+      fitCanvas();
+      W = canvas.getBoundingClientRect().width;
+      H = canvas.getBoundingClientRect().height;
+    });
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>

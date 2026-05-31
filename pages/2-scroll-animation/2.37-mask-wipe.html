@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2.37 Animated Mask Wipe · Vibe Design Reference</title>
+<link rel="stylesheet" href="../../assets/css/global.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<style>
+  .mw-demo {
+    height: 720px;
+    overflow-y: scroll;
+    border-radius: var(--radius-lg);
+    background: #060611;
+    color: #fff;
+    position: relative;
+  }
+  .mw-spacer { height: 200px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+  .mw-pin {
+    position: sticky; top: 0;
+    height: 720px;
+    overflow: hidden;
+  }
+
+  /* TWO stacked full-bleed scenes; we wipe between them via clip-path */
+  .mw-layer {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 40px;
+  }
+
+  /* BACK scene — the "after" / revealed content */
+  .mw-back {
+    background:
+      radial-gradient(60% 60% at 50% 50%, rgba(232,179,57,0.25), transparent 70%),
+      linear-gradient(135deg, #4a2b6a 0%, #c66b6b 80%);
+  }
+  .mw-back .copy h4 { font-family: var(--font-display); font-weight: 400; font-size: clamp(36px, 5vw, 56px); letter-spacing: -0.03em; color: #fff; }
+  .mw-back .copy h4 em { font-style: italic; color: #ffd084; }
+  .mw-back .copy p { color: rgba(255,255,255,0.8); margin-top: 12px; }
+  .mw-back .eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #ffd084; margin-bottom: 8px; }
+
+  /* FRONT scene — the "before" cover that gets wiped away
+     Uses a diagonal clip-path that moves with --p */
+  .mw-front {
+    background: linear-gradient(180deg, #0a0a14 0%, #1a0e3a 100%);
+    /* Diagonal mask: starts as full polygon (covers everything), shrinks off the top-left as --p grows */
+    clip-path: polygon(
+      0% 0%,
+      calc(100% + 100px) 0%,
+      calc(100% + 100px) calc((1 - var(--p, 0)) * 100%),
+      calc(-100px - (1 - var(--p, 0)) * 200px) 100%,
+      0% 100%
+    );
+    transition: clip-path 0.06s linear;
+    color: #fff;
+  }
+  .mw-front .copy h4 { font-family: var(--font-display); font-weight: 400; font-size: clamp(36px, 5vw, 56px); letter-spacing: -0.03em; }
+  .mw-front .copy h4 em { font-style: italic; color: var(--accent); }
+  .mw-front .copy p { color: rgba(255,255,255,0.6); margin-top: 12px; }
+  .mw-front .eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+
+  /* The "wipe line" — a thin glowing diagonal at the mask boundary */
+  .mw-line {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+  }
+  .mw-line::after {
+    content: "";
+    position: absolute;
+    left: calc(-100px - (1 - var(--p, 0)) * 200px);
+    bottom: 0;
+    top: calc((1 - var(--p, 0)) * 100%);
+    width: calc(100% + 200px);
+    background: linear-gradient(135deg, transparent 0%, rgba(232,179,57,0.5) 50%, transparent 100%);
+    transform: translateY(-2px);
+    transform-origin: top left;
+    /* simulate a glowing 2px line along the diagonal edge */
+    height: 4px;
+    filter: blur(2px);
+  }
+
+  /* Variant: vertical wipe shape selector */
+  .mw-shape {
+    position: absolute;
+    top: 24px; left: 24px;
+    z-index: 5;
+    display: flex;
+    gap: 6px;
+  }
+  .mw-shape button {
+    padding: 7px 11px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.7);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .mw-shape button.active { background: var(--accent); color: #1A1300; border-color: var(--accent); }
+  .mw-shape button:hover:not(.active) { background: rgba(255,255,255,0.16); color: #fff; }
+
+  /* Alternate clip-path: circular wipe from center */
+  .mw-pin[data-shape="circle"] .mw-front {
+    clip-path: circle(calc((1 - var(--p, 0)) * 90%) at 50% 50%);
+  }
+  /* Alternate: vertical bars */
+  .mw-pin[data-shape="bars"] .mw-front {
+    clip-path: polygon(
+      0% 0%, 100% 0%,
+      100% calc((1 - var(--p, 0)) * 100%),
+      0% calc((1 - var(--p, 0)) * 100%)
+    );
+  }
+
+  .mw-readout {
+    position: absolute;
+    bottom: 28px; left: 0; right: 0;
+    text-align: center;
+    z-index: 5;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+  }
+  .mw-readout b { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo"><span class="dot"></span>Vibe Design Reference <small>v1</small></a>
+    <div class="nav-trail">
+      <a href="../../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="index.html">Scroll &amp; Animation</a>
+      <span class="sep">/</span>
+      <span class="here">Mask Wipe</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="entry-hero">
+  <div class="container-narrow">
+    <span class="num-badge">2.37 · Animation</span>
+    <h1 class="title">Animated Mask <em>Wipe</em>.</h1>
+    <p class="tagline">A clip-path animated by scroll wipes one full-bleed scene away to reveal the one behind. Diagonal sweep, circle iris, or horizontal blinds — pick the shape.</p>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>What it is</h2>
+    <div class="body">
+      <p>Two full-bleed scenes are stacked; the front one has a <code>clip-path</code> that gets smaller as you scroll, revealing the back scene through the shrinking shape. Different clip-path shapes give different reveal personalities — a diagonal sweep feels cinematic, a circle from center feels like a portal, horizontal bars feels like Venetian blinds. Used by motion-design portfolios, fashion sites, and product launches where the reveal is the moment.</p>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>Two layers: <code>.mw-back</code> (the revealed content, always fully rendered) and <code>.mw-front</code> (the cover) stacked at <code>inset: 0</code>. The front layer's <code>clip-path</code> is parameterized by the scroll-driven <code>--p</code> custom property. For a diagonal wipe: <code>polygon(0% 0%, 100% 0%, 100% calc((1 - --p) × 100%), 0% 100%)</code> — at <code>--p:0</code> the polygon covers everything; at <code>--p:1</code> it shrinks to zero. Optional: animate a glowing thin line along the wipe boundary using a separate absolutely-positioned strip with a blurred gradient.</p>
+      <div class="term-grid">
+        <div><b>Two stacked scenes</b><span>Back always visible underneath; front cover is the one with the clip-path</span></div>
+        <div><b>clip-path driven by --p</b><span>Animate the polygon / circle / inset values from full to empty as --p grows</span></div>
+        <div><b>Glowing wipe line</b><span>A blurred gradient strip along the moving edge sells the "energy of the cut"</span></div>
+        <div><b>Multiple shapes</b><span>diagonal polygon / circle inset / horizontal blinds — different feels</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container">
+    <h2>Live demo</h2>
+    <p class="muted" style="font-size:14.5px; margin-bottom:14px;">Scroll inside. Pick a wipe shape in the top-left. The dark cover wipes away to reveal the warm sunset scene.</p>
+    <div class="demo-shell">
+      <div class="demo mw-demo" id="mwDemo">
+        <span class="demo-badge">Live · scroll + pick shape</span>
+        <div class="mw-spacer">↓ scroll to wipe</div>
+        <div style="height: 2400px; position: relative;">
+          <div class="mw-pin" id="mwPin" data-shape="diagonal" style="--p: 0">
+            <div class="mw-shape" id="mwShape">
+              <button class="active" data-shape="diagonal">Diagonal</button>
+              <button data-shape="circle">Circle</button>
+              <button data-shape="bars">Bars</button>
+            </div>
+            <div class="mw-layer mw-back">
+              <div class="copy">
+                <div class="eyebrow">★ Behind the wipe</div>
+                <h4>The sunset was <em>always there</em>.</h4>
+                <p>You just hadn't moved the cover yet.</p>
+              </div>
+            </div>
+            <div class="mw-layer mw-front">
+              <div class="copy">
+                <div class="eyebrow">— Cover</div>
+                <h4>Scroll to <em>wipe me</em>.</h4>
+                <p>A diagonal polygon clip-path shrinks as you scroll.</p>
+              </div>
+            </div>
+            <div class="mw-line"></div>
+            <div class="mw-readout">Wipe progress: <b id="mwPct">0%</b></div>
+          </div>
+        </div>
+        <div class="mw-spacer">— cover restored —</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Copy this prompt</h2>
+    <div class="prompt-card" style="margin-top: 16px;">
+      <div class="prompt-head"><span class="lang">Prompt · 2.37 Animated Mask Wipe</span><button class="copy-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+      <pre class="prompt-body"><code>Build a scroll-driven mask-wipe reveal between two full-bleed scenes. Sticky pin (top:0 height:100vh overflow:hidden) inside a 2400px-tall section. Inside the pin layer two full-bleed scene divs: BACK (the revealed content — warm sunset gradient + display headline with italic accent) at inset:0, and FRONT (the cover — dark gradient + its own headline) also at inset:0. The front has a clip-path that's driven by a CSS custom property --p (0→1 as user scrolls): for the DIAGONAL variant clip-path:polygon(0% 0%, calc(100% + 100px) 0%, calc(100% + 100px) calc((1 - var(--p)) * 100%), calc(-100px - (1 - var(--p)) * 200px) 100%, 0% 100%) — covers everything at --p:0, shrinks to zero at --p:1. Add a thin glowing accent-colored bar along the wipe edge (separate absolutely-positioned blurred gradient strip). Provide 3 toggle buttons in the corner to switch the wipe SHAPE via a data-shape attribute on the pin: "diagonal" (above), "circle" (clip-path:circle(calc((1 - --p) * 90%) at 50% 50%)), and "bars" (vertical Venetian — clip-path:polygon with top/bottom inset). Use peak-at-middle easing so the cover wipes away, holds open, then wipes back. Show "Wipe progress: NN%" readout.</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <h2>Example sites to study</h2>
+    <ul class="examples">
+      <li><div><a href="https://www.activetheory.net" target="_blank" rel="noopener">Active Theory</a><span class="desc">Mask wipes between case-study scenes</span></div></li>
+      <li><div><a href="https://gsap.com" target="_blank" rel="noopener">GSAP clip-path examples</a><span class="desc">Library that handles complex clip-path animations</span></div></li>
+      <li><div><a href="https://codepen.io/search/pens?q=clip-path+reveal" target="_blank" rel="noopener">CodePen — clip-path reveals</a><span class="desc">Hundreds of variant mask shapes to study</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="entry-section">
+  <div class="container-narrow">
+    <div class="pager">
+      <a href="2.36-type-shatter.html" class="prev"><span class="label">← Prev</span><span class="title">2.36 Type Shatter</span></a>
+      <a href="2.38-book-open.html" class="next"><span class="label">Next →</span><span class="title">2.38 Book Open</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="foot-inner"><div>© Vibe Design Reference</div><div><a href="../../index.html">↑ Home</a></div></div></footer>
+<script>
+  (function () {
+    const sc = document.getElementById('mwDemo');
+    const pin = document.getElementById('mwPin');
+    const shape = document.getElementById('mwShape');
+    const pct = document.getElementById('mwPct');
+    const tall = sc.querySelector('[style*="2400"]');
+    function update() {
+      const r = tall.getBoundingClientRect();
+      const sr = sc.getBoundingClientRect();
+      const start = r.top - sr.top;
+      const total = tall.offsetHeight - sr.height;
+      const p = Math.max(0, Math.min(1, -start / total));
+      const eased = 1 - Math.abs(p - 0.5) * 2;
+      pin.style.setProperty('--p', eased.toFixed(4));
+      pct.textContent = Math.round(eased * 100) + '%';
+    }
+    sc.addEventListener('scroll', update, { passive: true });
+    shape.addEventListener('click', (e) => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      shape.querySelectorAll('button').forEach(x => x.classList.toggle('active', x === b));
+      pin.setAttribute('data-shape', b.dataset.shape);
+    });
+    update();
+  })();
+</script>
+<script src="../../assets/js/global.js"></script>
+</body>
+</html>
