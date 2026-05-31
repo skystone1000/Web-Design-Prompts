@@ -28,6 +28,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
+  position: relative;
 }
 .nav-logo {
   display: inline-flex;
@@ -64,13 +65,49 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-muted);
+  /* center in the bar regardless of logo/actions widths */
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
 }
 .nav-trail a { transition: color 0.2s; }
 .nav-trail a:hover { color: var(--text); }
 .nav-trail span.sep { color: var(--text-dim); }
 .nav-trail .here { color: var(--accent); }
 
-.nav-actions { display: flex; align-items: center; gap: 12px; }
+.nav-actions { display: flex; align-items: center; gap: 8px; }
+
+/* GitHub / YouTube icon buttons */
+.nav-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-elev);
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s, border-color 0.2s, background 0.2s, transform 0.2s;
+}
+.nav-icon-btn:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+.nav-icon-btn svg { width: 17px; height: 17px; }
+
+/* YouTube red tint on hover */
+.nav-icon-btn.yt:hover { color: #FF4444; border-color: rgba(255,68,68,0.45); }
+
+/* divider pip between icon group and theme toggle */
+.nav-actions .nav-divider {
+  width: 1px;
+  height: 22px;
+  background: var(--border);
+  margin: 0 2px;
+}
 
 .theme-toggle {
   display: inline-flex;
@@ -90,8 +127,12 @@
 [data-theme="light"] .theme-toggle .sun { display: block; }
 [data-theme="light"] .theme-toggle .moon { display: none; }
 
-@media (max-width: 720px) {
+@media (max-width: 900px) {
   .nav-trail { display: none; }
+}
+@media (max-width: 560px) {
+  .nav-icon-btn { display: none; }
+  .nav-actions .nav-divider { display: none; }
 }
 
 /* ---------------------- Prompt card ---------------------- */
