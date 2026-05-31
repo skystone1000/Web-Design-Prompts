@@ -240,6 +240,182 @@
   transform: translateX(-50%) translateY(0);
 }
 
+/* ---------------------- Demo Fullscreen Toggle ---------------------- */
+/* A floating "Fullscreen" button injected into every .demo by global.js */
+.demo-fs {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: background 0.2s var(--ease), border-color 0.2s var(--ease), color 0.2s var(--ease), transform 0.15s var(--ease);
+}
+.demo-fs:hover {
+  background: var(--accent);
+  color: #1A1300;
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+.demo-fs:active { transform: translateY(0); }
+.demo-fs svg { width: 13px; height: 13px; flex-shrink: 0; }
+.demo-fs .text { line-height: 1; }
+
+/* Fullscreen state — the .demo element is moved to body and takes over the viewport */
+.demo.is-fullscreen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  inset: 0 !important;
+  z-index: 9999 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  min-height: 100vh !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: 0 0 0 9999px rgba(0,0,0,0.5);
+  animation: demo-fs-in 0.28s var(--ease-out-back);
+}
+@keyframes demo-fs-in {
+  from { transform: scale(0.96); opacity: 0.7; }
+  to { transform: scale(1); opacity: 1; }
+}
+.demo.is-fullscreen .demo-fs {
+  top: 24px;
+  left: 24px;
+  background: var(--accent);
+  color: #1A1300;
+  border-color: var(--accent);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+}
+.demo.is-fullscreen .demo-fs:hover {
+  background: var(--accent-soft);
+}
+.demo.is-fullscreen .demo-badge {
+  top: 24px !important;
+  right: 24px !important;
+}
+/* When a demo is fullscreen, lock the underlying body scroll */
+body.demo-fullscreen-open {
+  overflow: hidden;
+}
+/* Hide the grain overlay and other fixed chrome behind the fullscreen demo */
+body.demo-fullscreen-open .grain,
+body.demo-fullscreen-open .nav,
+body.demo-fullscreen-open .toast {
+  z-index: 1;
+}
+
+/* Placeholder left in the original DOM position while the demo is fullscreen */
+.demo-placeholder {
+  width: 100%;
+  min-height: 380px;
+  border: 2px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--bg-elev);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 32px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.8;
+}
+.demo-placeholder .ic {
+  display: block;
+  font-size: 28px;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.demo-placeholder b { color: var(--text); font-weight: 600; }
+.demo-placeholder kbd {
+  display: inline-block;
+  padding: 2px 7px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text);
+  margin: 0 2px;
+}
+.demo-placeholder .return-btn {
+  margin-top: 18px;
+  padding: 10px 18px;
+  background: var(--accent);
+  color: #1A1300;
+  border: 0;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s var(--ease);
+}
+.demo-placeholder .return-btn:hover { background: var(--accent-soft); }
+
+/* Subtle floating Esc-hint pill at the bottom of fullscreen */
+.demo-fs-hint {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.1);
+  pointer-events: none;
+  animation: demo-fs-hint-fade 4s ease-out forwards;
+}
+body.demo-fullscreen-open .demo-fs-hint { display: inline-flex; }
+.demo-fs-hint kbd {
+  padding: 2px 8px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 4px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+}
+@keyframes demo-fs-hint-fade {
+  0%, 70% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+}
+
 /* ---------------------- Demo-page section blocks ---------------------- */
 .entry-hero {
   padding: 80px 0 40px;
